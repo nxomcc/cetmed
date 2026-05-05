@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cursos",
+  "info": {
+    "singularName": "curso",
+    "pluralName": "cursos",
+    "displayName": "Curso",
+    "description": "Cursos de capacitación CETMED"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "titulo": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "titulo", "required": true },
+    "descripcion": { "type": "text" },
+    "objetivo": { "type": "text" },
+    "contenidos": { "type": "json" },
+    "precio": { "type": "integer", "required": true, "default": 0 },
+    "horas": { "type": "integer" },
+    "modalidad": {
+      "type": "enumeration",
+      "enum": ["Presencial", "E-Learning", "Blended", "In Company"],
+      "default": "Presencial"
+    },
+    "nivel": {
+      "type": "enumeration",
+      "enum": ["Básico", "Básico-Intermedio", "Intermedio", "Avanzado"],
+      "default": "Básico-Intermedio"
+    },
+    "franquicia_sence": { "type": "boolean", "default": false },
+    "imagen": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "categoria": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::categoria.categoria",
+      "inversedBy": "cursos"
+    },
+    "instructor": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "cursos"
+    },
+    "activo": { "type": "boolean", "default": true }
+  }
+}
