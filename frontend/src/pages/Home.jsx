@@ -97,7 +97,7 @@ export default function Home() {
   return (
     <>
       {/* ── Hero + Stats: juntos forman 100vh ─────── */}
-      <div className="flex flex-col" style={{ minHeight: '100vh' }}>
+      <div className="flex flex-col" style={{ minHeight: 'calc(100vh - 96px)' }}>
       <section className="hero">
         <div className="max-w-7xl mx-auto px-4 py-24 relative z-10 w-full">
           <div className="max-w-2xl">

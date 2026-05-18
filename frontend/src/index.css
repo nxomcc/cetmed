@@ -233,7 +233,7 @@ img, video, svg { display: block; max-width: 100%; }
   position: absolute; inset: 0;
 }
 .hero .section-label { color: #fff; }
-.hero .section-label::before { background: #fff; }
+.hero .section-label::before { background: var(--accent); }
 
 /* ── Page hero ───────────────────────────── */
 .page-hero {
