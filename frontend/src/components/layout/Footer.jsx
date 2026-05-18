@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import logo from '../../assets/logo.png'
+
+const LOGO_URL = 'https://cetmed.cl/wp-content/uploads/2025/02/Logo-web.png'
 
 const LINKS = [
   { to: '/',         label: 'Inicio' },
@@ -10,12 +11,24 @@ const LINKS = [
 ]
 
 const AREAS = [
-  'Prevención de Riesgos',
-  'Construcción y Obras',
-  'Salud Ocupacional',
   'Administración',
-  'Medio Ambiente',
-  'Electricidad y Energía',
+  'Alimentación, Gastronomía y Turismo',
+  'Ciencias y Técnicas Aplicadas',
+  'Computación e Informática',
+  'Construcción',
+  'Electricidad y Electrónica',
+  'Mecánica Industrial',
+  'Minería',
+  'Procesos Industriales',
+  'Salud Nutrición y Dietética',
+  'Servicio a las Personas',
+]
+
+const SOCIAL = [
+  { label:'Facebook',  icon:'facebook',     href:'#' },
+  { label:'Instagram', icon:'photo_camera', href:'#' },
+  { label:'YouTube',   icon:'play_circle',  href:'#' },
+  { label:'X',         icon:'close',        href:'#' },
 ]
 
 export default function Footer() {
@@ -27,21 +40,18 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <img src={logo} alt="CETMED" className="h-10 w-auto brightness-0 invert"
-                onError={e => e.target.style.display = 'none'} />
+              <img src={LOGO_URL} alt="CETMED" className="h-10 w-auto brightness-0 invert" />
               <span className="font-black text-xl tracking-tight">CETMED</span>
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-5">
-              Centro de capacitación certificado SENCE. Formamos profesionales competentes para los desafíos del mercado laboral chileno.
+              Somos un OTEC que ejecuta Capacitación y Formación complementaria dirigido a Personas Naturales, Trabajadores, Profesionales, Empresas Públicas o Privadas, con el más alto Nivel de Calidad posible según la Norma Chilena 2728:2015, SENCE y demás requisitos Legales aplicables.
             </p>
             <div className="flex gap-2">
-              {['facebook', 'linkedin', 'instagram', 'youtube'].map(sn => (
-                <a key={sn} href="#"
+              {SOCIAL.map(sn => (
+                <a key={sn.label} href={sn.href}
                   className="w-9 h-9 rounded-full bg-white/10 hover:bg-[var(--accent)] hover:text-[var(--primary-dark)] flex items-center justify-center transition-all"
-                  aria-label={sn}>
-                  <span className="material-icons text-[18px]">
-                    {sn === 'facebook' ? 'facebook' : sn === 'linkedin' ? 'work' : sn === 'instagram' ? 'photo_camera' : 'play_circle'}
-                  </span>
+                  aria-label={sn.label}>
+                  <span className="material-icons text-[18px]">{sn.icon}</span>
                 </a>
               ))}
             </div>
@@ -58,6 +68,12 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <a href="https://cursos.cetmed.cl/login/index.php" target="_blank" rel="noopener noreferrer"
+                  className="text-white/70 hover:text-[var(--accent)] text-sm transition-colors flex items-center gap-1.5">
+                  <span className="material-icons text-xs">chevron_right</span>Aula Virtual
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -81,28 +97,36 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-white/70">
               <li className="flex items-start gap-2">
                 <span className="material-icons text-[var(--accent)] mt-0.5 text-base">location_on</span>
-                Coquimbo, Región de Coquimbo, Chile
+                Av. Videla 810 – Oficina 208-209, Edificio Verne, Coquimbo, Chile
               </li>
               <li className="flex items-center gap-2">
                 <span className="material-icons text-[var(--accent)] text-base">phone</span>
-                <a href="tel:+56512200000" className="hover:text-white transition-colors">+56 51 220 0000</a>
+                <a href="tel:+56927781966" className="hover:text-white transition-colors">+56 9 2778 1966</a>
               </li>
               <li className="flex items-center gap-2">
                 <span className="material-icons text-[var(--accent)] text-base">email</span>
                 <a href="mailto:contacto@cetmed.cl" className="hover:text-white transition-colors">contacto@cetmed.cl</a>
               </li>
-              <li className="flex items-center gap-2">
+              <li className="flex items-start gap-2">
                 <span className="material-icons text-[var(--accent)] text-base">access_time</span>
-                Lun–Vie 09:00–18:00
+                <span>Lun–Jue 09:00–13:30<br />Vie 09:00–13:00</span>
               </li>
             </ul>
 
-            <div className="mt-5 flex flex-wrap gap-2">
-              {['OTEC SENCE', 'NCh 2728', 'Cámara CC'].map(cert => (
-                <span key={cert} className="tag bg-white/10 text-white/80 border border-white/20 text-xs px-2 py-0.5 rounded-full">
-                  {cert}
-                </span>
-              ))}
+            {/* Certification logos */}
+            <div className="mt-6 space-y-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <img src="https://cetmed.cl/wp-content/uploads/2025/02/Logo_Sence_Blanco.png"
+                  alt="SENCE" className="h-8 w-auto object-contain" />
+                <img src="https://cetmed.cl/wp-content/uploads/2025/02/certificacion_nch2-pequeno.png.webp"
+                  alt="NCh 2728" className="h-8 w-auto object-contain" />
+              </div>
+              <img src="https://cetmed.cl/wp-content/uploads/2025/02/LogoChC_footerweb-1024x276.png"
+                alt="Cámara Chilena de la Construcción" className="h-6 w-auto object-contain" />
+              <img src="https://cetmed.cl/wp-content/uploads/2025/02/banderas.png"
+                alt="Certificaciones internacionales" className="h-6 w-auto object-contain" />
+              <img src="https://cetmed.cl/wp-content/uploads/2025/10/3-cuotas-precio-contado-1.png"
+                alt="3 cuotas precio contado" className="h-10 w-auto object-contain" />
             </div>
           </div>
         </div>
@@ -110,8 +134,8 @@ export default function Footer() {
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-white/40">
           <p>© {new Date().getFullYear()} CETMED Capacitaciones. Todos los derechos reservados.</p>
           <div className="flex gap-4">
-            <Link to="#" className="hover:text-white/70 transition-colors">Términos</Link>
-            <Link to="#" className="hover:text-white/70 transition-colors">Privacidad</Link>
+            <Link to="#" className="hover:text-white/70 transition-colors">Términos y Condiciones</Link>
+            <Link to="#" className="hover:text-white/70 transition-colors">Política de Privacidad</Link>
           </div>
         </div>
       </div>

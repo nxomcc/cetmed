@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import useCart from '../../hooks/useCart'
-import logo from '../../assets/logo.png'
+
+const LOGO_URL = 'https://cetmed.cl/wp-content/uploads/2025/02/Logo-web.png'
 
 const NAV_LINKS = [
   { to: '/',         label: 'Inicio' },
@@ -29,8 +30,7 @@ export default function Navbar({ onCartOpen }) {
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 no-underline">
-            <img src={logo} alt="CETMED" className="h-10 w-auto object-contain"
-              onError={e => e.target.style.display = 'none'} />
+            <img src={LOGO_URL} alt="CETMED" className="h-10 w-auto object-contain" />
             <span className="font-black text-xl tracking-tight" style={{ color:'var(--primary)', letterSpacing:'-0.02em' }}>
               CETMED
             </span>
@@ -44,6 +44,11 @@ export default function Navbar({ onCartOpen }) {
                 {label}
               </NavLink>
             ))}
+            <a href="https://cursos.cetmed.cl/login/index.php" target="_blank" rel="noopener noreferrer"
+              className="nav-link flex items-center gap-1">
+              <span className="material-icons text-sm">computer</span>
+              Aula Virtual
+            </a>
           </div>
 
           {/* Actions */}
@@ -77,8 +82,7 @@ export default function Navbar({ onCartOpen }) {
       <div className={`mobile-menu${menuOpen ? ' open' : ''}`}>
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
-            <img src={logo} alt="CETMED" className="h-9 w-auto object-contain brightness-0 invert"
-              onError={e => e.target.style.display = 'none'} />
+            <img src={LOGO_URL} alt="CETMED" className="h-9 w-auto object-contain brightness-0 invert" />
             <span className="font-black text-xl text-white tracking-tight">CETMED</span>
           </div>
           <button onClick={() => setMenuOpen(false)} className="p-2 text-white">

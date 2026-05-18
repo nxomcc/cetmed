@@ -8,18 +8,18 @@ import useCart from '../hooks/useCart'
 
 /* ── Mock data fallback (when CMS offline) ────────── */
 const MOCK_CURSOS = [
-  { id:1, attributes:{ titulo:'Prevención de Riesgos en Obra', precio:120000, modalidad:'Presencial', horas:40, slug:'prevencion-riesgos-obra', franquicia_sence:true, imagen:{data:null} } },
-  { id:2, attributes:{ titulo:'Primeros Auxilios Empresarial', precio:85000, modalidad:'Blended', horas:16, slug:'primeros-auxilios', franquicia_sence:true, imagen:{data:null} } },
-  { id:3, attributes:{ titulo:'Seguridad en Instalaciones Eléctricas', precio:95000, modalidad:'Presencial', horas:32, slug:'seguridad-electrica', imagen:{data:null} } },
-  { id:4, attributes:{ titulo:'Liderazgo y Gestión de Equipos', precio:110000, modalidad:'E-Learning', horas:24, slug:'liderazgo-gestion', imagen:{data:null} } },
-  { id:5, attributes:{ titulo:'Excel Avanzado para Gestión', precio:75000, modalidad:'E-Learning', horas:20, slug:'excel-avanzado', imagen:{data:null} } },
-  { id:6, attributes:{ titulo:'Manejo Defensivo de Vehículos', precio:88000, modalidad:'Presencial', horas:16, slug:'manejo-defensivo', franquicia_sence:true, imagen:{data:null} } },
+  { id:1, attributes:{ titulo:'Técnicas de primeros auxilios básicos RCP Y DEA', precio:0, modalidad:'E-Learning', horas:16, slug:'primeros-auxilios-rcp-dea', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/auxilio-1-300x200.jpg' } } } } },
+  { id:2, attributes:{ titulo:'Gestor de inclusión laboral', precio:0, modalidad:'Presencial', horas:40, slug:'gestor-inclusion-laboral', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/inclusion-300x188.jpg' } } } } },
+  { id:3, attributes:{ titulo:'Técnicas de trabajo seguro en espacios confinados', precio:0, modalidad:'E-Learning', horas:16, slug:'trabajo-seguro-espacios-confinados', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/trabajo-seguro-300x188.jpg' } } } } },
+  { id:4, attributes:{ titulo:'Técnicas de seguridad en el montaje y desmontaje de andamios', precio:0, modalidad:'E-Learning', horas:16, slug:'seguridad-andamios', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/andamioss-300x188.jpg' } } } } },
+  { id:5, attributes:{ titulo:'Manejo de extintores portátiles', precio:0, modalidad:'E-Learning', horas:8, slug:'manejo-extintores', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/extintores2-300x188.jpg' } } } } },
+  { id:6, attributes:{ titulo:'Procedimientos para trabajo en altura física', precio:0, modalidad:'Presencial', horas:16, slug:'trabajo-en-altura', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/trabajo-en-altura-300x200.jpg' } } } } },
 ]
 
 const MOCK_NOTICIAS = [
-  { id:1, attributes:{ titulo:'CETMED renueva certificación SENCE para 2025', resumen:'Nuestro centro supera con éxito el proceso de renovación...', slug:'renovacion-sence-2025', publishedAt:'2025-04-01', imagen:{data:null} } },
-  { id:2, attributes:{ titulo:'Nueva oferta de cursos E-Learning disponible', resumen:'Ampliamos nuestra plataforma virtual con 12 nuevos cursos...', slug:'nuevos-cursos-elearning', publishedAt:'2025-03-20', imagen:{data:null} } },
-  { id:3, attributes:{ titulo:'Alianza estratégica con constructoras regionales', resumen:'Firmamos convenio con las principales empresas del sector...', slug:'alianza-constructoras', publishedAt:'2025-03-05', imagen:{data:null} } },
+  { id:1, attributes:{ titulo:'CETMED renueva certificación SENCE para 2025', resumen:'Nuestro centro supera con éxito el proceso de renovación anual de la certificación SENCE, reafirmando nuestro compromiso con la calidad formativa.', slug:'renovacion-sence-2025', publishedAt:'2025-04-01', imagen:{data:null} } },
+  { id:2, attributes:{ titulo:'Nueva oferta de cursos E-Learning disponible', resumen:'Ampliamos nuestra plataforma virtual con nuevos cursos en modalidad online para que puedas capacitarte desde donde estés.', slug:'nuevos-cursos-elearning', publishedAt:'2025-03-20', imagen:{data:null} } },
+  { id:3, attributes:{ titulo:'Alianza estratégica con empresas de la región', resumen:'Firmamos convenio con las principales empresas del sector productivo de Coquimbo para ofrecer capacitación con franquicia SENCE.', slug:'alianza-empresas-region', publishedAt:'2025-03-05', imagen:{data:null} } },
 ]
 
 const STATS = [
@@ -30,16 +30,21 @@ const STATS = [
 ]
 
 const AREAS = [
-  { icon:'construction',    label:'Construcción y Obras',   color:'#003d7a' },
-  { icon:'health_and_safety', label:'Prevención de Riesgos', color:'#1a5fa8' },
-  { icon:'local_hospital',  label:'Salud Ocupacional',      color:'#0077b6' },
-  { icon:'bolt',            label:'Electricidad y Energía', color:'#F0A500' },
-  { icon:'eco',             label:'Medio Ambiente',         color:'#2d8a4e' },
-  { icon:'manage_accounts', label:'Administración',         color:'#6c3d9e' },
-  { icon:'engineering',     label:'Obras Civiles',          color:'#c0392b' },
-  { icon:'directions_car',  label:'Manejo Defensivo',       color:'#e67e22' },
-  { icon:'wifi',            label:'Tecnología e IT',        color:'#2980b9' },
-  { icon:'groups',          label:'Desarrollo Personal',    color:'#16a085' },
+  { label:'Administración',                  img:'https://cetmed.cl/wp-content/themes/wpopus-fse/assets/images/service3.webp' },
+  { label:'Alimentación, Gastronomía y Turismo', img:'https://cetmed.cl/wp-content/uploads/2025/03/grupo-cocineros-trabajando-cocina_53876-42734.jpg.avif' },
+  { label:'Artes, Artesanías y Gráficas',    img:'https://cetmed.cl/wp-content/uploads/2025/03/arreglo-dibujo-marcadores_23-2148577709.jpg' },
+  { label:'Ciencias y Técnicas Aplicadas',   img:'https://cetmed.cl/wp-content/uploads/2025/03/examinando-modelo-molecular_1098-19572.jpg' },
+  { label:'Computación e Informática',       img:'https://cetmed.cl/wp-content/themes/wpopus-fse/assets/images/service4.webp' },
+  { label:'Construcción',                    img:'https://cetmed.cl/wp-content/uploads/2025/03/trabajadores-examinando-obra_1122-970.jpg.avif' },
+  { label:'Ecología',                        img:'https://cetmed.cl/wp-content/uploads/2025/03/fotografia-aerea-espeso-bosque-hermosos-arboles-vegetacion_181624-2812.jpg.avif' },
+  { label:'Educación y Capacitación',        img:'https://cetmed.cl/wp-content/uploads/2025/03/todos-sonrien-escuchan-grupo-personas-conferencia-negocios-aula-moderna-dia_146671-16288.jpg.avif' },
+  { label:'Electricidad y Electrónica',      img:'https://cetmed.cl/wp-content/uploads/2025/03/sirva-tecnico-electrico-que-trabaja-centralita-fusibles_169016-24062.jpg.avif' },
+  { label:'Idiomas y Comunicación',          img:'https://cetmed.cl/wp-content/uploads/2025/03/libro-ingles-descansando-sobre-mesa-espacio-trabajo_23-2149429592.jpg' },
+  { label:'Mecánica Industrial',             img:'https://cetmed.cl/wp-content/uploads/2025/03/trabajador-industrial-que-trabaja-linea-produccion-fabrica_342744-177.jpg.avif' },
+  { label:'Minería',                         img:'https://cetmed.cl/wp-content/uploads/2025/03/camion-volquete-mina-cielo_181624-60225.jpg.avif' },
+  { label:'Procesos Industriales',           img:'https://cetmed.cl/wp-content/uploads/2025/03/tecnologo-traje-proteccion-blanco-comprobando-presion-manometro-maquina-industrial-fabrica_342744-1194.jpg' },
+  { label:'Salud Nutrición y Dietética',     img:'https://cetmed.cl/wp-content/uploads/2025/03/concepto-dieta-cientifica-comida-sana_23-2148193255.jpg.avif' },
+  { label:'Servicio a las Personas',         img:'https://cetmed.cl/wp-content/uploads/2025/03/feliz-apreton-manos-reparador-automoviles-cliente-taller_637285-8634.jpg.avif' },
 ]
 
 function useCountUp(target, active) {
@@ -77,7 +82,6 @@ export default function Home() {
   const [statsVisible, setStatsVisible] = useState(false)
   const statsRef = useRef(null)
   const { addItem } = useCart()
-  const [cartOpen, setCartOpen] = useState(false)
 
   useEffect(() => {
     getCursos({'pagination[pageSize]':6}).then(d => { if (d?.data?.length) setCursos(d.data) }).catch(()=>{})
@@ -90,11 +94,6 @@ export default function Home() {
     return () => obs.disconnect()
   }, [])
 
-  function openCart() {
-    // Dispatch custom event so Layout's CartDrawer opens
-    window.dispatchEvent(new CustomEvent('cetmed:opencart'))
-  }
-
   return (
     <>
       {/* ── Hero ──────────────────────────────────── */}
@@ -105,11 +104,10 @@ export default function Home() {
               OTEC Certificado SENCE · Coquimbo, Chile
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6" data-reveal data-delay="1">
-              Capacitación profesional que{' '}
-              <span className="text-[var(--accent)]">transforma</span> carreras
+              Bienvenido a CETMED Capacitaciones
             </h1>
             <p className="text-white/80 text-lg leading-relaxed mb-8 max-w-xl" data-reveal data-delay="2">
-              Más de 120 cursos certificados en Prevención de Riesgos, Construcción, Salud y más. Aprende con los mejores, a tu ritmo.
+              Cursos diseñados para llevar tu perfil al siguiente nivel.
             </p>
             <div className="flex flex-wrap gap-3" data-reveal data-delay="3">
               <Link to="/cursos" className="btn-primary text-base px-6 py-3">
@@ -147,8 +145,46 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Areas ─────────────────────────────────── */}
+      {/* ── About CETMED ──────────────────────────── */}
       <section className="py-20 bg-[var(--bg-light)]">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div data-reveal="left">
+              <SectionLabel>Quiénes somos</SectionLabel>
+              <h2 className="text-3xl sm:text-4xl font-black text-[var(--text-dark)] mb-6">
+                CETMED Capacitaciones
+              </h2>
+              <p className="text-[var(--text-body)] leading-relaxed mb-6 text-lg">
+                Somos un OTEC que ejecuta Capacitación y Formación complementaria dirigido a Personas Naturales, Trabajadores, Profesionales, Empresas Públicas o Privadas, con el más alto Nivel de Calidad posible según la Norma Chilena 2728:2015, SENCE y demás requisitos Legales aplicables.
+              </p>
+              <div className="flex flex-wrap gap-3 mb-8">
+                {['OTEC SENCE','Norma NCh 2728','Cámara Chilena de la Construcción'].map(c => (
+                  <span key={c} className="tag text-sm px-3 py-1">{c}</span>
+                ))}
+              </div>
+              <Link to="/nosotros" className="btn-primary">
+                Conoce más sobre CETMED
+                <span className="material-icons text-sm">arrow_forward</span>
+              </Link>
+            </div>
+
+            <div data-reveal="right" className="relative">
+              <img
+                src="https://cetmed.cl/wp-content/uploads/2025/12/PORTAFOLIO-DE-SERVICIOS-DE-CAPACITACION2.png"
+                alt="CETMED Portafolio de Servicios"
+                className="rounded-2xl w-full shadow-hero object-cover"
+              />
+              <div className="absolute -bottom-5 -left-5 bg-[var(--accent)] text-[var(--primary-dark)] rounded-2xl p-5 font-black shadow-lift hidden sm:block">
+                <div className="text-3xl">+2.800</div>
+                <div className="text-sm font-semibold">alumnos capacitados</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Specialization Areas ──────────────────── */}
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12" data-reveal>
             <SectionLabel>Áreas de formación</SectionLabel>
@@ -160,13 +196,17 @@ export default function Home() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {AREAS.map((a, i) => (
               <Link key={a.label} to={`/cursos?area=${encodeURIComponent(a.label)}`}
-                className="group flex flex-col items-center gap-3 p-5 bg-white rounded-2xl border border-[var(--border)] hover:border-transparent hover:shadow-lift hover:-translate-y-1 transition-all text-center no-underline"
+                className="group relative rounded-2xl overflow-hidden aspect-square shadow hover:shadow-lift transition-all hover:-translate-y-1 no-underline"
                 data-reveal data-delay={String(i % 5 + 1)}>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center"
-                  style={{ background: `${a.color}18` }}>
-                  <span className="material-icons" style={{ color: a.color }}>{a.icon}</span>
-                </div>
-                <span className="text-sm font-semibold text-[var(--text-dark)] leading-tight">{a.label}</span>
+                <img
+                  src={a.img}
+                  alt={a.label}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <span className="absolute bottom-0 left-0 right-0 p-3 text-white text-xs font-bold leading-tight text-center">
+                  {a.label}
+                </span>
               </Link>
             ))}
           </div>
@@ -174,7 +214,7 @@ export default function Home() {
       </section>
 
       {/* ── Featured Courses ──────────────────────── */}
-      <section className="py-20">
+      <section className="py-20 bg-[var(--bg-light)]">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-12" data-reveal>
             <div>
@@ -199,54 +239,46 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Why CETMED ────────────────────────────── */}
-      <section className="py-20 bg-[var(--bg-light)]">
+      {/* ── DNC Section ───────────────────────────── */}
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div data-reveal="left">
-              <SectionLabel>Por qué elegirnos</SectionLabel>
+              <SectionLabel>Servicio especializado</SectionLabel>
               <h2 className="text-3xl sm:text-4xl font-black text-[var(--text-dark)] mb-6">
-                Capacitación con propósito real
+                Diagnóstico de Necesidades de Capacitación (DNC)
               </h2>
-              <p className="text-[var(--text-body)] leading-relaxed mb-8">
-                Somos un OTEC certificado por SENCE con más de 15 años formando a los profesionales que mueven la economía regional. Cada curso está diseñado con la industria, para la industria.
+              <p className="text-[var(--text-body)] leading-relaxed mb-8 text-lg">
+                El servicio de Diagnóstico de Necesidades de Capacitación (DNC) es un proceso que identifica las áreas de conocimiento, habilidades y actitudes que los empleados necesitan mejorar para optimizar su desempeño y el de la empresa, permitiendo una capacitación más efectiva.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                {[
-                  { icon:'verified', title:'Certificación SENCE', desc:'Cursos con franquicia tributaria disponible' },
-                  { icon:'people',   title:'Instructores expertos', desc:'Profesionales activos en cada área' },
-                  { icon:'schedule', title:'Horarios flexibles', desc:'Tarde, noche y fin de semana' },
-                  { icon:'workspace_premium', title:'Certificados válidos', desc:'Reconocidos a nivel nacional' },
-                ].map(f => (
-                  <div key={f.title} className="flex gap-3 p-4 bg-white rounded-xl border border-[var(--border)]">
-                    <span className="material-icons text-[var(--primary)] mt-0.5">{f.icon}</span>
-                    <div>
-                      <h4 className="font-bold text-sm text-[var(--text-dark)]">{f.title}</h4>
-                      <p className="text-xs text-[var(--text-muted)] mt-0.5">{f.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Link to="/nosotros" className="btn-primary">
-                Conoce más sobre CETMED
+              <Link to="/contacto" className="btn-primary">
+                Solicitar DNC
                 <span className="material-icons text-sm">arrow_forward</span>
               </Link>
             </div>
 
-            <div data-reveal="right" className="relative">
-              <img src="https://placehold.co/580x440/003d7a/ffffff?text=CETMED+en+acción"
-                alt="Capacitación CETMED" className="rounded-2xl w-full shadow-hero" />
-              <div className="absolute -bottom-5 -left-5 bg-[var(--accent)] text-[var(--primary-dark)] rounded-2xl p-5 font-black shadow-lift hidden sm:block">
-                <div className="text-3xl">+2.800</div>
-                <div className="text-sm font-semibold">alumnos capacitados</div>
-              </div>
+            <div className="grid grid-cols-2 gap-4" data-reveal="right">
+              {[
+                { icon:'search', title:'Diagnóstico', desc:'Identificamos las brechas de conocimiento de tu equipo.' },
+                { icon:'analytics', title:'Análisis', desc:'Evaluamos competencias actuales frente a las requeridas.' },
+                { icon:'assignment', title:'Plan a medida', desc:'Diseñamos un plan de capacitación personalizado.' },
+                { icon:'verified', title:'Resultados', desc:'Optimizamos el desempeño y la productividad organizacional.' },
+              ].map((f,i) => (
+                <div key={f.title} className="p-5 bg-[var(--bg-light)] rounded-2xl border border-[var(--border)]" data-delay={String(i+1)}>
+                  <div className="w-12 h-12 bg-[var(--primary)]/10 rounded-xl flex items-center justify-center mb-3">
+                    <span className="material-icons text-[var(--primary)]">{f.icon}</span>
+                  </div>
+                  <h4 className="font-bold text-[var(--text-dark)] mb-1">{f.title}</h4>
+                  <p className="text-xs text-[var(--text-muted)] leading-relaxed">{f.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* ── Latest news ───────────────────────────── */}
-      <section className="py-20">
+      <section className="py-20 bg-[var(--bg-light)]">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-12" data-reveal>
             <div>

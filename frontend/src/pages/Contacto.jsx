@@ -42,10 +42,10 @@ export default function Contacto() {
             {/* Info */}
             <div className="space-y-6">
               {[
-                { icon:'location_on',  title:'Dirección',    content:'Coquimbo, Región de Coquimbo, Chile' },
-                { icon:'phone',        title:'Teléfono',     content:'+56 51 220 0000', href:'tel:+56512200000' },
+                { icon:'location_on',  title:'Dirección',    content:'Av. Videla 810 – Oficina 208-209, Edificio Verne, Coquimbo, Chile' },
+                { icon:'phone',        title:'Teléfono',     content:'+56 9 2778 1966', href:'tel:+56927781966' },
                 { icon:'email',        title:'Email',        content:'contacto@cetmed.cl', href:'mailto:contacto@cetmed.cl' },
-                { icon:'access_time',  title:'Horario',      content:'Lun–Vie 09:00–18:00' },
+                { icon:'access_time',  title:'Horario',      content:'Lun–Jue 09:00–13:30 / Vie 09:00–13:00' },
               ].map(d => (
                 <div key={d.title} className="flex gap-4 p-5 bg-[var(--bg-light)] rounded-xl border border-[var(--border)]" data-reveal>
                   <div className="w-11 h-11 bg-[var(--primary)] rounded-xl flex items-center justify-center shrink-0">
@@ -60,12 +60,18 @@ export default function Contacto() {
                 </div>
               ))}
 
-              {/* Map placeholder */}
-              <div className="rounded-xl overflow-hidden border border-[var(--border)] aspect-video bg-[var(--bg-light)] flex items-center justify-center" data-reveal>
-                <div className="text-center text-[var(--text-muted)]">
-                  <span className="material-icons text-4xl mb-2 block">map</span>
-                  <p className="text-sm">Coquimbo, Chile</p>
-                </div>
+              {/* Map embed */}
+              <div className="rounded-xl overflow-hidden border border-[var(--border)] aspect-video" data-reveal>
+                <iframe
+                  title="CETMED ubicación"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3385.6!2d-71.3396!3d-29.9533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9691ce9b8f5e4b0b%3A0x1!2sAv.%20Videla%20810%2C%20Coquimbo!5e0!3m2!1ses!2scl!4v1"
+                  width="100%"
+                  height="100%"
+                  style={{ border:0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
             </div>
 
@@ -130,7 +136,7 @@ export default function Contacto() {
                         <label className="block text-sm font-semibold text-[var(--text-dark)] mb-1.5">Área de interés</label>
                         <select name="area" value={form.area} onChange={handleChange} className="form-control">
                           <option value="">Selecciona un área...</option>
-                          {['Prevención de Riesgos','Construcción','Salud Ocupacional','Electricidad','Administración','Medio Ambiente','Otro'].map(a => (
+                          {['Administración','Alimentación, Gastronomía y Turismo','Artes, Artesanías y Gráficas','Ciencias y Técnicas Aplicadas','Computación e Informática','Construcción','Ecología','Educación y Capacitación','Electricidad y Electrónica','Idiomas y Comunicación','Mecánica Industrial','Minería','Procesos Industriales','Salud Nutrición y Dietética','Servicio a las Personas','Otro'].map(a => (
                             <option key={a}>{a}</option>
                           ))}
                         </select>

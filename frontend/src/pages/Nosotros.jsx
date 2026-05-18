@@ -1,20 +1,20 @@
 import { Link } from 'react-router-dom'
 import SectionLabel from '../components/ui/SectionLabel'
 
-const VALORES = [
-  { icon:'verified',  title:'Calidad',       desc:'Procesos certificados y mejora continua en cada programa formativo.' },
-  { icon:'handshake', title:'Compromiso',     desc:'Con nuestros alumnos, empresas y el desarrollo de la región.' },
-  { icon:'groups',    title:'Comunidad',      desc:'Construimos redes entre profesionales y empresas del sector.' },
-  { icon:'lightbulb', title:'Innovación',     desc:'Metodologías actualizadas y plataformas e-learning modernas.' },
-  { icon:'gavel',     title:'Ética',          desc:'Transparencia y honestidad en cada interacción.' },
-  { icon:'bolt',      title:'Excelencia',     desc:'Nos exigimos el más alto estándar en docencia y servicio.' },
+const MODALIDADES = [
+  { icon:'place',    title:'Presencial',  desc:'Interacción directa entre instructor y participantes en las instalaciones de CETMED o del cliente.' },
+  { icon:'computer', title:'E-Learning',  desc:'Formación vía internet con contenido multimedia: texto, audio, video e imágenes, en modalidad sincrónica.' },
+  { icon:'sync_alt', title:'B-Learning',  desc:'Modalidad híbrida que combina sesiones presenciales con recursos digitales para mayor flexibilidad.' },
+  { icon:'business', title:'A Distancia', desc:'Aprendizaje autodirigido mediante materiales escritos y digitales, sin presencia directa del instructor.' },
 ]
 
-const MODALIDADES = [
-  { icon:'place',    title:'Presencial',       desc:'Clases en nuestras instalaciones con instructores expertos.' },
-  { icon:'computer', title:'E-Learning',       desc:'100% online, a tu ritmo, con plataforma interactiva.' },
-  { icon:'sync_alt', title:'Blended',          desc:'Combinación de clases presenciales y contenido online.' },
-  { icon:'business', title:'In Company',       desc:'Formación en las instalaciones de tu empresa, personalizada.' },
+const VALORES = [
+  { icon:'verified',  title:'Calidad',       desc:'Procesos certificados y mejora continua en cada programa formativo según NCh 2728:2015.' },
+  { icon:'handshake', title:'Compromiso',     desc:'Con nuestros alumnos, empresas y el desarrollo de la región de Coquimbo.' },
+  { icon:'groups',    title:'Comunidad',      desc:'Construimos redes entre profesionales y empresas del sector productivo.' },
+  { icon:'lightbulb', title:'Innovación',     desc:'Metodologías actualizadas y plataformas e-learning modernas.' },
+  { icon:'gavel',     title:'Ética',          desc:'Transparencia y honestidad en cada interacción con nuestros usuarios.' },
+  { icon:'bolt',      title:'Excelencia',     desc:'Nos exigimos el más alto estándar en docencia y servicio.' },
 ]
 
 export default function Nosotros() {
@@ -28,58 +28,54 @@ export default function Nosotros() {
           </SectionLabel>
           <h1 className="text-4xl sm:text-5xl font-black mt-2">Sobre CETMED</h1>
           <p className="text-white/70 mt-3 max-w-xl mx-auto">
-            Centro de Capacitación y Entrenamiento con más de 15 años formando profesionales en la Región de Coquimbo.
+            Centro de Capacitación y Formación complementaria certificado por SENCE en la Región de Coquimbo.
           </p>
         </div>
       </section>
 
-      {/* Misión / Visión */}
+      {/* Quiénes somos */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <div className="p-8 rounded-2xl border-2 border-[var(--primary)] bg-[var(--primary)]/5" data-reveal="left">
-              <div className="w-12 h-12 bg-[var(--primary)] rounded-xl flex items-center justify-center mb-5">
-                <span className="material-icons text-white">flag</span>
-              </div>
-              <h2 className="text-2xl font-black text-[var(--primary)] mb-3">Nuestra Misión</h2>
-              <p className="text-[var(--text-body)] leading-relaxed">
-                Desarrollar competencias laborales y profesionales en personas y organizaciones, a través de programas de capacitación de alta calidad, contribuyendo al crecimiento económico y social de la Región de Coquimbo y el país.
-              </p>
-            </div>
-            <div className="p-8 rounded-2xl border-2 border-[var(--accent)] bg-[var(--accent)]/5" data-reveal="right">
-              <div className="w-12 h-12 bg-[var(--accent)] rounded-xl flex items-center justify-center mb-5">
-                <span className="material-icons text-[var(--primary-dark)]">visibility</span>
-              </div>
-              <h2 className="text-2xl font-black text-[var(--primary-dark)] mb-3">Nuestra Visión</h2>
-              <p className="text-[var(--text-body)] leading-relaxed">
-                Ser el centro de capacitación de referencia en la Región de Coquimbo, reconocido por la excelencia de sus programas, la calidad de sus instructores y el impacto positivo en el desarrollo profesional de la comunidad.
-              </p>
-            </div>
-          </div>
-
-          {/* About content */}
           <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
             <div data-reveal="left">
-              <SectionLabel>Nuestra historia</SectionLabel>
+              <SectionLabel>Nuestra identidad</SectionLabel>
               <h2 className="text-3xl font-black text-[var(--text-dark)] mb-4">
-                Más de 15 años formando al Chile que trabaja
+                CETMED Capacitaciones
               </h2>
-              <p className="text-[var(--text-body)] leading-relaxed mb-4">
-                CETMED nació en Coquimbo con la convicción de que la capacitación de calidad debe estar al alcance de todos. Comenzamos con un pequeño equipo y hoy somos un OTEC certificado por SENCE con presencia en toda la región.
-              </p>
-              <p className="text-[var(--text-body)] leading-relaxed mb-6">
-                Hemos capacitado a más de 2.800 profesionales en áreas críticas como Prevención de Riesgos, Construcción, Salud Ocupacional, Electricidad y Administración. Nuestros programas están diseñados junto a la industria para garantizar relevancia y aplicabilidad inmediata.
+              <p className="text-[var(--text-body)] leading-relaxed mb-6 text-lg">
+                Somos un OTEC que ejecuta Capacitación y Formación complementaria dirigido a Personas Naturales, Trabajadores, Profesionales, Empresas Públicas o Privadas, con el más alto Nivel de Calidad posible según la Norma Chilena 2728:2015, SENCE y demás requisitos Legales aplicables.
               </p>
               <div className="flex flex-wrap gap-3">
-                {['OTEC SENCE','Norma NCh 2728','Cámara Chilena de la Construcción'].map(c => (
+                {['OTEC SENCE','Norma NCh 2728:2015','Cámara Chilena de la Construcción'].map(c => (
                   <span key={c} className="tag text-sm px-3 py-1">{c}</span>
                 ))}
               </div>
             </div>
             <div data-reveal="right">
-              <img src="https://placehold.co/580x420/1a5fa8/ffffff?text=CETMED+Coquimbo"
-                alt="CETMED instalaciones" className="rounded-2xl w-full shadow-lift" />
+              <img
+                src="https://cetmed.cl/wp-content/uploads/2025/12/PORTAFOLIO-DE-SERVICIOS-DE-CAPACITACION2.png"
+                alt="CETMED Portafolio de Servicios"
+                className="rounded-2xl w-full shadow-lift"
+              />
             </div>
+          </div>
+
+          {/* Certificaciones */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-20">
+            {[
+              { img:'https://cetmed.cl/wp-content/uploads/2025/02/Logo_Sence_Blanco.png',   bg:'bg-[var(--primary)]',      label:'SENCE',                             desc:'Organismo Técnico de Capacitación certificado por el Servicio Nacional de Capacitación y Empleo.' },
+              { img:'https://cetmed.cl/wp-content/uploads/2025/02/certificacion_nch2-pequeno.png.webp', bg:'bg-white border border-[var(--border)]', label:'NCh 2728:2015', desc:'Certificados bajo la Norma Chilena de Calidad para Organismos Técnicos de Capacitación.' },
+              { img:'https://cetmed.cl/wp-content/uploads/2025/02/LogoChC_footerweb-1024x276.png', bg:'bg-white border border-[var(--border)]', label:'Cámara ChC', desc:'Miembros activos de la Cámara Chilena de la Construcción.' },
+              { img:'https://cetmed.cl/wp-content/uploads/2025/02/banderas.png',             bg:'bg-white border border-[var(--border)]', label:'Internacional',         desc:'Certificaciones con validez y reconocimiento a nivel nacional e internacional.' },
+            ].map((c, i) => (
+              <div key={i} className={`p-6 rounded-2xl ${c.bg} flex flex-col items-center text-center gap-3`} data-reveal data-delay={String(i+1)}>
+                <img src={c.img} alt={c.label} className="h-12 w-auto object-contain" />
+                <div>
+                  <h4 className="font-bold text-sm mb-1" style={{ color: c.bg.includes('primary') ? 'white' : 'var(--text-dark)' }}>{c.label}</h4>
+                  <p className="text-xs leading-relaxed" style={{ color: c.bg.includes('primary') ? 'rgba(255,255,255,0.75)' : 'var(--text-muted)' }}>{c.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Modalidades */}
@@ -130,7 +126,7 @@ export default function Nosotros() {
       <section className="py-16 bg-[var(--primary)]">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-black text-white mb-4">¿Quieres capacitar a tu equipo?</h2>
-          <p className="text-white/70 mb-6">Diseñamos programas a medida para empresas e instituciones.</p>
+          <p className="text-white/70 mb-6">Diseñamos programas a medida para empresas e instituciones. Con franquicia SENCE disponible.</p>
           <Link to="/contacto" className="btn-primary text-base px-8 py-3">
             Hablar con un asesor
             <span className="material-icons text-sm">arrow_forward</span>
