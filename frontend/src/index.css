@@ -242,12 +242,17 @@ img, video, svg { display: block; max-width: 100%; }
 }
 
 /* ── Stats strip ─────────────────────────── */
-.stats-strip { background: var(--primary); }
-.stat-item { text-align: center; padding: 1.75rem 1rem; position: relative; }
+.stats-strip {
+  background: var(--primary);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+.stat-item { text-align: center; padding: 2.5rem 1rem; position: relative; }
 .stat-item:not(:last-child)::after {
   content: '';
   position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-  height: 40px; width: 1px;
+  height: 60px; width: 1px;
   background: rgba(255,255,255,0.2);
 }
 

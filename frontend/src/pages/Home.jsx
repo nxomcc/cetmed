@@ -100,7 +100,7 @@ export default function Home() {
       <section className="hero">
         <div className="max-w-7xl mx-auto px-4 py-24 relative z-10 w-full">
           <div className="max-w-2xl">
-            <div className="section-label text-white/80 mb-4" data-reveal>
+            <div className="section-label text-white mb-4" data-reveal>
               OTEC Certificado SENCE · Coquimbo, Chile
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6" data-reveal data-delay="1">
@@ -122,7 +122,7 @@ export default function Home() {
 
             {/* Trust pills */}
             <div className="flex flex-wrap gap-3 mt-10" data-reveal data-delay="4">
-              {['✓ Certificado SENCE','✓ Franquicia tributaria','✓ Clases presenciales y online'].map(t => (
+              {['✓ Certificado SENCE','✓ Clases presenciales y online'].map(t => (
                 <span key={t} className="bg-white/10 backdrop-blur text-white/90 text-sm px-3 py-1.5 rounded-full border border-white/20">
                   {t}
                 </span>
