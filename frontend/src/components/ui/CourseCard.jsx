@@ -47,7 +47,7 @@ export default function CourseCard({ curso, onCartOpen }) {
           </span>
         )}
         {a?.franquicia_sence && (
-          <span className="absolute top-3 right-3 tag font-bold" style={{ background:'#fff', color:'#000', border:'1.5px solid var(--accent)' }}>SENCE</span>
+          <span className="absolute top-3 right-3 tag font-bold" style={{ background:'#fff', color:'var(--primary)', border:'1.5px solid var(--accent)' }}>SENCE</span>
         )}
       </div>
 
