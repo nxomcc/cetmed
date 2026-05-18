@@ -233,7 +233,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {cursos.slice(0,6).map((c,i) => (
-              <div key={c.id} data-reveal data-delay={String(i%3+1)}>
+              <div key={c.id} className="h-full" data-reveal data-delay={String(i%3+1)}>
                 <CourseCard curso={c} />
               </div>
             ))}
@@ -297,7 +297,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {noticias.slice(0,3).map((n,i) => (
-              <div key={n.id} data-reveal data-delay={String(i+1)}>
+              <div key={n.id} className="h-full" data-reveal data-delay={String(i+1)}>
                 <BlogCard noticia={n} />
               </div>
             ))}
