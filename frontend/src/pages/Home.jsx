@@ -98,7 +98,7 @@ export default function Home() {
     <>
       {/* ── Hero + Stats: juntos forman 100vh ─────── */}
       <div className="flex flex-col" style={{ minHeight: '100vh' }}>
-      <section className="hero" style={{ flex: 1 }}>
+      <section className="hero">
         <div className="max-w-7xl mx-auto px-4 py-24 relative z-10 w-full">
           <div className="max-w-2xl">
             <div className="section-label text-white mb-4" data-reveal>
