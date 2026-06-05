@@ -40,6 +40,7 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "cursos"
     },
-    "activo": { "type": "boolean", "default": true }
+    "activo": { "type": "boolean", "default": true },
+    "vistas": { "type": "integer", "default": 0 }
   }
 }

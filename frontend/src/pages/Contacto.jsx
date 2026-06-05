@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import SectionLabel from '../components/ui/SectionLabel'
 
 const FAQS = [
@@ -11,17 +11,75 @@ const FAQS = [
 
 export default function Contacto() {
   const [openFaq, setOpenFaq] = useState(null)
-  const [form, setForm] = useState({ nombre:'', rut:'', email:'', telefono:'', empresa:'', tipo:'persona', area:'', mensaje:'' })
-  const [sent, setSent] = useState(false)
+  const [form, setForm] = useState({
+    nombre:'', rut:'', email:'', telefono:'', empresa:'',
+    tipo:'persona', categoria_slug:'', curso_id:'', mensaje:'',
+  })
+  const [sent, setSent]           = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError]         = useState('')
+  const [categorias, setCategorias] = useState([])
+  const [cursos, setCursos]       = useState([])
+
+  useEffect(() => {
+    fetch('/api/categorias?pagination[pageSize]=100&sort=nombre:asc')
+      .then(r => r.json())
+      .then(d => setCategorias(d.data || []))
+      .catch(() => {})
+
+    fetch('/api/cursos?pagination[pageSize]=200')
+      .then(r => r.json())
+      .then(d => setCursos(d.data || []))
+      .catch(() => {})
+  }, [])
+
+  const cursosFiltered = useMemo(() => {
+    if (!form.categoria_slug) return cursos
+    return cursos.filter(c => {
+      const cat = c.attributes?.categoria?.data?.attributes
+      return cat?.slug === form.categoria_slug
+    })
+  }, [cursos, form.categoria_slug])
 
   function handleChange(e) {
-    setForm(p => ({ ...p, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setForm(p => {
+      const next = { ...p, [name]: value }
+      // reset course when category changes
+      if (name === 'categoria_slug') next.curso_id = ''
+      return next
+    })
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    // TODO: connect to backend/email service
-    setSent(true)
+    setSubmitting(true)
+    setError('')
+    try {
+      // Resolve area from selected category name
+      const catName = categorias.find(c => c.attributes?.slug === form.categoria_slug)?.attributes?.nombre || ''
+      const res = await fetch('/api/contacto-leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: {
+          nombre:   form.nombre,
+          email:    form.email,
+          telefono: form.telefono,
+          mensaje:  form.mensaje,
+          rut:      form.rut,
+          empresa:  form.empresa,
+          tipo:     form.tipo,
+          area:     catName || form.categoria_slug || null,
+          curso_id: form.curso_id ? Number(form.curso_id) : null,
+        }}),
+      })
+      if (!res.ok) throw new Error('Error al enviar')
+      setSent(true)
+    } catch {
+      setError('No se pudo enviar el mensaje. Intentá de nuevo o contactanos directamente.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -42,10 +100,10 @@ export default function Contacto() {
             {/* Info */}
             <div className="space-y-6">
               {[
-                { icon:'location_on',  title:'Dirección',    content:'Av. Videla 810 – Oficina 208-209, Edificio Verne, Coquimbo, Chile' },
+                { icon:'location_on',  title:'Dirección',    content:'Coquimbo, Región de Coquimbo, Chile' },
                 { icon:'phone',        title:'Teléfono',     content:'+56 9 2778 1966', href:'tel:+56927781966' },
                 { icon:'email',        title:'Email',        content:'contacto@cetmed.cl', href:'mailto:contacto@cetmed.cl' },
-                { icon:'access_time',  title:'Horario',      content:'Lun–Jue 09:00–13:30 / Vie 09:00–13:00' },
+                { icon:'access_time',  title:'Horario',      content:'Lun–Vie 09:00–18:00' },
               ].map(d => (
                 <div key={d.title} className="flex gap-4 p-5 bg-[var(--bg-light)] rounded-xl border border-[var(--border)]" data-reveal>
                   <div className="w-11 h-11 bg-[var(--primary)] rounded-xl flex items-center justify-center shrink-0">
@@ -60,18 +118,11 @@ export default function Contacto() {
                 </div>
               ))}
 
-              {/* Map embed */}
-              <div className="rounded-xl overflow-hidden border border-[var(--border)] aspect-video" data-reveal>
-                <iframe
-                  title="CETMED ubicación"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3385.6!2d-71.3396!3d-29.9533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9691ce9b8f5e4b0b%3A0x1!2sAv.%20Videla%20810%2C%20Coquimbo!5e0!3m2!1ses!2scl!4v1"
-                  width="100%"
-                  height="100%"
-                  style={{ border:0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
+              <div className="rounded-xl overflow-hidden border border-[var(--border)] aspect-video bg-[var(--bg-light)] flex items-center justify-center" data-reveal>
+                <div className="text-center text-[var(--text-muted)]">
+                  <span className="material-icons text-4xl mb-2 block">map</span>
+                  <p className="text-sm">Coquimbo, Chile</p>
+                </div>
               </div>
             </div>
 
@@ -85,7 +136,7 @@ export default function Contacto() {
                     <span className="material-icons text-5xl text-green-500 mb-3 block">check_circle</span>
                     <h3 className="text-xl font-bold mb-2">¡Mensaje enviado!</h3>
                     <p className="text-[var(--text-muted)]">Te responderemos a la brevedad.</p>
-                    <button onClick={() => setSent(false)} className="btn-ghost mt-5">
+                    <button onClick={() => { setSent(false); setForm(p => ({ ...p, nombre:'', email:'', mensaje:'', rut:'', telefono:'', empresa:'', categoria_slug:'', curso_id:'' })) }} className="btn-ghost mt-5">
                       Enviar otro mensaje
                     </button>
                   </div>
@@ -132,12 +183,31 @@ export default function Contacto() {
                             className="form-control" placeholder="Nombre de la empresa" />
                         </div>
                       )}
-                      <div className="sm:col-span-2">
-                        <label className="block text-sm font-semibold text-[var(--text-dark)] mb-1.5">Área de interés</label>
-                        <select name="area" value={form.area} onChange={handleChange} className="form-control">
-                          <option value="">Selecciona un área...</option>
-                          {['Administración','Alimentación, Gastronomía y Turismo','Artes, Artesanías y Gráficas','Ciencias y Técnicas Aplicadas','Computación e Informática','Construcción','Ecología','Educación y Capacitación','Electricidad y Electrónica','Idiomas y Comunicación','Mecánica Industrial','Minería','Procesos Industriales','Salud Nutrición y Dietética','Servicio a las Personas','Otro'].map(a => (
-                            <option key={a}>{a}</option>
+
+                      {/* Área de interés */}
+                      <div>
+                        <label className="block text-sm font-semibold text-[var(--text-dark)] mb-1.5">
+                          <span className="material-icons text-[14px] align-middle mr-1 text-[var(--primary)]">category</span>
+                          Área de interés
+                        </label>
+                        <select name="categoria_slug" value={form.categoria_slug} onChange={handleChange} className="form-control">
+                          <option value="">Todas las áreas...</option>
+                          {categorias.map(c => (
+                            <option key={c.id} value={c.attributes.slug}>{c.attributes.nombre}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Curso específico */}
+                      <div>
+                        <label className="block text-sm font-semibold text-[var(--text-dark)] mb-1.5">
+                          <span className="material-icons text-[14px] align-middle mr-1 text-[var(--primary)]">school</span>
+                          Curso de interés
+                        </label>
+                        <select name="curso_id" value={form.curso_id} onChange={handleChange} className="form-control">
+                          <option value="">Selecciona un curso...</option>
+                          {cursosFiltered.map(c => (
+                            <option key={c.id} value={c.id}>{c.attributes.titulo}</option>
                           ))}
                         </select>
                       </div>
@@ -149,9 +219,14 @@ export default function Contacto() {
                         className="form-control resize-none" placeholder="¿En qué podemos ayudarte?" />
                     </div>
 
-                    <button type="submit" className="btn-primary w-full justify-center text-base py-3">
-                      <span className="material-icons">send</span>
-                      Enviar mensaje
+                    {error && (
+                      <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                        {error}
+                      </div>
+                    )}
+                    <button type="submit" disabled={submitting} className="btn-primary w-full justify-center text-base py-3 disabled:opacity-60">
+                      <span className="material-icons">{submitting ? 'refresh' : 'send'}</span>
+                      {submitting ? 'Enviando...' : 'Enviar mensaje'}
                     </button>
                   </form>
                 )}

@@ -22,7 +22,7 @@ export default function Topbar() {
             OTEC SENCE
           </span>
           <span className="opacity-40">|</span>
-          <a href="https://cursos.cetmed.cl/login/index.php" target="_blank" rel="noopener noreferrer"
+          <a href="https://cursos.cetmed.cl/login/" target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-1 font-semibold text-white/90 hover:text-white transition-colors">
             <span className="material-icons text-sm">computer</span>
             Aula Virtual

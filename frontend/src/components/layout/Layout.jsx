@@ -33,24 +33,55 @@ export default function Layout() {
   // Scroll reveal
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); observer.unobserve(e.target) } }),
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed')
+          observer.unobserve(e.target)
+        }
+      }),
       { threshold: 0.12 }
     )
-    const init = () => {
-      document.querySelectorAll('[data-reveal]').forEach(el => {
-        const rect = el.getBoundingClientRect()
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          el.style.transition = 'none'
-          el.classList.add('revealed')
-          requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = '' }))
-        } else {
-          observer.observe(el)
-        }
-      })
+
+    const revealElement = el => {
+      if (el.classList.contains('revealed')) return
+      const rect = el.getBoundingClientRect()
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.style.transition = 'none'
+        el.classList.add('revealed')
+        requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = '' }))
+      } else {
+        observer.observe(el)
+      }
     }
-    // small delay so page content renders
+
+    const init = () => {
+      document.querySelectorAll('[data-reveal]').forEach(revealElement)
+    }
+
+    // Small delay for initial render
     const t = setTimeout(init, 50)
-    return () => { clearTimeout(t); observer.disconnect() }
+
+    // Observe DOM changes to dynamically reveal late-loading elements (e.g. after API fetches)
+    const mutationObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.hasAttribute('data-reveal')) {
+              revealElement(node)
+            }
+            node.querySelectorAll('[data-reveal]').forEach(revealElement)
+          }
+        })
+      })
+    })
+
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
+
+    return () => {
+      clearTimeout(t)
+      observer.disconnect()
+      mutationObserver.disconnect()
+    }
   }, [pathname])
 
   return (

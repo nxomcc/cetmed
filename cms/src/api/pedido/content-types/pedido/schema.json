@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pedidos",
+  "info": {
+    "singularName": "pedido",
+    "pluralName": "pedidos",
+    "displayName": "Pedido"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "nombre_cliente": { "type": "string", "required": true },
+    "email_cliente": { "type": "email", "required": true },
+    "telefono_cliente": { "type": "string" },
+    "items": { "type": "json", "required": true },
+    "subtotal": { "type": "decimal", "required": true },
+    "descuento_monto": { "type": "decimal", "default": 0 },
+    "total": { "type": "decimal", "required": true },
+    "codigo_descuento": { "type": "string" },
+    "estado": {
+      "type": "enumeration",
+      "enum": ["pendiente", "completado", "fallido", "reembolsado"],
+      "default": "pendiente"
+    },
+    "payment_id": { "type": "string" },
+    "notas": { "type": "text" }
+  }
+}

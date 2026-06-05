@@ -46,7 +46,7 @@ export default function Nosotros() {
                 Somos un OTEC que ejecuta Capacitación y Formación complementaria dirigido a Personas Naturales, Trabajadores, Profesionales, Empresas Públicas o Privadas, con el más alto Nivel de Calidad posible según la Norma Chilena 2728:2015, SENCE y demás requisitos Legales aplicables.
               </p>
               <div className="flex flex-wrap gap-3">
-                {['OTEC SENCE','Norma NCh 2728:2015','Cámara Chilena de la Construcción'].map(c => (
+                {['OTEC SENCE','Norma NCh 2728:2015'].map(c => (
                   <span key={c} className="tag text-sm px-3 py-1">{c}</span>
                 ))}
               </div>
@@ -61,11 +61,10 @@ export default function Nosotros() {
           </div>
 
           {/* Certificaciones */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-20">
+          <div className="grid sm:grid-cols-3 gap-5 mb-20">
             {[
               { img:'https://cetmed.cl/wp-content/uploads/2025/02/Logo_Sence_Blanco.png',   bg:'bg-[var(--primary)]',      label:'SENCE',                             desc:'Organismo Técnico de Capacitación certificado por el Servicio Nacional de Capacitación y Empleo.' },
               { img:'https://cetmed.cl/wp-content/uploads/2025/02/certificacion_nch2-pequeno.png.webp', bg:'bg-white border border-[var(--border)]', label:'NCh 2728:2015', desc:'Certificados bajo la Norma Chilena de Calidad para Organismos Técnicos de Capacitación.' },
-              { img:'https://cetmed.cl/wp-content/uploads/2025/02/LogoChC_footerweb-1024x276.png', bg:'bg-white border border-[var(--border)]', label:'Cámara ChC', desc:'Miembros activos de la Cámara Chilena de la Construcción.' },
               { img:'https://cetmed.cl/wp-content/uploads/2025/02/banderas.png',             bg:'bg-white border border-[var(--border)]', label:'Internacional',         desc:'Certificaciones con validez y reconocimiento a nivel nacional e internacional.' },
             ].map((c, i) => (
               <div key={i} className={`p-6 rounded-2xl ${c.bg} flex flex-col items-center text-center gap-3`} data-reveal data-delay={String(i+1)}>

@@ -68,12 +68,6 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <a href="https://cursos.cetmed.cl/login/index.php" target="_blank" rel="noopener noreferrer"
-                  className="text-white/70 hover:text-[var(--accent)] text-sm transition-colors flex items-center gap-1.5">
-                  <span className="material-icons text-xs">chevron_right</span>Aula Virtual
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -121,8 +115,6 @@ export default function Footer() {
                 <img src="https://cetmed.cl/wp-content/uploads/2025/02/certificacion_nch2-pequeno.png.webp"
                   alt="NCh 2728" className="h-8 w-auto object-contain" />
               </div>
-              <img src="https://cetmed.cl/wp-content/uploads/2025/02/LogoChC_footerweb-1024x276.png"
-                alt="Cámara Chilena de la Construcción" className="h-6 w-auto object-contain" />
               <img src="https://cetmed.cl/wp-content/uploads/2025/02/banderas.png"
                 alt="Certificaciones internacionales" className="h-6 w-auto object-contain" />
               <img src="https://cetmed.cl/wp-content/uploads/2025/10/3-cuotas-precio-contado-1.png"
@@ -134,8 +126,9 @@ export default function Footer() {
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-white/40">
           <p>© {new Date().getFullYear()} CETMED Capacitaciones. Todos los derechos reservados.</p>
           <div className="flex gap-4">
-            <Link to="#" className="hover:text-white/70 transition-colors">Términos y Condiciones</Link>
-            <Link to="#" className="hover:text-white/70 transition-colors">Política de Privacidad</Link>
+            <Link to="/terminos-y-condiciones" className="hover:text-white/70 transition-colors">Términos y Condiciones</Link>
+            <Link to="/politica-de-privacidad" className="hover:text-white/70 transition-colors">Política de Privacidad</Link>
+            <Link to="/politicas-de-mantenimiento" className="hover:text-white/70 transition-colors">Políticas de Mantenimiento</Link>
           </div>
         </div>
       </div>

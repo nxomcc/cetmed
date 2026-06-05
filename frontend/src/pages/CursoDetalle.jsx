@@ -1,32 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { getCurso } from '../services/api'
+import { getCurso, registerCursoView } from '../services/api'
 import useCart from '../hooks/useCart'
 import SectionLabel from '../components/ui/SectionLabel'
-
-const MOCK = {
-  id: 1,
-  attributes: {
-    titulo: 'Prevención de Riesgos en Obra',
-    precio: 120000,
-    modalidad: 'Presencial',
-    horas: 40,
-    slug: 'prevencion-riesgos-obra',
-    franquicia_sence: true,
-    descripcion: 'Este programa forma profesionales capaces de identificar, evaluar y controlar los riesgos laborales presentes en obras de construcción. Con énfasis en normativa chilena y aplicación práctica.',
-    objetivo: 'Al finalizar el curso, el participante será capaz de aplicar las principales herramientas de gestión de riesgos en faenas de construcción, cumpliendo con la normativa vigente.',
-    contenidos: [
-      'Marco legal: Ley 16.744 y DS N°40',
-      'Identificación y evaluación de riesgos',
-      'Uso correcto de EPP',
-      'Planes de emergencia y evacuación',
-      'Investigación de accidentes',
-      'Auditorías de seguridad en obra',
-    ],
-    imagen: { data: null },
-    categoria: { data: { attributes: { nombre: 'Prevención de Riesgos' } } },
-  }
-}
 
 function fmt(n) {
   return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(n)
@@ -41,8 +17,8 @@ export default function CursoDetalle() {
   useEffect(() => {
     setLoading(true)
     getCurso(slug)
-      .then(d => setCurso(d || MOCK))
-      .catch(() => setCurso(MOCK))
+      .then(d => { setCurso(d || null); if (d?.id) registerCursoView(d.id) })
+      .catch(() => setCurso(null))
       .finally(() => setLoading(false))
   }, [slug])
 

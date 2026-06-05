@@ -61,10 +61,28 @@ export async function createPaymentIntent(items) {
   return res.json()
 }
 
+/* ── View tracking ─────────────────────────────────── */
+export async function registerCursoView(id) {
+  try { await fetch(`${BASE}/cursos/${id}/view`, { method: 'POST' }) } catch {}
+}
+
+export async function registerNoticiaView(id) {
+  try { await fetch(`${BASE}/noticias/${id}/view`, { method: 'POST' }) } catch {}
+}
+
+/* ── Descuento ──────────────────────────────────────── */
+export async function validarDescuento(codigo, subtotal) {
+  const res = await fetch(`${BASE}/descuentos/validar`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ codigo, subtotal }),
+  })
+  if (!res.ok) throw new Error('Error validando descuento')
+  return res.json()
+}
+
 /* ── Helpers ────────────────────────────────────────── */
 export function imgUrl(media) {
   if (!media?.data) return null
-  const url = media.data.attributes?.url
-  if (!url) return null
-  return url.startsWith('http') ? url : `http://localhost:1337${url}`
+  return media.data.attributes?.url || null
 }

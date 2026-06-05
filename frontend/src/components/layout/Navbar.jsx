@@ -44,11 +44,6 @@ export default function Navbar({ onCartOpen }) {
                 {label}
               </NavLink>
             ))}
-            <a href="https://cursos.cetmed.cl/login/index.php" target="_blank" rel="noopener noreferrer"
-              className="nav-link flex items-center gap-1">
-              <span className="material-icons text-sm">computer</span>
-              Aula Virtual
-            </a>
           </div>
 
           {/* Actions */}
@@ -102,11 +97,6 @@ export default function Navbar({ onCartOpen }) {
         </nav>
 
         <div className="mt-auto pt-6 space-y-3">
-          <a href="https://aulavirtual.cetmed.cl" target="_blank" rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg border-2 border-white/30 text-white font-semibold hover:border-white/60 transition-colors">
-            <span className="material-icons text-sm">computer</span>
-            Ingresar al Aula Virtual
-          </a>
           <Link to="/cursos" onClick={() => setMenuOpen(false)}
             className="btn-primary w-full justify-center">
             <span className="material-icons text-sm">school</span>

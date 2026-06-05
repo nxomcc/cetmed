@@ -41,11 +41,6 @@ export default function CourseCard({ curso, onCartOpen }) {
       <div className="relative overflow-hidden aspect-[16/9]">
         <img src={imgSrc} alt={titulo} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        {categoria && (
-          <span className="absolute top-3 left-3 tag bg-[var(--accent)] text-[var(--primary-dark)] font-bold">
-            {categoria}
-          </span>
-        )}
         {a?.franquicia_sence && (
           <span className="absolute top-3 right-3 tag font-bold" style={{ background:'#fff', color:'var(--primary)', border:'1.5px solid var(--accent)' }}>SENCE</span>
         )}
@@ -53,6 +48,12 @@ export default function CourseCard({ curso, onCartOpen }) {
 
       {/* Body */}
       <div className="p-5 flex flex-col flex-1">
+        {categoria && (
+          <span className="tag mb-2 self-start">
+            {categoria}
+          </span>
+        )}
+
         <div className="flex items-center gap-2 mb-2 text-xs text-[var(--text-muted)]">
           <span className="material-icons text-sm">{MODALIDAD_ICON[modalidad] || 'school'}</span>
           {modalidad}

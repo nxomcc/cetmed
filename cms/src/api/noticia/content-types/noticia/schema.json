@@ -19,6 +19,7 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "noticias"
-    }
+    },
+    "vistas": { "type": "integer", "default": 0 }
   }
 }

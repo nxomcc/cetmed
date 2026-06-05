@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { getNoticia } from '../services/api'
+import { getNoticia, registerNoticiaView } from '../services/api'
 
 const MOCK = {
   id: 1,
@@ -27,7 +27,7 @@ export default function NoticiaDetalle() {
   useEffect(() => {
     setLoading(true)
     getNoticia(slug)
-      .then(d => setNoticia(d || MOCK))
+      .then(d => { const n = d || MOCK; setNoticia(n); if (n?.id) registerNoticiaView(n.id) })
       .catch(() => setNoticia(MOCK))
       .finally(() => setLoading(false))
   }, [slug])
