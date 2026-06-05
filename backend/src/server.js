@@ -33,15 +33,18 @@ app.use((err, req, res, _next) => {
 })
 
 const PORT = process.env.PORT || 3001
-
-async function start() {
-  try {
-    await migrate()
-    app.listen(PORT, () => console.log(`[CMS] Backend corriendo en http://localhost:${PORT}`))
-  } catch (err) {
-    console.error('[CMS] Error al iniciar:', err.message)
-    process.exit(1)
+ 
+if (process.env.VERCEL) {
+  module.exports = app
+} else {
+  async function start() {
+    try {
+      await migrate()
+      app.listen(PORT, () => console.log(`[CMS] Backend corriendo en http://localhost:${PORT}`))
+    } catch (err) {
+      console.error('[CMS] Error al iniciar:', err.message)
+      process.exit(1)
+    }
   }
+  start()
 }
-
-start()
