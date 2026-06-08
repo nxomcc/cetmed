@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-// Replace this value on cPanel after deploy. Do not commit real tokens.
-$MAIL_WEBHOOK_TOKEN = 'REPLACE_WITH_MAIL_WEBHOOK_TOKEN';
+$tokenFile = '/home/cetmedcl/.cetmed-mail-token';
+$MAIL_WEBHOOK_TOKEN = is_readable($tokenFile) ? trim((string)file_get_contents($tokenFile)) : '';
 $MAIL_FROM = 'no-reply@cetmed.cl';
 $MAIL_FROM_NAME = 'CETMED Capacitaciones';
 
@@ -15,6 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $providedToken = $_SERVER['HTTP_X_MAIL_TOKEN'] ?? '';
+if ($MAIL_WEBHOOK_TOKEN === '') {
+  http_response_code(500);
+  echo json_encode(['error' => 'Mail token is not configured']);
+  exit;
+}
+
 if (!hash_equals($MAIL_WEBHOOK_TOKEN, $providedToken)) {
   http_response_code(403);
   echo json_encode(['error' => 'Forbidden']);

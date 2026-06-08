@@ -73,19 +73,15 @@ window.__CETMED_CONFIG__ = {
 
 `config.js` queda excluido del `rsync` para no borrar la configuracion local del servidor.
 
-Crear/editar tambien:
+Crear el token privado del webhook en el home de cPanel, fuera del document root:
 
-```text
-/home/cetmedcl/new.cetmed.cl/mail/send.php
+```bash
+printf '%s' 'TOKEN_LARGO_SEGURO' > /home/cetmedcl/.cetmed-mail-token
+chmod 600 /home/cetmedcl/.cetmed-mail-token
 ```
 
-Reemplazar:
-
-```php
-$MAIL_WEBHOOK_TOKEN = 'REPLACE_WITH_MAIL_WEBHOOK_TOKEN';
-```
-
-por el mismo token configurado en `MAIL_WEBHOOK_TOKEN`.
+Ese token debe ser el mismo valor configurado en `MAIL_WEBHOOK_TOKEN`.
+El archivo `/home/cetmedcl/new.cetmed.cl/mail/send.php` se publica desde Git y no debe editarse a mano.
 
 ## 4. Compra de prueba
 

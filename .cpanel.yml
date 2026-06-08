@@ -7,9 +7,6 @@ deployment:
     - /bin/mkdir -p $FRONTEND_PUBLIC_PATH
     - /bin/mkdir -p /home/cetmedcl/.cetmed-deploy-backup
     - /bin/cp -f $FRONTEND_PUBLIC_PATH/config.js /home/cetmedcl/.cetmed-deploy-backup/config.js 2>/dev/null || true
-    - /bin/cp -f $FRONTEND_PUBLIC_PATH/mail/send.php /home/cetmedcl/.cetmed-deploy-backup/send.php 2>/dev/null || true
     - /bin/find $FRONTEND_PUBLIC_PATH -mindepth 1 -exec /bin/rm -rf {} +
     - /bin/cp -a $REPO_PATH/frontend/dist/. $FRONTEND_PUBLIC_PATH/
     - /bin/cp -f /home/cetmedcl/.cetmed-deploy-backup/config.js $FRONTEND_PUBLIC_PATH/config.js 2>/dev/null || true
-    - /bin/mkdir -p $FRONTEND_PUBLIC_PATH/mail
-    - /bin/cp -f /home/cetmedcl/.cetmed-deploy-backup/send.php $FRONTEND_PUBLIC_PATH/mail/send.php 2>/dev/null || true
