@@ -1,0 +1,2 @@
+ALTER TABLE public.pedidos
+ADD COLUMN IF NOT EXISTS mail_sent_at TIMESTAMPTZ;

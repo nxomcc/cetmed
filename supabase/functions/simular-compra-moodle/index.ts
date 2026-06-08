@@ -50,6 +50,12 @@ Deno.serve(async (req) => {
     if (orderError) throw orderError
     const enrollment = await enrollOrderCourses(sb, order)
     const mail = await sendEnrollmentEmails(order, enrollment).catch((mailError) => ({ error: mailError.message }))
+    if (!mail?.error) {
+      await sb
+        .from('pedidos')
+        .update({ mail_sent_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+        .eq('id', order.id)
+    }
     return json(req, { orderId: order.id, status: order.estado, enrollment, mail }, 201)
   } catch (error) {
     return json(req, { error: error.message || 'Error al simular compra' }, 500)

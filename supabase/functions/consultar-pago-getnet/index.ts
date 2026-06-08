@@ -16,6 +16,24 @@ Deno.serve(async (req) => {
     const { data: order, error: orderError } = await sb.from('pedidos').select('*').eq('id', orderId).maybeSingle()
     if (orderError) throw orderError
     if (!order) return json(req, { error: 'Pedido no encontrado' }, 404)
+    if (order.estado === 'completado') {
+      let enrollment = null
+      let mail = null
+
+      if (!order.mail_sent_at) {
+        enrollment = await enrollOrderCourses(sb, order)
+        mail = await sendEnrollmentEmails(order, enrollment).catch((mailError) => ({ error: mailError.message }))
+
+        if (!mail?.error) {
+          await sb
+            .from('pedidos')
+            .update({ mail_sent_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+            .eq('id', order.id)
+        }
+      }
+
+      return json(req, { status: order.estado, enrollment, mail, mailSentAt: order.mail_sent_at })
+    }
     if (order.estado !== 'pendiente') return json(req, { status: order.estado })
     if (!order.payment_id) return json(req, { error: 'Pedido sin transaccion Getnet' }, 400)
 
@@ -39,6 +57,12 @@ Deno.serve(async (req) => {
       await sb.from('pedidos').update({ estado: finalState, updated_at: new Date().toISOString() }).eq('id', order.id)
       enrollment = await enrollOrderCourses(sb, order)
       mail = await sendEnrollmentEmails(order, enrollment).catch((mailError) => ({ error: mailError.message }))
+      if (!mail?.error) {
+        await sb
+          .from('pedidos')
+          .update({ mail_sent_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+          .eq('id', order.id)
+      }
     } else if (getnetStatus === 'REJECTED') {
       finalState = 'rechazado'
       await sb.from('pedidos').update({ estado: finalState, updated_at: new Date().toISOString() }).eq('id', order.id)
