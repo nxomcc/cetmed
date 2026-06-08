@@ -38,6 +38,42 @@ function fmtUser(row) {
   }
 }
 
+function getOrderItems(row) {
+  const items = Array.isArray(row?.items) ? row.items : []
+  return items
+    .map(item => {
+      if (typeof item === 'number') return { id: item }
+      if (typeof item === 'string') return { id: Number(item) }
+      return { ...item, id: Number(item?.id || item?.curso_id || item?.courseId) }
+    })
+    .filter(item => Number.isFinite(item.id) && item.id > 0)
+}
+
+function attachOrderCourses(row, coursesById) {
+  const items = getOrderItems(row).map(item => {
+    const course = coursesById.get(item.id)
+    return {
+      ...item,
+      titulo: item.titulo || item.title || course?.titulo || `Curso #${item.id}`,
+      slug: item.slug || course?.slug || null,
+      precio: Number(item.precio ?? item.price ?? course?.precio ?? 0),
+      moodle_course_id: item.moodle_course_id || course?.moodle_course_id || null,
+    }
+  })
+  return { ...row, items }
+}
+
+function monthKey(dateValue) {
+  const date = new Date(dateValue)
+  if (Number.isNaN(date.getTime())) return null
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+}
+
+function monthLabel(key) {
+  const [year, month] = key.split('-').map(Number)
+  return new Date(year, month - 1, 1).toLocaleDateString('es-CL', { month: 'short', year: '2-digit' })
+}
+
 async function requireSession() {
   const { data, error } = await supabase.auth.getSession()
   if (error || !data.session) throw new Error('UNAUTHORIZED')
@@ -290,7 +326,15 @@ export async function deleteDescuento(id) {
 }
 
 export async function getPedidos() {
-  const rows = await selectList('pedidos')
+  await requireSession()
+  const [pedidosResult, cursosResult] = await Promise.all([
+    supabase.from('pedidos').select('*').order('created_at', { ascending: false }).limit(500),
+    supabase.from('cursos').select('id,titulo,slug,precio,moodle_course_id').limit(500),
+  ])
+  if (pedidosResult.error) throw pedidosResult.error
+  if (cursosResult.error) throw cursosResult.error
+  const coursesById = new Map((cursosResult.data || []).map(c => [Number(c.id), c]))
+  const rows = (pedidosResult.data || []).map(row => attachOrderCourses(row, coursesById))
   return { data: rows.map(strapiWrap), meta: { pagination: { total: rows.length } } }
 }
 
@@ -396,12 +440,41 @@ export async function getStats() {
     supabase.from('noticias').select('*', { count: 'exact', head: true }),
     supabase.from('leads').select('*', { count: 'exact', head: true }),
     supabase.from('leads').select('*', { count: 'exact', head: true }).eq('leido', false),
-    supabase.from('pedidos').select('*').order('created_at', { ascending: false }).limit(100),
-    supabase.from('cursos').select('id,titulo,vistas').order('vistas', { ascending: false }).limit(5),
+    supabase.from('pedidos').select('*').order('created_at', { ascending: false }).limit(500),
+    supabase.from('cursos').select('id,titulo,slug,precio,moodle_course_id,vistas').order('vistas', { ascending: false }).limit(500),
   ])
+  if (pedidos.error) throw pedidos.error
+  if (cursos.error) throw cursos.error
 
-  const completed = (pedidos.data || []).filter(p => p.estado === 'completado')
+  const coursesById = new Map((cursos.data || []).map(c => [Number(c.id), c]))
+  const enrichedPedidos = (pedidos.data || []).map(row => attachOrderCourses(row, coursesById))
+  const completed = enrichedPedidos.filter(p => p.estado === 'completado')
   const totalRevenue = completed.reduce((sum, p) => sum + Number(p.total || 0), 0)
+  const revenueByMonth = new Map()
+  const soldByCourse = new Map()
+
+  for (const pedido of completed) {
+    const key = monthKey(pedido.created_at)
+    if (key) revenueByMonth.set(key, (revenueByMonth.get(key) || 0) + Number(pedido.total || 0))
+
+    for (const item of getOrderItems(pedido)) {
+      const course = coursesById.get(item.id)
+      const existing = soldByCourse.get(item.id) || {
+        id: item.id,
+        titulo: item.titulo || item.title || course?.titulo || `Curso #${item.id}`,
+        vendidos: 0,
+        ingresos: 0,
+      }
+      existing.vendidos += 1
+      existing.ingresos += Number(item.precio ?? item.price ?? course?.precio ?? 0)
+      soldByCourse.set(item.id, existing)
+    }
+  }
+
+  const monthlyRevenue = [...revenueByMonth.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .slice(-12)
+    .map(([key, ingresos]) => ({ mes: monthLabel(key), ingresos }))
 
   return {
     totalCursos: totalCursos || 0,
@@ -410,9 +483,10 @@ export async function getStats() {
     unreadLeads: unreadLeads || 0,
     totalRevenue,
     totalOrders: completed.length,
-    monthlyRevenue: [],
-    topCursos: cursos.data || [],
-    recentPedidos: (pedidos.data || []).slice(0, 5).map(p => ({ ...p, createdAt: p.created_at })),
+    monthlyRevenue,
+    topCursos: (cursos.data || []).slice(0, 5),
+    topCursosVendidos: [...soldByCourse.values()].sort((a, b) => b.vendidos - a.vendidos || b.ingresos - a.ingresos).slice(0, 5),
+    recentPedidos: enrichedPedidos.slice(0, 5).map(p => ({ ...p, createdAt: p.created_at })),
   }
 }
 
