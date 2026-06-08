@@ -37,7 +37,7 @@ export default function AdminLogin() {
       navigate(from, { replace: true })
     } catch (err) {
       setError(err.message === 'UNAUTHORIZED' || err.message.includes('Invalid')
-        ? 'Credenciales incorrectas. Revisá tu usuario y contraseña.'
+        ? 'Credenciales incorrectas. Revisa tu email y contraseña.'
         : err.message)
     } finally {
       setLoading(false)
@@ -65,7 +65,7 @@ export default function AdminLogin() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Usuario o email</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
               <input
                 autoFocus
                 value={form.identifier}

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { login as apiLogin, getMe } from '../services/adminApi'
+import { getMe, login as apiLogin, logout as apiLogout } from '../services/adminApi'
+import { supabase } from '../../services/supabaseClient'
 
 const AdminAuthContext = createContext(null)
 
@@ -9,31 +10,48 @@ export function AdminAuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const jwt = sessionStorage.getItem('admin_jwt')
-    if (!jwt) { setLoading(false); return }
+    let active = true
 
-    getMe()
-      .then(me => {
+    async function loadSession() {
+      try {
+        const { data } = await supabase.auth.getSession()
+        if (!data.session) return
+        const me = await getMe()
+        if (!active) return
         setUser(me)
         setRole(me.role?.type)
-      })
-      .catch(() => {
-        sessionStorage.removeItem('admin_jwt')
-      })
-      .finally(() => setLoading(false))
+      } catch {
+        await supabase.auth.signOut()
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    loadSession()
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        setUser(null)
+        setRole(null)
+      }
+    })
+
+    return () => {
+      active = false
+      listener.subscription.unsubscribe()
+    }
   }, [])
 
   const login = useCallback(async (identifier, password) => {
-    const { jwt } = await apiLogin(identifier, password)
-    sessionStorage.setItem('admin_jwt', jwt)
+    await apiLogin(identifier, password)
     const me = await getMe()
     setUser(me)
     setRole(me.role?.type)
     return me
   }, [])
 
-  const logout = useCallback(() => {
-    sessionStorage.removeItem('admin_jwt')
+  const logout = useCallback(async () => {
+    await apiLogout()
     setUser(null)
     setRole(null)
   }, [])

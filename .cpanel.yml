@@ -1,30 +1,7 @@
-# Archivo de despliegue automático de cPanel (.cpanel.yml)
 ---
 deployment:
   tasks:
-    # 1. DEFINIR VARIABLES DE RUTA
-    # Usuario de cPanel
-    - export USERNAME="cetmedcl"
-    - export BACKEND_APP_PATH="/home/$USERNAME/cetmed-backend"
-    - export FRONTEND_PUBLIC_PATH="/home/$USERNAME/new.cetmed.cl"
-
-    # ==========================================
-    # PASO 2: DESPLEGAR EL BACKEND (Node.js)
-    # ==========================================
-    # Creamos el directorio si no existe
-    - /bin/mkdir -p $BACKEND_APP_PATH
-    # Sincronizamos los archivos del backend excluyendo node_modules y el .env local
-    - /bin/rsync -av --delete --exclude='node_modules' --exclude='.env' backend/ $BACKEND_APP_PATH/
-    # Instalamos las dependencias del backend en producción
-    - cd $BACKEND_APP_PATH && npm install --only=production
-    # Creamos la carpeta tmp y tocamos restart.txt para reiniciar la aplicación Node.js
-    - /bin/mkdir -p $BACKEND_APP_PATH/tmp
-    - /bin/touch $BACKEND_APP_PATH/tmp/restart.txt
-
-    # ==========================================
-    # PASO 3: COMPILAR Y DESPLEGAR EL FRONTEND (React)
-    # ==========================================
-    # Instalamos dependencias y compilamos el frontend en la carpeta de clonación temporal
-    - cd $cpanel_root/frontend && npm install && npm run build
-    # Copiamos la carpeta compilada (dist) al directorio público principal (public_html)
-    - /bin/rsync -av $cpanel_root/frontend/dist/ $FRONTEND_PUBLIC_PATH/
+    - export FRONTEND_PUBLIC_PATH="/home/cetmedcl/new.cetmed.cl"
+    - export REPO_PATH="/home/cetmedcl/repositories/cetmed"
+    - /bin/test -d $REPO_PATH/frontend/dist
+    - /bin/rsync -av --delete --exclude='config.js' $REPO_PATH/frontend/dist/ $FRONTEND_PUBLIC_PATH/

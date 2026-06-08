@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import SectionLabel from '../components/ui/SectionLabel'
+import { crearLead, getCategorias, getCursos } from '../services/api'
 
 const FAQS = [
   { q:'¿Qué es la franquicia tributaria SENCE?', a:'La franquicia SENCE permite a las empresas descontar el costo de capacitación de sus impuestos. Todos nuestros cursos certificados la contemplan.' },
@@ -22,13 +23,11 @@ export default function Contacto() {
   const [cursos, setCursos]       = useState([])
 
   useEffect(() => {
-    fetch('/api/categorias?pagination[pageSize]=100&sort=nombre:asc')
-      .then(r => r.json())
+    getCategorias()
       .then(d => setCategorias(d.data || []))
       .catch(() => {})
 
-    fetch('/api/cursos?pagination[pageSize]=200')
-      .then(r => r.json())
+    getCursos({ 'pagination[pageSize]': 200 })
       .then(d => setCursos(d.data || []))
       .catch(() => {})
   }, [])
@@ -58,22 +57,17 @@ export default function Contacto() {
     try {
       // Resolve area from selected category name
       const catName = categorias.find(c => c.attributes?.slug === form.categoria_slug)?.attributes?.nombre || ''
-      const res = await fetch('/api/contacto-leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: {
-          nombre:   form.nombre,
-          email:    form.email,
-          telefono: form.telefono,
-          mensaje:  form.mensaje,
-          rut:      form.rut,
-          empresa:  form.empresa,
-          tipo:     form.tipo,
-          area:     catName || form.categoria_slug || null,
-          curso_id: form.curso_id ? Number(form.curso_id) : null,
-        }}),
+      await crearLead({
+        nombre:   form.nombre,
+        email:    form.email,
+        telefono: form.telefono,
+        mensaje:  form.mensaje,
+        rut:      form.rut,
+        empresa:  form.empresa,
+        tipo:     form.tipo,
+        area:     catName || form.categoria_slug || null,
+        curso_id: form.curso_id ? Number(form.curso_id) : null,
       })
-      if (!res.ok) throw new Error('Error al enviar')
       setSent(true)
     } catch {
       setError('No se pudo enviar el mensaje. Intentá de nuevo o contactanos directamente.')

@@ -6,6 +6,8 @@ node_modules/
 dist/
 build/
 .cache/
+!frontend/dist/
+!frontend/dist/**
 
 
 # Env files (keep example)

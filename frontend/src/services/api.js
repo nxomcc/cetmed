@@ -1,96 +1,162 @@
-const BASE = '/api'
+import { supabase } from './supabaseClient'
 
-async function fetchAPI(path, params = {}) {
-  const qs = new URLSearchParams(params).toString()
-  const url = `${BASE}${path}${qs ? '?' + qs : ''}`
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`API error ${res.status}: ${url}`)
-  return res.json()
+function mediaToStrapi(row) {
+  return row ? { data: { id: row.id, attributes: { url: row.url, name: row.name } } } : { data: null }
 }
 
-/* ── Cursos ─────────────────────────────────────────── */
-export async function getCursos(filters = {}) {
-  const params = {
-    'populate': 'imagen,categoria',
-    'pagination[pageSize]': 100,
-    ...filters,
+function categoriaToStrapi(row) {
+  return row ? { data: { id: row.id, attributes: { nombre: row.nombre, slug: row.slug, icono: row.icono } } } : { data: null }
+}
+
+function cursoToStrapi(row) {
+  if (!row) return null
+  const { categorias, media, created_at, updated_at, published_at, imagen_id, categoria_id, ...rest } = row
+  return {
+    id: row.id,
+    attributes: {
+      ...rest,
+      createdAt: created_at,
+      updatedAt: updated_at,
+      publishedAt: published_at || null,
+      categoria: categoriaToStrapi(categorias),
+      imagen: mediaToStrapi(media),
+    },
   }
-  return fetchAPI('/cursos', params)
+}
+
+function noticiaToStrapi(row) {
+  if (!row) return null
+  const { media, created_at, updated_at, published_at, imagen_id, ...rest } = row
+  return {
+    id: row.id,
+    attributes: {
+      ...rest,
+      createdAt: created_at,
+      updatedAt: updated_at,
+      publishedAt: published_at || null,
+      imagen: mediaToStrapi(media),
+    },
+  }
+}
+
+function categoriaRowToStrapi(row) {
+  return { id: row.id, attributes: { ...row, createdAt: row.created_at, updatedAt: row.updated_at } }
+}
+
+async function invokeFunction(name, body) {
+  const { data, error } = await supabase.functions.invoke(name, { body })
+  if (error) throw new Error(error.message || `Error en ${name}`)
+  return data
+}
+
+export async function getCursos(filters = {}) {
+  const slug = filters['filters[slug][$eq]']
+  const pageSize = Number(filters['pagination[pageSize]'] || 100)
+
+  let q = supabase
+    .from('cursos')
+    .select('*, categorias(*), media(*)')
+    .eq('activo', true)
+    .not('published_at', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(pageSize)
+
+  if (slug) q = q.eq('slug', slug).limit(1)
+
+  const { data, error } = await q
+  if (error) throw error
+  return { data: (data || []).map(cursoToStrapi), meta: { pagination: { total: data?.length || 0 } } }
 }
 
 export async function getCurso(slug) {
-  const data = await fetchAPI('/cursos', {
-    'filters[slug][$eq]': slug,
-    'populate': 'imagen,categoria,instructor',
-  })
-  return data?.data?.[0] ?? null
+  const res = await getCursos({ 'filters[slug][$eq]': slug })
+  return res.data?.[0] || null
 }
 
-/* ── Categorias ─────────────────────────────────────── */
 export async function getCategorias() {
-  return fetchAPI('/categorias', { 'pagination[pageSize]': 50 })
+  const { data, error } = await supabase
+    .from('categorias')
+    .select('*')
+    .order('nombre', { ascending: true })
+    .limit(100)
+  if (error) throw error
+  return { data: (data || []).map(categoriaRowToStrapi), meta: { pagination: { total: data?.length || 0 } } }
 }
 
-/* ── Noticias ───────────────────────────────────────── */
 export async function getNoticias(filters = {}) {
-  const params = {
-    'populate': 'imagen,autor',
-    'sort': 'publishedAt:desc',
-    'pagination[pageSize]': 50,
-    ...filters,
-  }
-  return fetchAPI('/noticias', params)
+  const slug = filters['filters[slug][$eq]']
+  const pageSize = Number(filters['pagination[pageSize]'] || 50)
+
+  let q = supabase
+    .from('noticias')
+    .select('*, media(*)')
+    .not('published_at', 'is', null)
+    .order('published_at', { ascending: false })
+    .limit(pageSize)
+
+  if (slug) q = q.eq('slug', slug).limit(1)
+
+  const { data, error } = await q
+  if (error) throw error
+  return { data: (data || []).map(noticiaToStrapi), meta: { pagination: { total: data?.length || 0 } } }
 }
 
 export async function getNoticia(slug) {
-  const data = await fetchAPI('/noticias', {
-    'filters[slug][$eq]': slug,
-    'populate': 'imagen,autor',
-  })
-  return data?.data?.[0] ?? null
+  const res = await getNoticias({ 'filters[slug][$eq]': slug })
+  return res.data?.[0] || null
 }
 
-/* ── Pagos (Getnet Chile) ───────────────────────────── */
-export async function crearPagoGetnet(datosPago) {
-  const res = await fetch(`${BASE}/pagos/intent`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(datosPago),
-  })
-  if (!res.ok) {
-    const errData = await res.json().catch(() => ({}))
-    throw new Error(errData.error || 'Error al iniciar el pago con Getnet')
-  }
-  return res.json()
+export function crearPagoGetnet(datosPago) {
+  return invokeFunction('crear-pago-getnet', datosPago)
 }
 
-export async function consultarPagoGetnet(orderId) {
-  const res = await fetch(`${BASE}/pagos/status/${orderId}`)
-  if (!res.ok) throw new Error('Error al consultar el estado del pago')
-  return res.json()
+export function consultarPagoGetnet(orderId) {
+  return invokeFunction('consultar-pago-getnet', { orderId })
 }
 
-/* ── View tracking ─────────────────────────────────── */
+export function simularCompraMoodle(datosPago) {
+  return invokeFunction('simular-compra-moodle', datosPago)
+}
+
 export async function registerCursoView(id) {
-  try { await fetch(`${BASE}/cursos/${id}/view`, { method: 'POST' }) } catch {}
+  try {
+    const { data } = await supabase.from('cursos').select('vistas').eq('id', id).single()
+    await supabase.from('cursos').update({ vistas: Number(data?.vistas || 0) + 1 }).eq('id', id)
+  } catch {}
 }
 
 export async function registerNoticiaView(id) {
-  try { await fetch(`${BASE}/noticias/${id}/view`, { method: 'POST' }) } catch {}
+  try {
+    const { data } = await supabase.from('noticias').select('vistas').eq('id', id).single()
+    await supabase.from('noticias').update({ vistas: Number(data?.vistas || 0) + 1 }).eq('id', id)
+  } catch {}
 }
 
-/* ── Descuento ──────────────────────────────────────── */
 export async function validarDescuento(codigo, subtotal) {
-  const res = await fetch(`${BASE}/descuentos/validar`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ codigo, subtotal }),
-  })
-  if (!res.ok) throw new Error('Error validando descuento')
-  return res.json()
+  const normalized = codigo.trim().toUpperCase()
+  const { data, error } = await supabase
+    .from('descuentos')
+    .select('*')
+    .eq('codigo', normalized)
+    .eq('activo', true)
+    .maybeSingle()
+
+  if (error) throw error
+  if (!data) throw new Error('Codigo invalido')
+  if (data.fecha_expiracion && new Date(data.fecha_expiracion) < new Date()) throw new Error('Codigo expirado')
+  if (data.limite_usos && Number(data.usos_actuales || 0) >= Number(data.limite_usos)) throw new Error('Codigo sin usos')
+
+  const valor = Number(data.valor)
+  const monto = data.tipo === 'porcentaje' ? Math.round(Number(subtotal || 0) * valor / 100) : valor
+  return { ...data, valor, monto }
 }
 
-/* ── Helpers ────────────────────────────────────────── */
+export async function crearLead(data) {
+  const { data: created, error } = await supabase.from('leads').insert(data).select('*').single()
+  if (error) throw error
+  return created
+}
+
 export function imgUrl(media) {
   if (!media?.data) return null
   return media.data.attributes?.url || null
