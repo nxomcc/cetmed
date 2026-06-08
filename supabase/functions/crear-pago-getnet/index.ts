@@ -1,5 +1,6 @@
-import { handleOptions, json } from '../_shared/cors.ts'
+import { assertAllowedOrigin, handleOptions, json } from '../_shared/cors.ts'
 import { generateGetnetAuth, getnetEndpoint } from '../_shared/getnet.ts'
+import { calculateOrderTotals } from '../_shared/orders.ts'
 import { serviceClient } from '../_shared/supabase.ts'
 
 Deno.serve(async (req) => {
@@ -8,21 +9,11 @@ Deno.serve(async (req) => {
 
   try {
     const sb = serviceClient()
-    const { items, nombre_cliente, email_cliente, telefono_cliente, rut_cliente, codigo_descuento, descuento_monto, notas } = await req.json()
+    const { items, nombre_cliente, email_cliente, telefono_cliente, rut_cliente, codigo_descuento, notas } = await req.json()
 
-    if (!Array.isArray(items) || items.length === 0) return json(req, { error: 'No se recibieron cursos' }, 400)
     if (!nombre_cliente || !email_cliente) return json(req, { error: 'Nombre y email son obligatorios' }, 400)
 
-    let subtotal = 0
-    for (const item of items) {
-      const { data: curso, error } = await sb.from('cursos').select('precio').eq('id', item.id).maybeSingle()
-      if (error) throw error
-      if (!curso) return json(req, { error: `Curso ${item.id} no encontrado` }, 404)
-      subtotal += Number(curso.precio || 0)
-    }
-
-    const descVal = Number(descuento_monto || 0)
-    const total = Math.max(0, subtotal - descVal)
+    const { items: normalizedItems, subtotal, descuentoMonto, total, codigoDescuento } = await calculateOrderTotals(sb, items, codigo_descuento)
     if (total <= 0) return json(req, { error: 'El monto total debe ser mayor a 0' }, 400)
 
     const { data: order, error: orderError } = await sb
@@ -31,11 +22,11 @@ Deno.serve(async (req) => {
         nombre_cliente,
         email_cliente: email_cliente.toLowerCase(),
         telefono_cliente: telefono_cliente || null,
-        items: items.map((item: any) => ({ id: item.id })),
+        items: normalizedItems,
         subtotal,
-        descuento_monto: descVal,
+        descuento_monto: descuentoMonto,
         total,
-        codigo_descuento: codigo_descuento || null,
+        codigo_descuento: codigoDescuento,
         estado: 'pendiente',
         notas: notas || null,
       })
@@ -44,7 +35,7 @@ Deno.serve(async (req) => {
 
     if (orderError) throw orderError
 
-    const origin = req.headers.get('origin') || Deno.env.get('PUBLIC_SITE_URL') || 'http://localhost:5173'
+    const origin = assertAllowedOrigin(req)
     const payload = {
       auth: await generateGetnetAuth(),
       locale: 'es_CL',
@@ -80,6 +71,7 @@ Deno.serve(async (req) => {
     await sb.from('pedidos').update({ payment_id: String(data.requestId), updated_at: new Date().toISOString() }).eq('id', order.id)
     return json(req, { processUrl: data.processUrl, orderId: order.id })
   } catch (error) {
+    if (error.message === 'ORIGIN_NOT_ALLOWED') return json(req, { error: 'Origen no permitido' }, 403)
     return json(req, { error: error.message || 'Error al iniciar pago' }, 500)
   }
 })

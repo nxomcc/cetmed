@@ -124,8 +124,13 @@ export function consultarPagoGetnet(orderId) {
   return invokeFunction('consultar-pago-getnet', { orderId })
 }
 
-export function simularCompraMoodle(datosPago) {
-  return invokeFunction('simular-compra-moodle', datosPago)
+export async function simularCompraMoodle(datosPago, simulationToken) {
+  const { data, error } = await supabase.functions.invoke('simular-compra-moodle', {
+    body: datosPago,
+    headers: simulationToken ? { 'x-simulation-token': simulationToken } : undefined,
+  })
+  if (error) throw new Error(error.message || 'Error en simular-compra-moodle')
+  return data
 }
 
 export async function registerCursoView(id) {
@@ -142,23 +147,11 @@ export async function registerNoticiaView(id) {
   } catch {}
 }
 
-export async function validarDescuento(codigo, subtotal) {
-  const normalized = codigo.trim().toUpperCase()
-  const { data, error } = await supabase
-    .from('descuentos')
-    .select('*')
-    .eq('codigo', normalized)
-    .eq('activo', true)
-    .maybeSingle()
-
-  if (error) throw error
-  if (!data) throw new Error('Codigo invalido')
-  if (data.fecha_expiracion && new Date(data.fecha_expiracion) < new Date()) throw new Error('Codigo expirado')
-  if (data.limite_usos && Number(data.usos_actuales || 0) >= Number(data.limite_usos)) throw new Error('Codigo sin usos')
-
-  const valor = Number(data.valor)
-  const monto = data.tipo === 'porcentaje' ? Math.round(Number(subtotal || 0) * valor / 100) : valor
-  return { ...data, valor, monto }
+export async function validarDescuento(codigo, items) {
+  return invokeFunction('validar-descuento', {
+    codigo_descuento: codigo.trim(),
+    items: (items || []).map(item => ({ id: item.id })),
+  })
 }
 
 export async function crearLead(data) {

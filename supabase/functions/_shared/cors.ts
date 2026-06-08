@@ -18,6 +18,20 @@ export function corsHeaders(req: Request) {
   }
 }
 
+export function allowedOrigins() {
+  return (Deno.env.get('PUBLIC_SITE_ORIGINS') || defaultOrigins.join(','))
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean)
+}
+
+export function assertAllowedOrigin(req: Request) {
+  const origin = req.headers.get('origin') || Deno.env.get('PUBLIC_SITE_URL') || defaultOrigins[0]
+  const allowed = allowedOrigins()
+  if (!allowed.includes(origin)) throw new Error('ORIGIN_NOT_ALLOWED')
+  return origin
+}
+
 export function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,

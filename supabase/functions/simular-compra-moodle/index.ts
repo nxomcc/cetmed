@@ -1,6 +1,7 @@
 import { handleOptions, json } from '../_shared/cors.ts'
 import { enrollOrderCourses } from '../_shared/enrollment.ts'
 import { sendEnrollmentEmails } from '../_shared/mail.ts'
+import { calculateOrderTotals } from '../_shared/orders.ts'
 import { serviceClient } from '../_shared/supabase.ts'
 
 Deno.serve(async (req) => {
@@ -11,23 +12,17 @@ Deno.serve(async (req) => {
     if (Deno.env.get('ENABLE_PAYMENT_SIMULATION') !== 'true') {
       return json(req, { error: 'La simulacion de compras no esta habilitada' }, 403)
     }
-
-    const sb = serviceClient()
-    const { items, nombre_cliente, email_cliente, telefono_cliente, codigo_descuento, descuento_monto, notas } = await req.json()
-
-    if (!Array.isArray(items) || items.length === 0) return json(req, { error: 'No se recibieron cursos' }, 400)
-    if (!nombre_cliente || !email_cliente) return json(req, { error: 'Nombre y email son obligatorios' }, 400)
-
-    let subtotal = 0
-    for (const item of items) {
-      const { data: curso, error } = await sb.from('cursos').select('precio').eq('id', item.id).maybeSingle()
-      if (error) throw error
-      if (!curso) return json(req, { error: `Curso ${item.id} no encontrado` }, 404)
-      subtotal += Number(curso.precio || 0)
+    const simulationToken = Deno.env.get('SIMULATION_WEBHOOK_TOKEN')
+    if (!simulationToken || req.headers.get('x-simulation-token') !== simulationToken) {
+      return json(req, { error: 'Simulacion no autorizada' }, 403)
     }
 
-    const descVal = Number(descuento_monto || 0)
-    const total = Math.max(0, subtotal - descVal)
+    const sb = serviceClient()
+    const { items, nombre_cliente, email_cliente, telefono_cliente, codigo_descuento, notas } = await req.json()
+
+    if (!nombre_cliente || !email_cliente) return json(req, { error: 'Nombre y email son obligatorios' }, 400)
+
+    const { items: normalizedItems, subtotal, descuentoMonto, total, codigoDescuento } = await calculateOrderTotals(sb, items, codigo_descuento)
 
     const { data: order, error: orderError } = await sb
       .from('pedidos')
@@ -35,11 +30,11 @@ Deno.serve(async (req) => {
         nombre_cliente,
         email_cliente: email_cliente.toLowerCase(),
         telefono_cliente: telefono_cliente || null,
-        items: items.map((item: any) => ({ id: item.id })),
+        items: normalizedItems,
         subtotal,
-        descuento_monto: descVal,
+        descuento_monto: descuentoMonto,
         total,
-        codigo_descuento: codigo_descuento || null,
+        codigo_descuento: codigoDescuento,
         estado: 'completado',
         payment_id: `SIM-${Date.now()}`,
         notas: notas || 'Compra simulada para pruebas de Moodle',

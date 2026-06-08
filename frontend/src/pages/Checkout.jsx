@@ -38,7 +38,7 @@ export default function Checkout() {
     setValidandoDesc(true)
     setDescError('')
     try {
-      const res = await validarDescuento(codigoDesc.trim(), total)
+      const res = await validarDescuento(codigoDesc.trim(), items)
       setDescuento(res)
     } catch {
       setDescError('Código inválido o expirado')
@@ -48,7 +48,7 @@ export default function Checkout() {
     }
   }
 
-  const descuentoMonto = descuento ? (descuento.tipo === 'porcentaje' ? Math.round(total * descuento.valor / 100) : Number(descuento.valor)) : 0
+  const descuentoMonto = descuento ? Number(descuento.monto ?? (descuento.tipo === 'porcentaje' ? Math.round(total * descuento.valor / 100) : descuento.valor)) : 0
   const totalFinal = Math.max(0, total - descuentoMonto)
 
   async function handleSubmit(e) {
@@ -69,7 +69,6 @@ export default function Checkout() {
         telefono_cliente: datos.telefono,
         rut_cliente: datos.rut,
         codigo_descuento: descuento ? codigoDesc.trim() : null,
-        descuento_monto: descuentoMonto
       }
 
       const data = await crearPagoGetnet(payload)

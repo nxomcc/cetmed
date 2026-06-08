@@ -27,6 +27,7 @@ supabase functions deploy crear-pago-getnet
 supabase functions deploy consultar-pago-getnet
 supabase functions deploy listar-cursos-moodle
 supabase functions deploy crear-curso-moodle
+supabase functions deploy validar-descuento
 ```
 
 Secretos:
@@ -41,6 +42,7 @@ supabase secrets set GETNET_ENDPOINT=https://checkout.test.getnet.cl
 supabase secrets set PUBLIC_SITE_URL=https://new.cetmed.cl
 supabase secrets set PUBLIC_SITE_ORIGINS=https://new.cetmed.cl,https://cetmed.cl
 supabase secrets set ENABLE_PAYMENT_SIMULATION=true
+supabase secrets set SIMULATION_WEBHOOK_TOKEN=...
 supabase secrets set MOODLE_DEFAULT_CATEGORY_ID=1
 supabase secrets set MAIL_WEBHOOK_URL=https://new.cetmed.cl/mail/send.php
 supabase secrets set MAIL_WEBHOOK_TOKEN=...
