@@ -44,6 +44,23 @@ async function requireSession() {
   return data.session
 }
 
+async function invokeFunction(name, body = undefined) {
+  await requireSession()
+  const { data, error } = await supabase.functions.invoke(name, body === undefined ? {} : { body })
+  if (error) {
+    if (error.context) {
+      try {
+        const payload = await error.context.json()
+        throw new Error(payload?.error || error.message || `Error en ${name}`)
+      } catch (payloadError) {
+        if (payloadError?.message) throw payloadError
+      }
+    }
+    throw new Error(error.message || `Error en ${name}`)
+  }
+  return data
+}
+
 async function selectList(table, select = '*', order = 'created_at', ascending = false) {
   await requireSession()
   const { data, error } = await supabase.from(table).select(select).order(order, { ascending }).limit(500)
@@ -400,15 +417,11 @@ export async function getStats() {
 }
 
 export async function listarCursosMoodle() {
-  await requireSession()
-  const { data, error } = await supabase.functions.invoke('listar-cursos-moodle')
-  if (error) throw error
+  const data = await invokeFunction('listar-cursos-moodle')
   return data?.courses || []
 }
 
 export async function crearCursoMoodle(payload) {
-  await requireSession()
-  const { data, error } = await supabase.functions.invoke('crear-curso-moodle', { body: payload })
-  if (error) throw error
+  const data = await invokeFunction('crear-curso-moodle', payload)
   return data?.course
 }
