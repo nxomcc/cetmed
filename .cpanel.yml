@@ -4,4 +4,6 @@ deployment:
     - export FRONTEND_PUBLIC_PATH="/home/cetmedcl/new.cetmed.cl"
     - export REPO_PATH="/home/cetmedcl/repositories/cetmed"
     - /bin/test -d $REPO_PATH/frontend/dist
-    - /bin/rsync -av --delete --exclude='config.js' $REPO_PATH/frontend/dist/ $FRONTEND_PUBLIC_PATH/
+    - /bin/mkdir -p $FRONTEND_PUBLIC_PATH
+    - /bin/find $FRONTEND_PUBLIC_PATH -mindepth 1 ! -name 'config.js' -exec /bin/rm -rf {} +
+    - /bin/cp -a $REPO_PATH/frontend/dist/. $FRONTEND_PUBLIC_PATH/
