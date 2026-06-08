@@ -155,9 +155,7 @@ export async function validarDescuento(codigo, items) {
 }
 
 export async function crearLead(data) {
-  const { data: created, error } = await supabase.from('leads').insert(data).select('*').single()
-  if (error) throw error
-  return created
+  return invokeFunction('crear-lead', data)
 }
 
 export function imgUrl(media) {

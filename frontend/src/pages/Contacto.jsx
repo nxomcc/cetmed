@@ -14,7 +14,7 @@ export default function Contacto() {
   const [openFaq, setOpenFaq] = useState(null)
   const [form, setForm] = useState({
     nombre:'', rut:'', email:'', telefono:'', empresa:'',
-    tipo:'persona', categoria_slug:'', curso_id:'', mensaje:'',
+    tipo:'persona', categoria_slug:'', curso_id:'', mensaje:'', website:'',
   })
   const [sent, setSent]           = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -67,6 +67,7 @@ export default function Contacto() {
         tipo:     form.tipo,
         area:     catName || form.categoria_slug || null,
         curso_id: form.curso_id ? Number(form.curso_id) : null,
+        website:  form.website,
       })
       setSent(true)
     } catch {
@@ -136,6 +137,19 @@ export default function Contacto() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="hidden" aria-hidden="true">
+                      <label>
+                        Sitio web
+                        <input
+                          type="text"
+                          name="website"
+                          value={form.website}
+                          onChange={handleChange}
+                          tabIndex={-1}
+                          autoComplete="off"
+                        />
+                      </label>
+                    </div>
                     {/* Tipo */}
                     <div className="flex gap-3">
                       {['persona','empresa'].map(t => (

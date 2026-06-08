@@ -1,5 +1,6 @@
 import { assertAllowedOrigin, handleOptions, json } from '../_shared/cors.ts'
 import { generateGetnetAuth, getnetEndpoint } from '../_shared/getnet.ts'
+import { isHoneypotFilled } from '../_shared/honeypot.ts'
 import { calculateOrderTotals } from '../_shared/orders.ts'
 import { serviceClient } from '../_shared/supabase.ts'
 
@@ -9,7 +10,10 @@ Deno.serve(async (req) => {
 
   try {
     const sb = serviceClient()
-    const { items, nombre_cliente, email_cliente, telefono_cliente, rut_cliente, codigo_descuento, notas } = await req.json()
+    const body = await req.json()
+    if (isHoneypotFilled(body)) return json(req, { error: 'No se pudo iniciar el pago' }, 400)
+
+    const { items, nombre_cliente, email_cliente, telefono_cliente, rut_cliente, codigo_descuento, notas } = body
 
     if (!nombre_cliente || !email_cliente) return json(req, { error: 'Nombre y email son obligatorios' }, 400)
 

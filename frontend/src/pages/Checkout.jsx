@@ -24,7 +24,7 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const [datos, setDatos] = useState({ nombre: '', email: '', rut: '', telefono: '' })
+  const [datos, setDatos] = useState({ nombre: '', email: '', rut: '', telefono: '', website: '' })
   function handleDatos(e) { setDatos(p => ({ ...p, [e.target.name]: e.target.value })) }
 
   // Discount
@@ -69,6 +69,7 @@ export default function Checkout() {
         telefono_cliente: datos.telefono,
         rut_cliente: datos.rut,
         codigo_descuento: descuento ? codigoDesc.trim() : null,
+        website: datos.website,
       }
 
       const data = await crearPagoGetnet(payload)
@@ -111,6 +112,19 @@ export default function Checkout() {
                 <h2 className="text-xl font-bold text-[var(--text-dark)] mb-6">Datos de inscripción</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="hidden" aria-hidden="true">
+                    <label>
+                      Sitio web
+                      <input
+                        type="text"
+                        name="website"
+                        value={datos.website}
+                        onChange={handleDatos}
+                        tabIndex={-1}
+                        autoComplete="off"
+                      />
+                    </label>
+                  </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold mb-1.5">Nombre completo *</label>
