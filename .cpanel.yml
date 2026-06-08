@@ -3,10 +3,10 @@
 deployment:
   tasks:
     # 1. DEFINIR VARIABLES DE RUTA
-    # REEMPLAZA "nacho" por tu nombre de usuario de cPanel
-    - export USERNAME="nacho"
+    # Usuario de cPanel
+    - export USERNAME="cetmedcl"
     - export BACKEND_APP_PATH="/home/$USERNAME/cetmed-backend"
-    - export FRONTEND_PUBLIC_PATH="/home/$USERNAME/public_html"
+    - export FRONTEND_PUBLIC_PATH="/home/$USERNAME/new.cetmed.cl"
 
     # ==========================================
     # PASO 2: DESPLEGAR EL BACKEND (Node.js)
