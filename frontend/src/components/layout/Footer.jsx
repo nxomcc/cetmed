@@ -40,7 +40,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <img src={LOGO_URL} alt="CETMED" className="h-10 w-auto brightness-0 invert" />
+              <img src={LOGO_URL} alt="CETMED" loading="lazy" decoding="async" className="h-10 w-auto brightness-0 invert" />
               <span className="font-black text-xl tracking-tight">CETMED</span>
             </div>
             <p className="text-white/60 text-sm leading-relaxed mb-5">
@@ -111,13 +111,17 @@ export default function Footer() {
             <div className="mt-6 space-y-3">
               <div className="flex flex-wrap items-center gap-3">
                 <img src="https://cetmed.cl/wp-content/uploads/2025/02/Logo_Sence_Blanco.png"
+                  loading="lazy" decoding="async"
                   alt="SENCE" className="h-8 w-auto object-contain" />
                 <img src="https://cetmed.cl/wp-content/uploads/2025/02/certificacion_nch2-pequeno.png.webp"
+                  loading="lazy" decoding="async"
                   alt="NCh 2728" className="h-8 w-auto object-contain" />
               </div>
               <img src="https://cetmed.cl/wp-content/uploads/2025/02/banderas.png"
+                loading="lazy" decoding="async"
                 alt="Certificaciones internacionales" className="h-6 w-auto object-contain" />
               <img src="https://cetmed.cl/wp-content/uploads/2025/10/3-cuotas-precio-contado-1.png"
+                loading="lazy" decoding="async"
                 alt="3 cuotas precio contado" className="h-10 w-auto object-contain" />
             </div>
           </div>

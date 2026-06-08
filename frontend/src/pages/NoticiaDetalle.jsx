@@ -78,7 +78,7 @@ export default function NoticiaDetalle() {
 
       <article className="py-16">
         <div className="max-w-3xl mx-auto px-4">
-          <img src={imgSrc} alt={a.titulo}
+          <img src={imgSrc} alt={a.titulo} loading="eager" decoding="async"
             className="w-full rounded-2xl shadow-lift aspect-video object-cover mb-10" />
 
           {a.resumen && (

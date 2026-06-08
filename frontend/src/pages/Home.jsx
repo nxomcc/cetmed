@@ -209,6 +209,8 @@ export default function Home() {
               <img
                 src="https://cetmed.cl/wp-content/uploads/2025/12/PORTAFOLIO-DE-SERVICIOS-DE-CAPACITACION2.png"
                 alt="CETMED Portafolio de Servicios"
+                loading="lazy"
+                decoding="async"
                 className="rounded-2xl w-full shadow-hero object-cover"
               />
               <div className="absolute -bottom-5 -left-5 bg-[var(--accent)] text-[var(--primary-dark)] rounded-2xl p-5 font-black shadow-lift hidden sm:block">
@@ -238,6 +240,8 @@ export default function Home() {
                 <img
                   src={a.img}
                   alt={a.label}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />

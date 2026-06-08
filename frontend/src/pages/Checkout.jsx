@@ -203,7 +203,7 @@ export default function Checkout() {
                   {items.map(i => (
                     <div key={i.id} className="flex gap-3">
                       {i.imagen && (
-                        <img src={i.imagen} alt={i.titulo} className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                        <img src={i.imagen} alt={i.titulo} loading="lazy" decoding="async" className="w-12 h-12 rounded-lg object-cover shrink-0" />
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-[var(--text-dark)] line-clamp-2">{i.titulo}</p>

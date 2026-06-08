@@ -36,7 +36,7 @@ export default function CartDrawer({ open, onClose }) {
           items.map(item => (
             <div key={item.id} className="flex gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--bg-light)]">
               {item.imagen && (
-                <img src={item.imagen} alt={item.titulo}
+                <img src={item.imagen} alt={item.titulo} loading="lazy" decoding="async"
                   className="w-16 h-16 object-cover rounded-lg shrink-0" />
               )}
               <div className="flex-1 min-w-0">

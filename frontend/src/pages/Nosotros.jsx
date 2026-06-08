@@ -55,6 +55,8 @@ export default function Nosotros() {
               <img
                 src="https://cetmed.cl/wp-content/uploads/2025/12/PORTAFOLIO-DE-SERVICIOS-DE-CAPACITACION2.png"
                 alt="CETMED Portafolio de Servicios"
+                loading="lazy"
+                decoding="async"
                 className="rounded-2xl w-full shadow-lift"
               />
             </div>
@@ -68,7 +70,7 @@ export default function Nosotros() {
               { img:'https://cetmed.cl/wp-content/uploads/2025/02/banderas.png',             bg:'bg-white border border-[var(--border)]', label:'Internacional',         desc:'Certificaciones con validez y reconocimiento a nivel nacional e internacional.' },
             ].map((c, i) => (
               <div key={i} className={`p-6 rounded-2xl ${c.bg} flex flex-col items-center text-center gap-3`} data-reveal data-delay={String(i+1)}>
-                <img src={c.img} alt={c.label} className="h-12 w-auto object-contain" />
+                <img src={c.img} alt={c.label} loading="lazy" decoding="async" className="h-12 w-auto object-contain" />
                 <div>
                   <h4 className="font-bold text-sm mb-1" style={{ color: c.bg.includes('primary') ? 'white' : 'var(--text-dark)' }}>{c.label}</h4>
                   <p className="text-xs leading-relaxed" style={{ color: c.bg.includes('primary') ? 'rgba(255,255,255,0.75)' : 'var(--text-muted)' }}>{c.desc}</p>

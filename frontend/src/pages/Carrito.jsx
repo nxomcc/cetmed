@@ -39,7 +39,7 @@ export default function Carrito() {
                 <div key={item.id}
                   className="flex gap-4 p-5 bg-white rounded-2xl border border-[var(--border)] shadow-card">
                   {item.imagen && (
-                    <img src={item.imagen} alt={item.titulo}
+                    <img src={item.imagen} alt={item.titulo} loading="lazy" decoding="async"
                       className="w-24 h-24 object-cover rounded-xl shrink-0" />
                   )}
                   <div className="flex-1 min-w-0">

@@ -75,7 +75,7 @@ export default function CursoDetalle() {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Main */}
             <div className="lg:col-span-2 space-y-8">
-              <img src={imgSrc} alt={a.titulo} className="w-full rounded-2xl shadow-lift aspect-video object-cover" />
+              <img src={imgSrc} alt={a.titulo} loading="eager" decoding="async" className="w-full rounded-2xl shadow-lift aspect-video object-cover" />
 
               {/* Descripción */}
               <div>
