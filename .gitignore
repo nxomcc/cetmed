@@ -8,6 +8,7 @@ build/
 .cache/
 !frontend/dist/
 !frontend/dist/**
+supabase/.temp/
 
 
 # Env files (keep example)
