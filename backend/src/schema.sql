@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS cursos (
   vistas INTEGER DEFAULT 0,
   imagen_id INTEGER REFERENCES media(id) ON DELETE SET NULL,
   categoria_id INTEGER REFERENCES categorias(id) ON DELETE SET NULL,
+  moodle_course_id INTEGER,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

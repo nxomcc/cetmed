@@ -100,17 +100,18 @@ router.get('/cursos/:id', optionalToken, async (req, res) => {
 router.post('/cursos', verifyToken, requireEditor, async (req, res) => {
   try {
     const { titulo, slug, descripcion, objetivo, contenidos, precio, horas, modalidad, nivel,
-      franquicia_sence, activo, categoria, imagen, publishedAt } = req.body.data || req.body
+      franquicia_sence, activo, categoria, imagen, publishedAt, moodle_course_id, moodleCourseId } = req.body.data || req.body
 
     const row = await queryOne(
       `INSERT INTO cursos (titulo, slug, descripcion, objetivo, contenidos, precio, horas, modalidad, nivel,
-        franquicia_sence, activo, published_at, imagen_id, categoria_id)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING id`,
+        franquicia_sence, activo, published_at, imagen_id, categoria_id, moodle_course_id)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING id`,
       [titulo, slug, descripcion || null, objetivo || null,
        contenidos ? JSON.stringify(contenidos) : null,
        precio || 0, horas || null, modalidad || 'Presencial', nivel || 'Básico-Intermedio',
        franquicia_sence || false, activo !== false,
-       publishedAt || null, imagen || null, categoria || null]
+       publishedAt || null, imagen || null, categoria || null,
+       moodle_course_id || moodleCourseId || null]
     )
     const created = await queryOne(`${SELECT} WHERE c.id = $1`, [row.id])
     clearCache()
@@ -129,10 +130,12 @@ router.put('/cursos/:id', verifyToken, requireEditor, async (req, res) => {
     const params = []
 
     const allowed = ['titulo', 'slug', 'descripcion', 'objetivo', 'precio', 'horas', 'modalidad',
-      'nivel', 'franquicia_sence', 'activo', 'publishedAt']
+      'nivel', 'franquicia_sence', 'activo', 'publishedAt', 'moodle_course_id', 'moodleCourseId']
     for (const key of allowed) {
       if (key in body) {
-        const col = key === 'publishedAt' ? 'published_at' : key
+        let col = key
+        if (key === 'publishedAt') col = 'published_at'
+        if (key === 'moodleCourseId') col = 'moodle_course_id'
         params.push(body[key])
         fields.push(`${col} = $${params.length}`)
       }

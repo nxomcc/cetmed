@@ -12,6 +12,7 @@ import NoticiaDetalle from './pages/NoticiaDetalle'
 import Contacto      from './pages/Contacto'
 import Carrito       from './pages/Carrito'
 import Checkout      from './pages/Checkout'
+import CheckoutRetorno from './pages/CheckoutRetorno'
 import NotFound      from './pages/NotFound'
 import Terminos      from './pages/Terminos'
 import Privacidad    from './pages/Privacidad'
@@ -46,6 +47,7 @@ export default function App() {
               <Route path="contacto"     element={<Contacto />} />
               <Route path="carrito"      element={<Carrito />} />
               <Route path="checkout"     element={<Checkout />} />
+              <Route path="checkout/retorno" element={<CheckoutRetorno />} />
               <Route path="terminos-y-condiciones" element={<Terminos />} />
               <Route path="politica-de-privacidad" element={<Privacidad />} />
 <Route path="politicas-de-mantenimiento" element={<PoliticasMantenimiento />} />

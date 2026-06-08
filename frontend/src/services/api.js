@@ -50,14 +50,23 @@ export async function getNoticia(slug) {
   return data?.data?.[0] ?? null
 }
 
-/* ── Payment Intent (Stripe) ────────────────────────── */
-export async function createPaymentIntent(items) {
+/* ── Pagos (Getnet Chile) ───────────────────────────── */
+export async function crearPagoGetnet(datosPago) {
   const res = await fetch(`${BASE}/pagos/intent`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items }),
+    body: JSON.stringify(datosPago),
   })
-  if (!res.ok) throw new Error('Payment intent failed')
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}))
+    throw new Error(errData.error || 'Error al iniciar el pago con Getnet')
+  }
+  return res.json()
+}
+
+export async function consultarPagoGetnet(orderId) {
+  const res = await fetch(`${BASE}/pagos/status/${orderId}`)
+  if (!res.ok) throw new Error('Error al consultar el estado del pago')
   return res.json()
 }
 

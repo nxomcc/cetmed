@@ -7,10 +7,6 @@ dist/
 build/
 .cache/
 
-# Strapi
-cms/.tmp/
-cms/.strapi/
-cms/public/uploads/
 
 # Env files (keep example)
 .env

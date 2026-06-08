@@ -8,7 +8,7 @@ import { useToast } from '../hooks/useToast'
 const EMPTY = {
   titulo: '', slug: '', descripcion: '', objetivo: '', precio: 0,
   horas: '', modalidad: 'Presencial', nivel: 'Básico-Intermedio',
-  franquicia_sence: false, activo: true, categoria: null, contenidos: '',
+  franquicia_sence: false, activo: true, categoria: null, moodle_course_id: '', contenidos: '',
 }
 
 export default function AdminCursoForm() {
@@ -44,6 +44,7 @@ export default function AdminCursoForm() {
             franquicia_sence: !!a.franquicia_sence,
             activo: !!a.activo,
             categoria: a.categoria?.data?.id || null,
+            moodle_course_id: a.moodle_course_id || '',
             contenidos: a.contenidos ? JSON.stringify(a.contenidos, null, 2) : '',
           })
           setCurrentImage(imgSrc(a.imagen))
@@ -97,6 +98,7 @@ export default function AdminCursoForm() {
         franquicia_sence: form.franquicia_sence,
         activo: form.activo,
         categoria: form.categoria ? Number(form.categoria) : null,
+        moodle_course_id: form.moodle_course_id ? Number(form.moodle_course_id) : null,
         contenidos: contenidosParsed,
         ...(imageId !== undefined ? { imagen: imageId } : {}),
       }
@@ -174,6 +176,17 @@ export default function AdminCursoForm() {
                 <option value="">Sin categoría</option>
                 {categorias.map(c => <option key={c.id} value={c.id}>{c.attributes.nombre}</option>)}
               </select>
+            </div>
+            <div>
+              <label className="label">ID curso Moodle</label>
+              <input
+                type="number"
+                min={1}
+                value={form.moodle_course_id}
+                onChange={e => set('moodle_course_id', e.target.value)}
+                className="field"
+                placeholder="Ej: 42"
+              />
             </div>
           </div>
 
