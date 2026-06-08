@@ -25,6 +25,10 @@ export default function AdminCursoForm() {
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving]       = useState(false)
   const [loading, setLoading]     = useState(isEdit)
+  const [moodleCourses, setMoodleCourses] = useState([])
+  const [moodleQuery, setMoodleQuery] = useState('')
+  const [loadingMoodle, setLoadingMoodle] = useState(false)
+  const [creatingMoodle, setCreatingMoodle] = useState(false)
 
   useEffect(() => {
     api.getCategorias().then(r => setCategorias(r.data || []))
@@ -67,6 +71,56 @@ export default function AdminCursoForm() {
     if (!file) return
     setImageFile(file)
     setImagePreview(URL.createObjectURL(file))
+  }
+
+  async function loadMoodleCourses() {
+    setLoadingMoodle(true)
+    try {
+      const courses = await api.listarCursosMoodle()
+      setMoodleCourses(courses)
+      toast('Cursos Moodle cargados')
+    } catch (err) {
+      toast(err.message || 'Error cargando cursos Moodle', 'error')
+    } finally {
+      setLoadingMoodle(false)
+    }
+  }
+
+  async function linkMoodleCourse(course) {
+    set('moodle_course_id', String(course.id))
+    try {
+      if (isEdit) {
+        await api.updateCurso(id, { moodle_course_id: Number(course.id) })
+        toast(`Vinculado con Moodle #${course.id}`)
+      } else {
+        toast(`ID Moodle #${course.id} seleccionado. Guarda el curso para completar.`)
+      }
+    } catch (err) {
+      toast(err.message || 'Error guardando vinculacion Moodle', 'error')
+    }
+  }
+
+  async function createAndLinkMoodleCourse() {
+    if (!form.titulo.trim()) {
+      toast('Primero ingresa un titulo para el curso', 'error')
+      return
+    }
+
+    setCreatingMoodle(true)
+    try {
+      const course = await api.crearCursoMoodle({
+        fullname: form.titulo.trim(),
+        shortname: form.slug || slugify(form.titulo),
+        summary: form.descripcion || form.objetivo || '',
+      })
+      await linkMoodleCourse(course)
+      setMoodleCourses(prev => [course, ...prev.filter(c => c.id !== course.id)])
+      toast(`Curso creado en Moodle: #${course.id}`)
+    } catch (err) {
+      toast(err.message || 'Error creando curso Moodle', 'error')
+    } finally {
+      setCreatingMoodle(false)
+    }
   }
 
   async function handleSubmit(e) {
@@ -120,6 +174,14 @@ export default function AdminCursoForm() {
   }
 
   if (loading) return <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003d7a]" /></div>
+
+  const filteredMoodleCourses = moodleCourses.filter(course => {
+    const q = moodleQuery.trim().toLowerCase()
+    if (!q) return true
+    return [course.fullname, course.shortname, String(course.id)]
+      .filter(Boolean)
+      .some(value => String(value).toLowerCase().includes(q))
+  }).slice(0, 20)
 
   return (
     <div className="max-w-3xl">
@@ -188,6 +250,65 @@ export default function AdminCursoForm() {
                 placeholder="Ej: 42"
               />
             </div>
+          </div>
+
+          <div className="border border-gray-100 rounded-xl p-4 bg-gray-50/60 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <h3 className="font-bold text-sm text-gray-900">Vinculacion Moodle</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Busca un curso existente o crea uno nuevo en Moodle.</p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={loadMoodleCourses}
+                  disabled={loadingMoodle}
+                  className="px-3 py-2 text-xs font-semibold rounded-lg border border-gray-200 bg-white hover:bg-gray-50 disabled:opacity-60 flex items-center gap-1"
+                >
+                  <span className={`material-icons text-[16px] ${loadingMoodle ? 'animate-spin' : ''}`}>{loadingMoodle ? 'refresh' : 'search'}</span>
+                  Buscar
+                </button>
+                <button
+                  type="button"
+                  onClick={createAndLinkMoodleCourse}
+                  disabled={creatingMoodle}
+                  className="px-3 py-2 text-xs font-semibold rounded-lg bg-[#003d7a] text-white hover:bg-[#002d5a] disabled:opacity-60 flex items-center gap-1"
+                >
+                  <span className={`material-icons text-[16px] ${creatingMoodle ? 'animate-spin' : ''}`}>{creatingMoodle ? 'refresh' : 'add'}</span>
+                  Crear en Moodle
+                </button>
+              </div>
+            </div>
+
+            {moodleCourses.length > 0 && (
+              <div className="space-y-2">
+                <input
+                  value={moodleQuery}
+                  onChange={e => setMoodleQuery(e.target.value)}
+                  className="field bg-white"
+                  placeholder="Filtrar por nombre, nombre corto o ID..."
+                />
+                <div className="max-h-56 overflow-auto rounded-lg border border-gray-200 bg-white divide-y divide-gray-100">
+                  {filteredMoodleCourses.length === 0 ? (
+                    <p className="text-xs text-gray-400 px-3 py-4 text-center">Sin coincidencias</p>
+                  ) : filteredMoodleCourses.map(course => (
+                    <div key={course.id} className="flex items-center gap-3 px-3 py-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-gray-800 truncate">{course.fullname}</p>
+                        <p className="text-xs text-gray-400 truncate">ID {course.id} · {course.shortname || 'sin shortname'}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => linkMoodleCourse(course)}
+                        className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-[#003d7a]/20 text-[#003d7a] hover:bg-[#003d7a]/5"
+                      >
+                        Vincular
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex gap-6">

@@ -398,3 +398,17 @@ export async function getStats() {
     recentPedidos: (pedidos.data || []).slice(0, 5).map(p => ({ ...p, createdAt: p.created_at })),
   }
 }
+
+export async function listarCursosMoodle() {
+  await requireSession()
+  const { data, error } = await supabase.functions.invoke('listar-cursos-moodle')
+  if (error) throw error
+  return data?.courses || []
+}
+
+export async function crearCursoMoodle(payload) {
+  await requireSession()
+  const { data, error } = await supabase.functions.invoke('crear-curso-moodle', { body: payload })
+  if (error) throw error
+  return data?.course
+}

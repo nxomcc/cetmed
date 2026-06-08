@@ -1,4 +1,4 @@
-async function callMoodle(wsFunction: string, params: Record<string, string | number | boolean | null | undefined> = {}) {
+export async function callMoodle(wsFunction: string, params: Record<string, string | number | boolean | null | undefined> = {}) {
   const moodleUrl = Deno.env.get('MOODLE_URL')
   const token = Deno.env.get('MOODLE_TOKEN')
   if (!moodleUrl || !token) throw new Error('Faltan MOODLE_URL o MOODLE_TOKEN')
@@ -59,4 +59,45 @@ export async function enrollMoodleUser(userId: number, courseId: number) {
     'enrolments[0][userid]': userId,
     'enrolments[0][courseid]': courseId,
   })
+}
+
+export async function listMoodleCourses() {
+  const courses = await callMoodle('core_course_get_courses')
+  return (courses || [])
+    .filter((course: any) => Number(course.id) !== 1)
+    .map((course: any) => ({
+      id: Number(course.id),
+      fullname: course.fullname,
+      shortname: course.shortname,
+      categoryid: Number(course.categoryid || 0),
+      visible: Boolean(Number(course.visible ?? 1)),
+    }))
+}
+
+export async function createMoodleCourse(input: {
+  fullname: string
+  shortname: string
+  summary?: string | null
+  categoryid?: number | null
+}) {
+  const defaultCategoryId = Number(Deno.env.get('MOODLE_DEFAULT_CATEGORY_ID') || 1)
+  const categoryid = Number(input.categoryid || defaultCategoryId)
+
+  const res = await callMoodle('core_course_create_courses', {
+    'courses[0][fullname]': input.fullname,
+    'courses[0][shortname]': input.shortname,
+    'courses[0][categoryid]': categoryid,
+    'courses[0][summary]': input.summary || '',
+    'courses[0][summaryformat]': 1,
+    'courses[0][format]': 'topics',
+    'courses[0][visible]': 1,
+  })
+
+  if (!res?.[0]?.id) throw new Error('Moodle no retorno ID de curso')
+  return {
+    id: Number(res[0].id),
+    fullname: input.fullname,
+    shortname: input.shortname,
+    categoryid,
+  }
 }

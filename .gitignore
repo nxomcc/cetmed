@@ -9,6 +9,7 @@ build/
 !frontend/dist/
 !frontend/dist/**
 supabase/.temp/
+CHECKLIST_DESARROLLO.md
 
 
 # Env files (keep example)
