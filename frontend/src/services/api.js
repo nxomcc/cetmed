@@ -45,7 +45,17 @@ function categoriaRowToStrapi(row) {
 
 async function invokeFunction(name, body) {
   const { data, error } = await supabase.functions.invoke(name, { body })
-  if (error) throw new Error(error.message || `Error en ${name}`)
+  if (error) {
+    if (error.context) {
+      try {
+        const payload = await error.context.json()
+        throw new Error(payload?.error || error.message || `Error en ${name}`)
+      } catch (payloadError) {
+        if (payloadError?.message) throw payloadError
+      }
+    }
+    throw new Error(error.message || `Error en ${name}`)
+  }
   return data
 }
 
