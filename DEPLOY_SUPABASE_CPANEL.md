@@ -42,6 +42,9 @@ supabase secrets set PUBLIC_SITE_URL=https://new.cetmed.cl
 supabase secrets set PUBLIC_SITE_ORIGINS=https://new.cetmed.cl,https://cetmed.cl
 supabase secrets set ENABLE_PAYMENT_SIMULATION=true
 supabase secrets set MOODLE_DEFAULT_CATEGORY_ID=1
+supabase secrets set MAIL_WEBHOOK_URL=https://new.cetmed.cl/mail/send.php
+supabase secrets set MAIL_WEBHOOK_TOKEN=...
+supabase secrets set MAIL_INTERNAL_TO=contacto@cetmed.cl
 ```
 
 En produccion cambiar:
@@ -69,6 +72,20 @@ window.__CETMED_CONFIG__ = {
 ```
 
 `config.js` queda excluido del `rsync` para no borrar la configuracion local del servidor.
+
+Crear/editar tambien:
+
+```text
+/home/cetmedcl/new.cetmed.cl/mail/send.php
+```
+
+Reemplazar:
+
+```php
+$MAIL_WEBHOOK_TOKEN = 'REPLACE_WITH_MAIL_WEBHOOK_TOKEN';
+```
+
+por el mismo token configurado en `MAIL_WEBHOOK_TOKEN`.
 
 ## 4. Compra de prueba
 

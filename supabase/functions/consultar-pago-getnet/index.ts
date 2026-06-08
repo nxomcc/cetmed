@@ -1,6 +1,7 @@
 import { handleOptions, json } from '../_shared/cors.ts'
 import { enrollOrderCourses } from '../_shared/enrollment.ts'
 import { generateGetnetAuth, getnetEndpoint } from '../_shared/getnet.ts'
+import { sendEnrollmentEmails } from '../_shared/mail.ts'
 import { serviceClient } from '../_shared/supabase.ts'
 
 Deno.serve(async (req) => {
@@ -31,17 +32,19 @@ Deno.serve(async (req) => {
     const getnetStatus = data.status?.status
     let finalState = 'pendiente'
     let enrollment = null
+    let mail = null
 
     if (getnetStatus === 'APPROVED') {
       finalState = 'completado'
       await sb.from('pedidos').update({ estado: finalState, updated_at: new Date().toISOString() }).eq('id', order.id)
       enrollment = await enrollOrderCourses(sb, order)
+      mail = await sendEnrollmentEmails(order, enrollment).catch((mailError) => ({ error: mailError.message }))
     } else if (getnetStatus === 'REJECTED') {
       finalState = 'rechazado'
       await sb.from('pedidos').update({ estado: finalState, updated_at: new Date().toISOString() }).eq('id', order.id)
     }
 
-    return json(req, { status: finalState, getnetStatus, enrollment })
+    return json(req, { status: finalState, getnetStatus, enrollment, mail })
   } catch (error) {
     return json(req, { error: error.message || 'Error al consultar pago' }, 500)
   }

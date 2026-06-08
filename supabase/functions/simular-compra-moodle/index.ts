@@ -1,5 +1,6 @@
 import { handleOptions, json } from '../_shared/cors.ts'
 import { enrollOrderCourses } from '../_shared/enrollment.ts'
+import { sendEnrollmentEmails } from '../_shared/mail.ts'
 import { serviceClient } from '../_shared/supabase.ts'
 
 Deno.serve(async (req) => {
@@ -48,7 +49,8 @@ Deno.serve(async (req) => {
 
     if (orderError) throw orderError
     const enrollment = await enrollOrderCourses(sb, order)
-    return json(req, { orderId: order.id, status: order.estado, enrollment }, 201)
+    const mail = await sendEnrollmentEmails(order, enrollment).catch((mailError) => ({ error: mailError.message }))
+    return json(req, { orderId: order.id, status: order.estado, enrollment, mail }, 201)
   } catch (error) {
     return json(req, { error: error.message || 'Error al simular compra' }, 500)
   }
