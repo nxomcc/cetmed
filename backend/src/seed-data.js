@@ -37,175 +37,175 @@ async function seed() {
   const mediaList = [
   {
     "name": "trabajo-en-altura.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2026/02/trabajo-en-altura.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2026/02/trabajo-en-altura.jpg"
   },
   {
     "name": "andamioss.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2026/02/andamioss.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2026/02/andamioss.jpg"
   },
   {
     "name": "trabajo-seguro.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2026/02/trabajo-seguro.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2026/02/trabajo-seguro.jpg"
   },
   {
     "name": "inclusion.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2026/02/inclusion.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2026/02/inclusion.jpg"
   },
   {
     "name": "auxilio-1.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2026/02/auxilio-1.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2026/02/auxilio-1.jpg"
   },
   {
     "name": "sustancia-peligrosa.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2026/02/sustancia-peligrosa.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2026/02/sustancia-peligrosa.jpg"
   },
   {
     "name": "extintores2.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2026/02/extintores2.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2026/02/extintores2.jpg"
   },
   {
     "name": "bloqueo-LOTO.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2026/02/bloqueo-LOTO.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2026/02/bloqueo-LOTO.png"
   },
   {
     "name": "CETMED50.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/10/CETMED50.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/10/CETMED50.png"
   },
   {
     "name": "excel-basico.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/03/primer-plano-manos-usando-computadora-portatil-pantalla-que-muestra-datos-analisis_53876-23014.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/03/primer-plano-manos-usando-computadora-portatil-pantalla-que-muestra-datos-analisis_53876-23014.jpg"
   },
   {
     "name": "electricista.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/03/electricista-masculino-trabaja-centralita-cable-conexion-electrica_169016-16570.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/03/electricista-masculino-trabaja-centralita-cable-conexion-electrica_169016-16570.jpg"
   },
   {
     "name": "curso_cuidadores.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/04/curso_cuidadores.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/04/curso_cuidadores.jpg"
   },
   {
     "name": "primer-plano-manos-usando-computadora-portatil-pantalla-que-muestra-datos-analisis_53876-23014.jpg.avif",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/03/primer-plano-manos-usando-computadora-portatil-pantalla-que-muestra-datos-analisis_53876-23014.jpg.avif"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/03/primer-plano-manos-usando-computadora-portatil-pantalla-que-muestra-datos-analisis_53876-23014.jpg.avif"
   },
   {
     "name": "electricista-masculino-trabaja-centralita-cable-conexion-electrica_169016-16570.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/03/electricista-masculino-trabaja-centralita-cable-conexion-electrica_169016-16570.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/03/electricista-masculino-trabaja-centralita-cable-conexion-electrica_169016-16570.jpg"
   },
   {
     "name": "nuevo-uniforme-carabineros-chile-900x600-1.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/10/nuevo-uniforme-carabineros-chile-900x600-1.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/10/nuevo-uniforme-carabineros-chile-900x600-1.jpg"
   },
   {
     "name": "libro-ingles-descansando-sobre-mesa-espacio-trabajo_23-2149429592.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/03/libro-ingles-descansando-sobre-mesa-espacio-trabajo_23-2149429592.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/03/libro-ingles-descansando-sobre-mesa-espacio-trabajo_23-2149429592.jpg"
   },
   {
     "name": "woman-having-abdomen-massage-by-professional-osteopathy-therapist_1139-1123.jpg.avif",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/03/woman-having-abdomen-massage-by-professional-osteopathy-therapist_1139-1123.jpg.avif"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/03/woman-having-abdomen-massage-by-professional-osteopathy-therapist_1139-1123.jpg.avif"
   },
   {
     "name": "dia-soleado_1098-15872.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/03/dia-soleado_1098-15872.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/03/dia-soleado_1098-15872.jpg"
   },
   {
     "name": "CETMED98.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/11/CETMED98.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/11/CETMED98.png"
   },
   {
     "name": "CETMED86.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/11/CETMED86.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/11/CETMED86.png"
   },
   {
     "name": "CETMED101.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/11/CETMED101.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/11/CETMED101.png"
   },
   {
     "name": "CETMED79.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/11/CETMED79.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/11/CETMED79.png"
   },
   {
     "name": "CETMED131.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/12/CETMED131.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/12/CETMED131.png"
   },
   {
     "name": "CETMED27.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/09/CETMED27.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/09/CETMED27.png"
   },
   {
     "name": "Diseno-sin-titulo-16.webp",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/07/Diseno-sin-titulo-16.webp"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/07/Diseno-sin-titulo-16.webp"
   },
   {
     "name": "CETMED62.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/10/CETMED62.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/10/CETMED62.png"
   },
   {
     "name": "CETMED95.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/11/CETMED95.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/11/CETMED95.png"
   },
   {
     "name": "CETMED104.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/11/CETMED104.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/11/CETMED104.png"
   },
   {
     "name": "CETMED114.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/12/CETMED114.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/12/CETMED114.png"
   },
   {
     "name": "CETMED121.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/12/CETMED121.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/12/CETMED121.png"
   },
   {
     "name": "CETMED125.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/12/CETMED125.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/12/CETMED125.png"
   },
   {
     "name": "CETMED128.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/12/CETMED128.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/12/CETMED128.png"
   },
   {
     "name": "CETMED130-1.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/12/CETMED130-1.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/12/CETMED130-1.png"
   },
   {
     "name": "CETMED43.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/10/CETMED43.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/10/CETMED43.png"
   },
   {
     "name": "CETMED129.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/12/CETMED129.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/12/CETMED129.png"
   },
   {
     "name": "CETMED18.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/09/CETMED18.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/09/CETMED18.png"
   },
   {
     "name": "CETMED61.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/11/CETMED61.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/11/CETMED61.png"
   },
   {
     "name": "CETMED56.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/10/CETMED56.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/10/CETMED56.png"
   },
   {
     "name": "141.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/07/141.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/07/141.png"
   },
   {
     "name": "131.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/08/131.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/08/131.png"
   },
   {
     "name": "image.png",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/05/image.png"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/05/image.png"
   },
   {
     "name": "images.jpeg",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/03/images.jpeg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/03/images.jpeg"
   },
   {
     "name": "diferentes-personas-que-ocupan-logistica-almacen_23-21491282.jpg",
-    "url": "https://cetmed.cl/wp-content/uploads/2025/03/diferentes-personas-que-ocupan-logistica-almacen_23-21491282.jpg"
+    "url": "https://old.cetmed.cl/wp-content/uploads/2025/03/diferentes-personas-que-ocupan-logistica-almacen_23-21491282.jpg"
   }
 ]
 

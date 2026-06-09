@@ -1,7 +1,8 @@
 const defaultOrigins = [
   'http://localhost:5173',
-  'https://new.cetmed.cl',
   'https://cetmed.cl',
+  'https://www.cetmed.cl',
+  'https://old.cetmed.cl',
 ]
 
 export function corsHeaders(req: Request) {

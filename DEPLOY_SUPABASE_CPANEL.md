@@ -39,12 +39,12 @@ supabase secrets set MOODLE_TOKEN=...
 supabase secrets set GETNET_LOGIN=...
 supabase secrets set GETNET_SECRET_KEY=...
 supabase secrets set GETNET_ENDPOINT=https://checkout.test.getnet.cl
-supabase secrets set PUBLIC_SITE_URL=https://new.cetmed.cl
-supabase secrets set PUBLIC_SITE_ORIGINS=https://new.cetmed.cl,https://cetmed.cl
+supabase secrets set PUBLIC_SITE_URL=https://cetmed.cl
+supabase secrets set PUBLIC_SITE_ORIGINS=https://cetmed.cl,https://www.cetmed.cl,https://old.cetmed.cl
 supabase secrets set ENABLE_PAYMENT_SIMULATION=true
 supabase secrets set SIMULATION_WEBHOOK_TOKEN=...
 supabase secrets set MOODLE_DEFAULT_CATEGORY_ID=1
-supabase secrets set MAIL_WEBHOOK_URL=https://new.cetmed.cl/mail/send.php
+supabase secrets set MAIL_WEBHOOK_URL=https://cetmed.cl/mail/send.php
 supabase secrets set MAIL_WEBHOOK_TOKEN=...
 supabase secrets set MAIL_INTERNAL_TO=contacto@cetmed.cl
 ```
@@ -61,7 +61,7 @@ supabase secrets set GETNET_ENDPOINT=https://checkout.getnet.cl
 El deploy Git solo copia `frontend/dist` a:
 
 ```text
-/home/cetmedcl/new.cetmed.cl
+/home/cetmedcl/public_html
 ```
 
 Crear en esa carpeta un archivo `config.js`:
@@ -74,6 +74,7 @@ window.__CETMED_CONFIG__ = {
 ```
 
 `config.js` queda excluido del `rsync` para no borrar la configuracion local del servidor.
+Al migrar desde `new.cetmed.cl`, el deploy intenta reutilizar `/home/cetmedcl/new.cetmed.cl/config.js` si aun no existe `/home/cetmedcl/public_html/config.js`.
 
 Crear el token privado del webhook en el home de cPanel, fuera del document root:
 
@@ -83,9 +84,28 @@ chmod 600 /home/cetmedcl/.cetmed-mail-token
 ```
 
 Ese token debe ser el mismo valor configurado en `MAIL_WEBHOOK_TOKEN`.
-El archivo `/home/cetmedcl/new.cetmed.cl/mail/send.php` se publica desde Git y no debe editarse a mano.
+El archivo `/home/cetmedcl/public_html/mail/send.php` se publica desde Git y no debe editarse a mano.
 
-## 4. Compra de prueba
+## 4. Migracion de new.cetmed.cl a cetmed.cl
+
+Antes de apuntar `cetmed.cl` a la app nueva, mover el sitio WordPress actual a `old.cetmed.cl` desde cPanel:
+
+1. Crear el subdominio `old.cetmed.cl` con document root propio.
+2. Copiar o mover los archivos del document root actual de `cetmed.cl` al document root de `old.cetmed.cl`.
+3. Ajustar el dominio del WordPress antiguo a `https://old.cetmed.cl` desde wp-admin o con WP-CLI.
+4. Verificar que `https://old.cetmed.cl/wp-content/uploads/...` responde antes de desplegar la app nueva.
+5. Mantener `cetmed.cl` en su document root principal `/home/cetmedcl/public_html`.
+6. Ejecutar el deploy Git de este repositorio.
+
+Si la base Supabase ya contiene URLs del WordPress antiguo con `https://cetmed.cl/wp-content`, actualizarlas a `old.cetmed.cl`:
+
+```sql
+update media
+set url = replace(url, 'https://cetmed.cl/wp-content', 'https://old.cetmed.cl/wp-content')
+where url like 'https://cetmed.cl/wp-content%';
+```
+
+## 5. Compra de prueba
 
 1. En el admin, cada curso debe tener `ID curso Moodle`.
 2. En Edge Functions dejar `ENABLE_PAYMENT_SIMULATION=true`.

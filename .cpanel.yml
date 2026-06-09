@@ -1,12 +1,13 @@
 ---
 deployment:
   tasks:
-    - export FRONTEND_PUBLIC_PATH="/home/cetmedcl/new.cetmed.cl"
+    - export FRONTEND_PUBLIC_PATH="/home/cetmedcl/public_html"
     - export REPO_PATH="/home/cetmedcl/repositories/cetmed"
     - /bin/test -d $REPO_PATH/frontend/dist
     - /bin/mkdir -p $FRONTEND_PUBLIC_PATH
     - /bin/mkdir -p /home/cetmedcl/.cetmed-deploy-backup
     - /bin/cp -f $FRONTEND_PUBLIC_PATH/config.js /home/cetmedcl/.cetmed-deploy-backup/config.js 2>/dev/null || true
+    - /bin/test -f /home/cetmedcl/.cetmed-deploy-backup/config.js || /bin/cp -f /home/cetmedcl/new.cetmed.cl/config.js /home/cetmedcl/.cetmed-deploy-backup/config.js 2>/dev/null || true
     - /bin/find $FRONTEND_PUBLIC_PATH -mindepth 1 -exec /bin/rm -rf {} +
     - /bin/cp -a $REPO_PATH/frontend/dist/. $FRONTEND_PUBLIC_PATH/
     - /bin/cp -f /home/cetmedcl/.cetmed-deploy-backup/config.js $FRONTEND_PUBLIC_PATH/config.js 2>/dev/null || true
