@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-const LOGO_URL = 'https://cetmed.cl/wp-content/uploads/2025/02/Logo-web.png'
+const LOGO_URL = '/images/brand/logo-web.png'
 
 const LINKS = [
   { to: '/',         label: 'Inicio' },
@@ -110,17 +110,17 @@ export default function Footer() {
             {/* Certification logos */}
             <div className="mt-6 space-y-3">
               <div className="flex flex-wrap items-center gap-3">
-                <img src="https://cetmed.cl/wp-content/uploads/2025/02/Logo_Sence_Blanco.png"
+                <img src="/images/certifications/logo-sence-blanco.png"
                   loading="lazy" decoding="async"
                   alt="SENCE" className="h-8 w-auto object-contain" />
-                <img src="https://cetmed.cl/wp-content/uploads/2025/02/certificacion_nch2-pequeno.png.webp"
+                <img src="/images/certifications/certificacion-nch2-pequeno.webp"
                   loading="lazy" decoding="async"
                   alt="NCh 2728" className="h-8 w-auto object-contain" />
               </div>
-              <img src="https://cetmed.cl/wp-content/uploads/2025/02/banderas.png"
+              <img src="/images/certifications/banderas.png"
                 loading="lazy" decoding="async"
                 alt="Certificaciones internacionales" className="h-6 w-auto object-contain" />
-              <img src="https://cetmed.cl/wp-content/uploads/2025/10/3-cuotas-precio-contado-1.png"
+              <img src="/images/payments/3-cuotas-precio-contado.png"
                 loading="lazy" decoding="async"
                 alt="3 cuotas precio contado" className="h-10 w-auto object-contain" />
             </div>

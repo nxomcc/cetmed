@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import useCart from '../../hooks/useCart'
 
-const LOGO_URL = 'https://cetmed.cl/wp-content/uploads/2025/02/Logo-web.png'
+const LOGO_URL = '/images/brand/logo-web.png'
 
 const NAV_LINKS = [
   { to: '/',         label: 'Inicio' },

@@ -222,7 +222,7 @@ img, video, svg { display: block; max-width: 100%; }
   flex: 1;
   background:
     linear-gradient(rgba(0,37,84,0.72), rgba(0,61,122,0.65)),
-    url('https://cetmed.cl/wp-content/uploads/2025/02/FGGGG.png') center/cover no-repeat;
+    url('/images/hero/hero-cetmed.png') center/cover no-repeat;
   position: relative;
   display: flex;
   align-items: center;

@@ -66,7 +66,6 @@ export async function getCursos(filters = {}) {
   let q = supabase
     .from('cursos')
     .select('*, categorias(*), media(*)')
-    .eq('activo', true)
     .not('published_at', 'is', null)
     .order('created_at', { ascending: false })
     .limit(pageSize)

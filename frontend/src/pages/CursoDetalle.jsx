@@ -37,12 +37,14 @@ export default function CursoDetalle() {
 
   const { id, attributes: a } = curso
   const imgSrc = a?.imagen?.data?.attributes?.url
-    ? (a.imagen.data.attributes.url.startsWith('http') ? a.imagen.data.attributes.url : `http://localhost:1337${a.imagen.data.attributes.url}`)
+    ? (a.imagen.data.attributes.url.startsWith('http') || a.imagen.data.attributes.url.startsWith('/') ? a.imagen.data.attributes.url : `http://localhost:1337${a.imagen.data.attributes.url}`)
     : `https://placehold.co/800x400/003d7a/ffffff?text=${encodeURIComponent(a.titulo)}`
 
   const added = inCart(id)
+  const activo = a.activo !== false
 
   function handleAdd() {
+    if (!activo) return
     addItem({ id, titulo: a.titulo, precio: a.precio, modalidad: a.modalidad, imagen: imgSrc, slug })
   }
 
@@ -64,6 +66,9 @@ export default function CursoDetalle() {
             )}
             {a.franquicia_sence && (
               <span className="tag bg-[var(--accent)] text-[var(--primary-dark)]">SENCE</span>
+            )}
+            {!activo && (
+              <span className="tag bg-white/20 text-white">No disponible</span>
             )}
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-white max-w-2xl">{a.titulo}</h1>
@@ -126,17 +131,19 @@ export default function CursoDetalle() {
                   </p>
                 )}
 
-                <button onClick={handleAdd} disabled={added}
+                <button onClick={handleAdd} disabled={!activo || added}
                   className={`w-full flex items-center justify-center gap-2 text-base font-bold py-3 px-6 rounded-lg transition-all mb-3 ${
-                    added
+                    !activo
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : added
                       ? 'bg-green-100 text-green-700 cursor-default'
                       : 'bg-[var(--accent)] text-[var(--primary-dark)] hover:bg-[var(--accent-dark)] hover:-translate-y-0.5 shadow hover:shadow-lg'
                   }`}>
-                  <span className="material-icons">{added ? 'check' : 'add_shopping_cart'}</span>
-                  {added ? 'En tu carrito' : 'Agregar al carrito'}
+                  <span className="material-icons">{!activo ? 'block' : added ? 'check' : 'add_shopping_cart'}</span>
+                  {!activo ? 'No disponible para compra' : added ? 'En tu carrito' : 'Agregar al carrito'}
                 </button>
 
-                {added && (
+                {activo && added && (
                   <Link to="/checkout" className="btn-primary w-full justify-center mb-3">
                     Ir al checkout
                     <span className="material-icons text-sm">arrow_forward</span>

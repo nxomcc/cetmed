@@ -8,12 +8,12 @@ import useCart from '../hooks/useCart'
 
 /* ── Mock data fallback (when CMS offline) ────────── */
 const MOCK_CURSOS = [
-  { id:1, attributes:{ titulo:'Técnicas de primeros auxilios básicos RCP Y DEA', precio:0, modalidad:'E-Learning', horas:16, slug:'primeros-auxilios-rcp-dea', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/auxilio-1-300x200.jpg' } } } } },
-  { id:2, attributes:{ titulo:'Gestor de inclusión laboral', precio:0, modalidad:'Presencial', horas:40, slug:'gestor-inclusion-laboral', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/inclusion-300x188.jpg' } } } } },
-  { id:3, attributes:{ titulo:'Técnicas de trabajo seguro en espacios confinados', precio:0, modalidad:'E-Learning', horas:16, slug:'trabajo-seguro-espacios-confinados', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/trabajo-seguro-300x188.jpg' } } } } },
-  { id:4, attributes:{ titulo:'Técnicas de seguridad en el montaje y desmontaje de andamios', precio:0, modalidad:'E-Learning', horas:16, slug:'seguridad-andamios', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/andamioss-300x188.jpg' } } } } },
-  { id:5, attributes:{ titulo:'Manejo de extintores portátiles', precio:0, modalidad:'E-Learning', horas:8, slug:'manejo-extintores', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/extintores2-300x188.jpg' } } } } },
-  { id:6, attributes:{ titulo:'Procedimientos para trabajo en altura física', precio:0, modalidad:'Presencial', horas:16, slug:'trabajo-en-altura', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'https://cetmed.cl/wp-content/uploads/2026/02/trabajo-en-altura-300x200.jpg' } } } } },
+  { id:1, attributes:{ titulo:'Técnicas de primeros auxilios básicos RCP Y DEA', precio:0, modalidad:'E-Learning', horas:16, slug:'primeros-auxilios-rcp-dea', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/primeros-auxilios-rcp-dea.jpg' } } } } },
+  { id:2, attributes:{ titulo:'Gestor de inclusión laboral', precio:0, modalidad:'Presencial', horas:40, slug:'gestor-inclusion-laboral', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/gestor-inclusion-laboral.jpg' } } } } },
+  { id:3, attributes:{ titulo:'Técnicas de trabajo seguro en espacios confinados', precio:0, modalidad:'E-Learning', horas:16, slug:'trabajo-seguro-espacios-confinados', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-seguro-espacios-confinados.jpg' } } } } },
+  { id:4, attributes:{ titulo:'Técnicas de seguridad en el montaje y desmontaje de andamios', precio:0, modalidad:'E-Learning', horas:16, slug:'seguridad-andamios', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/seguridad-andamios.jpg' } } } } },
+  { id:5, attributes:{ titulo:'Manejo de extintores portátiles', precio:0, modalidad:'E-Learning', horas:8, slug:'manejo-extintores', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/manejo-extintores.jpg' } } } } },
+  { id:6, attributes:{ titulo:'Procedimientos para trabajo en altura física', precio:0, modalidad:'Presencial', horas:16, slug:'trabajo-en-altura', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-en-altura.jpg' } } } } },
 ]
 
 const MOCK_NOTICIAS = [
@@ -30,21 +30,21 @@ const STATS = [
 ]
 
 const AREAS = [
-  { label:'Administración',                  img:'https://cetmed.cl/wp-content/themes/wpopus-fse/assets/images/service3.webp', category: 'Servicio a las Personas' },
-  { label:'Alimentación, Gastronomía y Turismo', img:'https://cetmed.cl/wp-content/uploads/2025/03/grupo-cocineros-trabajando-cocina_53876-42734.jpg.avif', category: 'Servicio a las Personas' },
-  { label:'Artes, Artesanías y Gráficas',    img:'https://cetmed.cl/wp-content/uploads/2025/03/arreglo-dibujo-marcadores_23-2148577709.jpg', category: 'Ciencias y Técnicas Aplicadas' },
-  { label:'Ciencias y Técnicas Aplicadas',   img:'https://cetmed.cl/wp-content/uploads/2025/03/examinando-modelo-molecular_1098-19572.jpg', category: 'Ciencias y Técnicas Aplicadas' },
-  { label:'Computación e Informática',       img:'https://cetmed.cl/wp-content/themes/wpopus-fse/assets/images/service4.webp', category: 'Computación e Informática' },
-  { label:'Construcción',                    img:'https://cetmed.cl/wp-content/uploads/2025/03/trabajadores-examinando-obra_1122-970.jpg.avif', category: 'Construcción' },
-  { label:'Ecología',                        img:'https://cetmed.cl/wp-content/uploads/2025/03/fotografia-aerea-espeso-bosque-hermosos-arboles-vegetacion_181624-2812.jpg.avif', category: 'Ciencias y Técnicas Aplicadas' },
-  { label:'Educación y Capacitación',        img:'https://cetmed.cl/wp-content/uploads/2025/03/todos-sonrien-escuchan-grupo-personas-conferencia-negocios-aula-moderna-dia_146671-16288.jpg.avif', category: 'Servicio a las Personas' },
-  { label:'Electricidad y Electrónica',      img:'https://cetmed.cl/wp-content/uploads/2025/03/sirva-tecnico-electrico-que-trabaja-centralita-fusibles_169016-24062.jpg.avif', category: 'Electricidad y Electrónica' },
-  { label:'Idiomas y Comunicación',          img:'https://cetmed.cl/wp-content/uploads/2025/03/libro-ingles-descansando-sobre-mesa-espacio-trabajo_23-2149429592.jpg', category: 'Servicio a las Personas' },
-  { label:'Mecánica Industrial',             img:'https://cetmed.cl/wp-content/uploads/2025/03/trabajador-industrial-que-trabaja-linea-produccion-fabrica_342744-177.jpg.avif', category: 'Procesos Industriales' },
-  { label:'Minería',                         img:'https://cetmed.cl/wp-content/uploads/2025/03/camion-volquete-mina-cielo_181624-60225.jpg.avif', category: 'Construcción' },
-  { label:'Procesos Industriales',           img:'https://cetmed.cl/wp-content/uploads/2025/03/tecnologo-traje-proteccion-blanco-comprobando-presion-manometro-maquina-industrial-fabrica_342744-1194.jpg', category: 'Procesos Industriales' },
-  { label:'Salud Nutrición y Dietética',     img:'https://cetmed.cl/wp-content/uploads/2025/03/concepto-dieta-cientifica-comida-sana_23-2148193255.jpg.avif', category: 'Salud' },
-  { label:'Servicio a las Personas',         img:'https://cetmed.cl/wp-content/uploads/2025/03/feliz-apreton-manos-reparador-automoviles-cliente-taller_637285-8634.jpg.avif', category: 'Servicio a las Personas' },
+  { label:'Administración',                  img:'/images/areas/administracion.webp', category: 'Servicio a las Personas' },
+  { label:'Alimentación, Gastronomía y Turismo', img:'/images/areas/alimentacion-gastronomia-turismo.avif', category: 'Servicio a las Personas' },
+  { label:'Artes, Artesanías y Gráficas',    img:'/images/areas/artes-artesanias-graficas.jpg', category: 'Ciencias y Técnicas Aplicadas' },
+  { label:'Ciencias y Técnicas Aplicadas',   img:'/images/areas/ciencias-tecnicas-aplicadas.jpg', category: 'Ciencias y Técnicas Aplicadas' },
+  { label:'Computación e Informática',       img:'/images/areas/computacion-informatica.webp', category: 'Computación e Informática' },
+  { label:'Construcción',                    img:'/images/areas/construccion.avif', category: 'Construcción' },
+  { label:'Ecología',                        img:'/images/areas/ecologia.avif', category: 'Ciencias y Técnicas Aplicadas' },
+  { label:'Educación y Capacitación',        img:'/images/areas/educacion-capacitacion.avif', category: 'Servicio a las Personas' },
+  { label:'Electricidad y Electrónica',      img:'/images/areas/electricidad-electronica.avif', category: 'Electricidad y Electrónica' },
+  { label:'Idiomas y Comunicación',          img:'/images/areas/idiomas-comunicacion.jpg', category: 'Servicio a las Personas' },
+  { label:'Mecánica Industrial',             img:'/images/areas/mecanica-industrial.avif', category: 'Procesos Industriales' },
+  { label:'Minería',                         img:'/images/areas/mineria.avif', category: 'Construcción' },
+  { label:'Procesos Industriales',           img:'/images/areas/procesos-industriales.jpg', category: 'Procesos Industriales' },
+  { label:'Salud Nutrición y Dietética',     img:'/images/areas/salud-nutricion-dietetica.avif', category: 'Salud' },
+  { label:'Servicio a las Personas',         img:'/images/areas/servicio-personas.avif', category: 'Servicio a las Personas' },
 ]
 
 function useCountUp(target, active) {
@@ -207,7 +207,7 @@ export default function Home() {
  
             <div data-reveal="right" className="relative">
               <img
-                src="https://cetmed.cl/wp-content/uploads/2025/12/PORTAFOLIO-DE-SERVICIOS-DE-CAPACITACION2.png"
+                src="/images/about/portafolio-servicios-capacitacion.png"
                 alt="CETMED Portafolio de Servicios"
                 loading="lazy"
                 decoding="async"

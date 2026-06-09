@@ -53,7 +53,7 @@ export default function Nosotros() {
             </div>
             <div data-reveal="right">
               <img
-                src="https://cetmed.cl/wp-content/uploads/2025/12/PORTAFOLIO-DE-SERVICIOS-DE-CAPACITACION2.png"
+                src="/images/about/portafolio-servicios-capacitacion.png"
                 alt="CETMED Portafolio de Servicios"
                 loading="lazy"
                 decoding="async"
@@ -65,9 +65,9 @@ export default function Nosotros() {
           {/* Certificaciones */}
           <div className="grid sm:grid-cols-3 gap-5 mb-20">
             {[
-              { img:'https://cetmed.cl/wp-content/uploads/2025/02/Logo_Sence_Blanco.png',   bg:'bg-[var(--primary)]',      label:'SENCE',                             desc:'Organismo Técnico de Capacitación certificado por el Servicio Nacional de Capacitación y Empleo.' },
-              { img:'https://cetmed.cl/wp-content/uploads/2025/02/certificacion_nch2-pequeno.png.webp', bg:'bg-white border border-[var(--border)]', label:'NCh 2728:2015', desc:'Certificados bajo la Norma Chilena de Calidad para Organismos Técnicos de Capacitación.' },
-              { img:'https://cetmed.cl/wp-content/uploads/2025/02/banderas.png',             bg:'bg-white border border-[var(--border)]', label:'Internacional',         desc:'Certificaciones con validez y reconocimiento a nivel nacional e internacional.' },
+              { img:'/images/certifications/logo-sence-blanco.png',   bg:'bg-[var(--primary)]',      label:'SENCE',                             desc:'Organismo Técnico de Capacitación certificado por el Servicio Nacional de Capacitación y Empleo.' },
+              { img:'/images/certifications/certificacion-nch2-pequeno.webp', bg:'bg-white border border-[var(--border)]', label:'NCh 2728:2015', desc:'Certificados bajo la Norma Chilena de Calidad para Organismos Técnicos de Capacitación.' },
+              { img:'/images/certifications/banderas.png',             bg:'bg-white border border-[var(--border)]', label:'Internacional',         desc:'Certificaciones con validez y reconocimiento a nivel nacional e internacional.' },
             ].map((c, i) => (
               <div key={i} className={`p-6 rounded-2xl ${c.bg} flex flex-col items-center text-center gap-3`} data-reveal data-delay={String(i+1)}>
                 <img src={c.img} alt={c.label} loading="lazy" decoding="async" className="h-12 w-auto object-contain" />
