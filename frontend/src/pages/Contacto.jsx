@@ -113,11 +113,15 @@ export default function Contacto() {
                 </div>
               ))}
 
-              <div className="rounded-xl overflow-hidden border border-[var(--border)] aspect-video bg-[var(--bg-light)] flex items-center justify-center" data-reveal>
-                <div className="text-center text-[var(--text-muted)]">
-                  <span className="material-icons text-4xl mb-2 block">map</span>
-                  <p className="text-sm">Coquimbo, Chile</p>
-                </div>
+              <div className="rounded-xl overflow-hidden border border-[var(--border)] aspect-video bg-[var(--bg-light)]" data-reveal>
+                <iframe
+                  title="Ubicacion CETMED en Coquimbo"
+                  src="https://www.google.com/maps?q=Av.%20Videla%20810%20Oficina%20208%20209%20Edificio%20Verne%20Coquimbo%20Chile&output=embed"
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
               </div>
             </div>
 
