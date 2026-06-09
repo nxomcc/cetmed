@@ -305,6 +305,11 @@ export async function getDescuentos() {
   return { data: rows.map(strapiWrap), meta: { pagination: { total: rows.length } } }
 }
 
+export async function getCursosForSelect() {
+  const rows = await selectList('cursos', 'id,titulo', 'titulo', true)
+  return rows.map(row => ({ id: row.id, titulo: row.titulo }))
+}
+
 export async function createDescuento(payload) {
   const body = unwrapData(payload)
   const { data, error } = await supabase.from('descuentos').insert(body).select('*').single()
@@ -392,13 +397,13 @@ export async function downloadLeadsCSV() {
 }
 
 export async function getUsers() {
-  const rows = await selectList('users')
+  const rows = await selectList('users', 'id,username,email,role,blocked,created_at')
   return rows.map(fmtUser)
 }
 
 export async function getUser(id) {
   await requireSession()
-  const { data, error } = await supabase.from('users').select('*').eq('id', id).single()
+  const { data, error } = await supabase.from('users').select('id,username,email,role,blocked,created_at').eq('id', id).single()
   if (error) throw error
   return fmtUser(data)
 }

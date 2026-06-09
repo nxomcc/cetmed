@@ -36,16 +36,20 @@ export default function AdminDescuentos() {
 
   async function loadData() {
     try {
-      const [discountsRes, coursesRes] = await Promise.all([
-        api.getDescuentos(),
-        api.getCursos({ 'pagination[pageSize]': 500 }),
-      ])
+      const discountsRes = await api.getDescuentos()
       setDescuentos(discountsRes.data || [])
-      setCursos(coursesRes.data || [])
     } catch {
       toast('Error cargando descuentos', 'error')
     } finally {
       setLoading(false)
+    }
+
+    try {
+      const coursesRes = await api.getCursosForSelect()
+      setCursos(coursesRes || [])
+    } catch {
+      setCursos([])
+      toast('No se pudieron cargar los cursos para descuentos', 'error')
     }
   }
 
@@ -124,7 +128,7 @@ export default function AdminDescuentos() {
   }
 
   function courseTitle(id, row) {
-    return row?.cursos?.titulo || cursos.find(c => Number(c.id) === Number(id))?.attributes?.titulo || `Curso #${id}`
+    return row?.cursos?.titulo || cursos.find(c => Number(c.id) === Number(id))?.titulo || `Curso #${id}`
   }
 
   return (
@@ -179,7 +183,7 @@ export default function AdminDescuentos() {
                     <select required value={form.curso_id} onChange={e => setForm(p => ({ ...p, curso_id: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#003d7a]">
                       <option value="">Selecciona un curso...</option>
                       {cursos.map(c => (
-                        <option key={c.id} value={c.id}>{c.attributes?.titulo}</option>
+                        <option key={c.id} value={c.id}>{c.titulo}</option>
                       ))}
                     </select>
                   </div>
