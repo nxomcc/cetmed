@@ -9,6 +9,7 @@ const NAV = [
   { to: '/admin/noticias',   icon: 'article',       label: 'Noticias' },
   { to: '/admin/categorias', icon: 'category',      label: 'Categorías' },
   { to: '/admin/descuentos', icon: 'local_offer',   label: 'Descuentos', adminOnly: true },
+  { to: '/admin/matriculas',  icon: 'how_to_reg',    label: 'Matriculas' },
   { to: '/admin/pedidos',    icon: 'shopping_bag',  label: 'Pedidos'  },
   { to: '/admin/leads',      icon: 'contact_mail',  label: 'Leads'    },
   { to: '/admin/usuarios',   icon: 'manage_accounts', label: 'Usuarios', adminOnly: true },

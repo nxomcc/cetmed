@@ -504,3 +504,7 @@ export async function crearCursoMoodle(payload) {
   const data = await invokeFunction('crear-curso-moodle', payload)
   return data?.course
 }
+
+export async function matricularAlumno(payload) {
+  return invokeFunction('matricular-alumno', payload)
+}

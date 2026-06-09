@@ -22,6 +22,21 @@ function Badge({ activo }) {
   return <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${activo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>{activo ? 'Activo' : 'Inactivo'}</span>
 }
 
+function toDateTimeLocal(value) {
+  if (!value) return ''
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ''
+  const pad = n => String(n).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+function fromDateTimeLocal(value) {
+  if (!value) return null
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return null
+  return date.toISOString()
+}
+
 export default function AdminDescuentos() {
   const { toasts, toast, remove } = useToast()
   const [descuentos, setDescuentos] = useState([])
@@ -64,7 +79,7 @@ export default function AdminDescuentos() {
       tipo: a.tipo || 'porcentaje',
       valor: a.valor ?? '',
       activo: !!a.activo,
-      fecha_expiracion: a.fecha_expiracion ? a.fecha_expiracion.slice(0, 16) : '',
+      fecha_expiracion: toDateTimeLocal(a.fecha_expiracion),
       limite_usos: a.limite_usos ?? '',
       descripcion: a.descripcion || '',
       alcance: a.curso_id ? 'curso' : 'todos',
@@ -88,7 +103,7 @@ export default function AdminDescuentos() {
         tipo: form.tipo,
         valor: Number(form.valor),
         activo: form.activo,
-        fecha_expiracion: form.fecha_expiracion || null,
+        fecha_expiracion: fromDateTimeLocal(form.fecha_expiracion),
         limite_usos: form.limite_usos ? Number(form.limite_usos) : null,
         descripcion: form.descripcion,
         curso_id: form.alcance === 'curso' && form.curso_id ? Number(form.curso_id) : null,
