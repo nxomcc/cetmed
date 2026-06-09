@@ -38,7 +38,7 @@ export async function createMoodleUser(nombre: string, email: string, telefono?:
   const firstname = parts[0] || 'Alumno'
   const lastname = parts.slice(1).join(' ') || 'CETMED'
   const username = `${email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '')}${Math.floor(100 + Math.random() * 900)}`
-  const password = `Cetmed.${crypto.randomUUID().slice(0, 8)}!`
+  const password = generateMoodlePassword()
 
   const res = await callMoodle('core_user_create_users', {
     'users[0][username]': username,
@@ -51,6 +51,17 @@ export async function createMoodleUser(nombre: string, email: string, telefono?:
 
   if (!res?.[0]?.id) throw new Error('Moodle no retorno ID de usuario')
   return { id: res[0].id, username, password }
+}
+
+export function generateMoodlePassword() {
+  return `Cetmed.${crypto.randomUUID().slice(0, 8)}!`
+}
+
+export async function updateMoodleUserPassword(userId: number, password: string) {
+  await callMoodle('core_user_update_users', {
+    'users[0][id]': userId,
+    'users[0][password]': password,
+  })
 }
 
 export async function enrollMoodleUser(userId: number, courseId: number) {

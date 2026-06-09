@@ -65,8 +65,8 @@ Deno.serve(async (req) => {
 
     if (orderError) throw orderError
 
-    const enrollment = await enrollOrderCourses(sb, order)
-    const mail = await sendEnrollmentEmails(order, enrollment).catch((mailError) => ({ error: mailError.message }))
+    const enrollment = await enrollOrderCourses(sb, order, { resetExistingPassword: true })
+    const mail = await sendEnrollmentEmails(order, enrollment, { source: 'manual' }).catch((mailError) => ({ error: mailError.message }))
 
     if (!mail?.error) {
       await sb

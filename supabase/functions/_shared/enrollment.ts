@@ -1,6 +1,6 @@
-import { createMoodleUser, enrollMoodleUser, getMoodleUserByEmail } from './moodle.ts'
+import { createMoodleUser, enrollMoodleUser, generateMoodlePassword, getMoodleUserByEmail, updateMoodleUserPassword } from './moodle.ts'
 
-export async function enrollOrderCourses(sb: any, order: any) {
+export async function enrollOrderCourses(sb: any, order: any, options: { resetExistingPassword?: boolean } = {}) {
   const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items
   if (!Array.isArray(items) || items.length === 0) {
     return { enrolled: [], missingMoodleCourseIds: [], user: null, createdUser: false }
@@ -15,6 +15,9 @@ export async function enrollOrderCourses(sb: any, order: any) {
     moodleUser = { id: created.id, username: created.username }
     createdUser = true
     tempPassword = created.password
+  } else if (options.resetExistingPassword) {
+    tempPassword = generateMoodlePassword()
+    await updateMoodleUserPassword(Number(moodleUser.id), tempPassword)
   }
 
   const enrolled = []

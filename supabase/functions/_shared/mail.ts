@@ -54,13 +54,14 @@ export async function sendLeadEmail(lead: any) {
   return sendMail(internalTo, subject, html)
 }
 
-export async function sendEnrollmentEmails(order: any, enrollment: any) {
+export async function sendEnrollmentEmails(order: any, enrollment: any, options: { source?: 'purchase' | 'manual' } = {}) {
   const moodleUrl = Deno.env.get('MOODLE_URL') || 'https://cursos.cetmed.cl'
   const internalTo = Deno.env.get('MAIL_INTERNAL_TO') || 'contacto@cetmed.cl'
+  const isManual = options.source === 'manual'
   const enrolled = enrollment?.enrolled || []
   const courseList = enrolled.map((course: any) => `<li>${escapeHtml(course.title)} (Moodle #${course.moodleCourseId})</li>`).join('')
 
-  const accessBlock = enrollment?.createdUser
+  const accessBlock = enrollment?.user?.tempPassword
     ? `
       <p><strong>Usuario:</strong> ${escapeHtml(enrollment.user?.username || '')}</p>
       <p><strong>Contrasena temporal:</strong> ${escapeHtml(enrollment.user?.tempPassword || '')}</p>
@@ -73,7 +74,7 @@ export async function sendEnrollmentEmails(order: any, enrollment: any) {
 
   const studentHtml = `
     <div style="font-family:Arial,sans-serif;line-height:1.5;color:#1f2937">
-      <h2>Tu compra CETMED fue aprobada</h2>
+      <h2>${isManual ? 'Tu matricula CETMED fue creada' : 'Tu compra CETMED fue aprobada'}</h2>
       <p>Hola ${escapeHtml(order.nombre_cliente || '')},</p>
       <p>Ya tienes acceso a:</p>
       <ul>${courseList}</ul>
@@ -85,7 +86,7 @@ export async function sendEnrollmentEmails(order: any, enrollment: any) {
 
   const internalHtml = `
     <div style="font-family:Arial,sans-serif;line-height:1.5;color:#1f2937">
-      <h2>Nueva compra aprobada</h2>
+      <h2>${isManual ? 'Nueva matricula manual' : 'Nueva compra aprobada'}</h2>
       <p><strong>Pedido:</strong> #${order.id}</p>
       <p><strong>Cliente:</strong> ${escapeHtml(order.nombre_cliente || '')}</p>
       <p><strong>Email:</strong> ${escapeHtml(order.email_cliente || '')}</p>
@@ -98,6 +99,6 @@ export async function sendEnrollmentEmails(order: any, enrollment: any) {
 
   const results = []
   results.push(await sendMail(order.email_cliente, 'Acceso a tu curso CETMED', studentHtml))
-  results.push(await sendMail(internalTo, `Nueva compra aprobada #${order.id}`, internalHtml))
+  results.push(await sendMail(internalTo, `${isManual ? 'Nueva matricula manual' : 'Nueva compra aprobada'} #${order.id}`, internalHtml))
   return results
 }

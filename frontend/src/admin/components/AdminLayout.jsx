@@ -3,16 +3,41 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAdminAuth } from '../context/AdminAuthContext'
 import logo from '../../assets/logo.png'
 
-const NAV = [
-  { to: '/admin',            icon: 'dashboard',     label: 'Dashboard',   exact: true },
-  { to: '/admin/cursos',     icon: 'school',        label: 'Cursos'   },
-  { to: '/admin/noticias',   icon: 'article',       label: 'Noticias' },
-  { to: '/admin/categorias', icon: 'category',      label: 'Categorías' },
-  { to: '/admin/descuentos', icon: 'local_offer',   label: 'Descuentos', adminOnly: true },
-  { to: '/admin/matriculas',  icon: 'how_to_reg',    label: 'Matriculas' },
-  { to: '/admin/pedidos',    icon: 'shopping_bag',  label: 'Pedidos'  },
-  { to: '/admin/leads',      icon: 'contact_mail',  label: 'Leads'    },
-  { to: '/admin/usuarios',   icon: 'manage_accounts', label: 'Usuarios', adminOnly: true },
+const NAV_GROUPS = [
+  {
+    label: 'Principal',
+    items: [
+      { to: '/admin', icon: 'dashboard', label: 'Dashboard', exact: true },
+    ],
+  },
+  {
+    label: 'Contenido',
+    items: [
+      { to: '/admin/cursos', icon: 'school', label: 'Cursos' },
+      { to: '/admin/noticias', icon: 'article', label: 'Noticias' },
+      { to: '/admin/categorias', icon: 'category', label: 'Categorias' },
+    ],
+  },
+  {
+    label: 'Comercial',
+    items: [
+      { to: '/admin/descuentos', icon: 'local_offer', label: 'Descuentos', adminOnly: true },
+      { to: '/admin/pedidos', icon: 'shopping_bag', label: 'Pedidos' },
+    ],
+  },
+  {
+    label: 'Alumnos',
+    items: [
+      { to: '/admin/matriculas', icon: 'how_to_reg', label: 'Matriculas' },
+      { to: '/admin/leads', icon: 'contact_mail', label: 'Leads' },
+    ],
+  },
+  {
+    label: 'Sistema',
+    items: [
+      { to: '/admin/usuarios', icon: 'manage_accounts', label: 'Usuarios', adminOnly: true },
+    ],
+  },
 ]
 
 export default function AdminLayout() {
@@ -20,47 +45,60 @@ export default function AdminLayout() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
-  // Prevent indexing
   useEffect(() => {
     let meta = document.querySelector('meta[name="robots"]')
-    if (!meta) { meta = document.createElement('meta'); meta.name = 'robots'; document.head.appendChild(meta) }
+    if (!meta) {
+      meta = document.createElement('meta')
+      meta.name = 'robots'
+      document.head.appendChild(meta)
+    }
     const prev = meta.content
     meta.content = 'noindex, nofollow'
     return () => { meta.content = prev }
   }, [])
 
-  function handleLogout() { logout(); navigate('/admin/login') }
+  function handleLogout() {
+    logout()
+    navigate('/admin/login')
+  }
 
-  const items = NAV.filter(n => !n.adminOnly || isAdmin)
+  const groups = NAV_GROUPS
+    .map(group => ({ ...group, items: group.items.filter(item => !item.adminOnly || isAdmin) }))
+    .filter(group => group.items.length)
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
-      {/* Mobile overlay */}
       {open && <div className="fixed inset-0 bg-black/40 z-20 lg:hidden" onClick={() => setOpen(false)} />}
 
-      {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-30 w-64 bg-[#003d7a] flex flex-col transition-transform duration-300 lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
           <img src={logo} alt="CETMED" className="h-8 w-auto brightness-0 invert" />
           <p className="text-white/50 text-xs">Panel de Control</p>
         </div>
 
-        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          {items.map(n => (
-            <NavLink
-              key={n.to}
-              to={n.to}
-              end={n.exact}
-              onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                  isActive ? 'bg-white/15 text-white' : 'text-white/60 hover:text-white hover:bg-white/10'
-                }`
-              }
-            >
-              <span className="material-icons text-[18px]">{n.icon}</span>
-              {n.label}
-            </NavLink>
+        <nav className="flex-1 p-3 space-y-4 overflow-y-auto">
+          {groups.map(group => (
+            <div key={group.label}>
+              <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-white/35">{group.label}</p>
+              <div className="space-y-0.5">
+                {group.items.map(item => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.exact}
+                    onClick={() => setOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                        isActive ? 'bg-white/15 text-white' : 'text-white/60 hover:text-white hover:bg-white/10'
+                      }`
+                    }
+                  >
+                    <span className="material-icons text-[18px]">{item.icon}</span>
+                    {item.label}
+                  </NavLink>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
 
@@ -80,12 +118,11 @@ export default function AdminLayout() {
           </a>
           <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-white/60 hover:text-white hover:bg-white/10 transition-colors">
             <span className="material-icons text-[18px]">logout</span>
-            Cerrar sesión
+            Cerrar sesion
           </button>
         </div>
       </aside>
 
-      {/* Main */}
       <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
         <header className="sticky top-0 z-10 bg-white border-b border-gray-200 flex items-center gap-3 px-4 py-3">
           <button onClick={() => setOpen(true)} className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100">

@@ -306,8 +306,21 @@ export async function getDescuentos() {
 }
 
 export async function getCursosForSelect() {
-  const rows = await selectList('cursos', 'id,titulo', 'titulo', true)
-  return rows.map(row => ({ id: row.id, titulo: row.titulo }))
+  const [courses, categories] = await Promise.all([
+    selectList('cursos', 'id,titulo,categoria_id,moodle_course_id', 'titulo', true),
+    selectList('categorias', 'id,nombre', 'nombre', true),
+  ])
+  const categoriesById = new Map(categories.map(category => [Number(category.id), category]))
+  return courses.map(row => {
+    const category = categoriesById.get(Number(row.categoria_id))
+    return {
+      id: row.id,
+      titulo: row.titulo,
+      categoria_id: row.categoria_id || null,
+      categoria_nombre: category?.nombre || 'Sin categoria',
+      moodle_course_id: row.moodle_course_id || null,
+    }
+  })
 }
 
 export async function createDescuento(payload) {
@@ -341,6 +354,40 @@ export async function getPedidos() {
   const coursesById = new Map((cursosResult.data || []).map(c => [Number(c.id), c]))
   const rows = (pedidosResult.data || []).map(row => attachOrderCourses(row, coursesById))
   return { data: rows.map(strapiWrap), meta: { pagination: { total: rows.length } } }
+}
+
+export async function getAlumnosMatriculados() {
+  await requireSession()
+  const [pedidosResult, courses] = await Promise.all([
+    supabase
+      .from('pedidos')
+      .select('id,nombre_cliente,email_cliente,telefono_cliente,items,estado,payment_id,created_at,notas')
+      .eq('estado', 'completado')
+      .order('created_at', { ascending: false })
+      .limit(500),
+    getCursosForSelect(),
+  ])
+  if (pedidosResult.error) throw pedidosResult.error
+
+  const coursesById = new Map(courses.map(course => [Number(course.id), course]))
+  return (pedidosResult.data || []).map(row => ({
+    id: row.id,
+    nombre: row.nombre_cliente,
+    email: row.email_cliente,
+    telefono: row.telefono_cliente,
+    fecha: row.created_at,
+    notas: row.notas,
+    manual: String(row.payment_id || '').startsWith('MANUAL-'),
+    cursos: getOrderItems(row).map(item => {
+      const course = coursesById.get(Number(item.id))
+      return {
+        id: item.id,
+        titulo: item.titulo || item.title || course?.titulo || `Curso #${item.id}`,
+        categoria: course?.categoria_nombre || 'Sin categoria',
+        moodle_course_id: item.moodle_course_id || course?.moodle_course_id || null,
+      }
+    }),
+  }))
 }
 
 export async function updatePedido(id, payload) {
