@@ -1,4 +1,5 @@
 import { supabase } from '../../services/supabaseClient'
+import { enforceAdminSession } from '../utils/sessionPolicy'
 
 const BUCKET = import.meta.env.VITE_SUPABASE_BUCKET || 'cetmed'
 
@@ -75,6 +76,8 @@ function monthLabel(key) {
 }
 
 async function requireSession() {
+  const fresh = await enforceAdminSession(supabase)
+  if (!fresh) throw new Error('SESSION_EXPIRED')
   const { data, error } = await supabase.auth.getSession()
   if (error || !data.session) throw new Error('UNAUTHORIZED')
   return data.session
