@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS descuentos (
   fecha_expiracion TIMESTAMPTZ,
   limite_usos INTEGER,
   usos_actuales INTEGER DEFAULT 0,
+  curso_id INTEGER REFERENCES cursos(id) ON DELETE SET NULL,
   descripcion VARCHAR(255),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );

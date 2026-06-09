@@ -57,12 +57,12 @@ router.post('/descuentos/validar', async (req, res) => {
 
 router.post('/descuentos', verifyToken, requireAdmin, async (req, res) => {
   try {
-    const { codigo, tipo, valor, activo, fecha_expiracion, limite_usos, descripcion } = req.body.data || req.body
+    const { codigo, tipo, valor, activo, fecha_expiracion, limite_usos, descripcion, curso_id } = req.body.data || req.body
     const row = await queryOne(
-      `INSERT INTO descuentos (codigo, tipo, valor, activo, fecha_expiracion, limite_usos, descripcion)
-       VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
+      `INSERT INTO descuentos (codigo, tipo, valor, activo, fecha_expiracion, limite_usos, descripcion, curso_id)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
       [codigo.toUpperCase().trim(), tipo, valor, activo !== false,
-       fecha_expiracion || null, limite_usos || null, descripcion || null]
+       fecha_expiracion || null, limite_usos || null, descripcion || null, curso_id || null]
     )
     res.status(201).json({ data: fmt(row) })
   } catch (err) {
@@ -73,12 +73,12 @@ router.post('/descuentos', verifyToken, requireAdmin, async (req, res) => {
 
 router.put('/descuentos/:id', verifyToken, requireAdmin, async (req, res) => {
   try {
-    const { codigo, tipo, valor, activo, fecha_expiracion, limite_usos, descripcion } = req.body.data || req.body
+    const { codigo, tipo, valor, activo, fecha_expiracion, limite_usos, descripcion, curso_id } = req.body.data || req.body
     const row = await queryOne(
       `UPDATE descuentos SET codigo=$1, tipo=$2, valor=$3, activo=$4,
-        fecha_expiracion=$5, limite_usos=$6, descripcion=$7 WHERE id=$8 RETURNING *`,
+        fecha_expiracion=$5, limite_usos=$6, descripcion=$7, curso_id=$8 WHERE id=$9 RETURNING *`,
       [codigo?.toUpperCase().trim(), tipo, valor, activo,
-       fecha_expiracion || null, limite_usos || null, descripcion || null, req.params.id]
+       fecha_expiracion || null, limite_usos || null, descripcion || null, curso_id || null, req.params.id]
     )
     res.json({ data: fmt(row) })
   } catch (err) {

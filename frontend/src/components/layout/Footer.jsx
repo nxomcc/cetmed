@@ -25,11 +25,43 @@ const AREAS = [
 ]
 
 const SOCIAL = [
-  { label:'Facebook',  icon:'facebook',     href:'#' },
-  { label:'Instagram', icon:'photo_camera', href:'#' },
-  { label:'YouTube',   icon:'play_circle',  href:'#' },
-  { label:'X',         icon:'close',        href:'#' },
+  { label:'Facebook',  icon:'facebook',  href:'https://www.facebook.com/profile.php?id=61574988417670' },
+  { label:'Instagram', icon:'instagram', href:'https://www.instagram.com/cetmed_capacitaciones/' },
+  { label:'YouTube',   icon:'youtube',   href:'https://www.youtube.com/@CetMedCapacitaciones' },
+  { label:'X',         icon:'x',         href:'https://x.com/Cetmed_Cap' },
 ]
+
+function SocialIcon({ icon }) {
+  const className = 'w-[18px] h-[18px]'
+  if (icon === 'instagram') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+      </svg>
+    )
+  }
+  if (icon === 'youtube') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+        <path d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.6 4.6 12 4.6 12 4.6s-5.6 0-7.5.5a3 3 0 0 0-2.1 2.1A31.2 31.2 0 0 0 2 12a31.2 31.2 0 0 0 .4 4.8 3 3 0 0 0 2.1 2.1c1.9.5 7.5.5 7.5.5s5.6 0 7.5-.5a3 3 0 0 0 2.1-2.1A31.2 31.2 0 0 0 22 12a31.2 31.2 0 0 0-.4-4.8ZM10 15.3V8.7l5.7 3.3L10 15.3Z" />
+      </svg>
+    )
+  }
+  if (icon === 'x') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+        <path d="M18.9 2h3.3l-7.2 8.2L23.5 22h-6.7l-5.2-6.8L5.6 22H2.3l7.7-8.8L1.8 2h6.8l4.7 6.2L18.9 2Zm-1.2 17.9h1.8L7.6 4H5.7l12 15.9Z" />
+      </svg>
+    )
+  }
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+      <path d="M14 8.5V6.4c0-.8.2-1.2 1.2-1.2H17V2.1c-.9-.1-1.8-.1-2.7-.1-2.7 0-4.5 1.6-4.5 4.6v1.9H7v3.5h2.8V22H14V12h2.8l.5-3.5H14Z" />
+    </svg>
+  )
+}
 
 export default function Footer() {
   return (
@@ -49,9 +81,11 @@ export default function Footer() {
             <div className="flex gap-2">
               {SOCIAL.map(sn => (
                 <a key={sn.label} href={sn.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full bg-white/10 hover:bg-[var(--accent)] hover:text-[var(--primary-dark)] flex items-center justify-center transition-all"
                   aria-label={sn.label}>
-                  <span className="material-icons text-[18px]">{sn.icon}</span>
+                  <SocialIcon icon={sn.icon} />
                 </a>
               ))}
             </div>

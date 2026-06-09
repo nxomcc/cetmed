@@ -9,6 +9,7 @@ export async function calculateOrderTotals(sb: any, items: any[], codigoDescuent
   if (!normalizedItems.length) throw new Error('No se recibieron cursos')
 
   let subtotal = 0
+  const pricesByCourseId = new Map<number, number>()
   for (const item of normalizedItems) {
     const { data: curso, error } = await sb
       .from('cursos')
@@ -18,7 +19,9 @@ export async function calculateOrderTotals(sb: any, items: any[], codigoDescuent
 
     if (error) throw error
     if (!curso || !curso.activo || !curso.published_at) throw new Error(`Curso ${item.id} no disponible`)
-    subtotal += Number(curso.precio || 0)
+    const price = Number(curso.precio || 0)
+    pricesByCourseId.set(item.id, price)
+    subtotal += price
   }
 
   const code = String(codigoDescuento || '').trim().toUpperCase()
@@ -28,7 +31,7 @@ export async function calculateOrderTotals(sb: any, items: any[], codigoDescuent
   if (code) {
     const { data, error } = await sb
       .from('descuentos')
-      .select('codigo,tipo,valor,fecha_expiracion,limite_usos,usos_actuales,activo')
+      .select('codigo,tipo,valor,fecha_expiracion,limite_usos,usos_actuales,activo,curso_id')
       .eq('codigo', code)
       .eq('activo', true)
       .maybeSingle()
@@ -38,10 +41,15 @@ export async function calculateOrderTotals(sb: any, items: any[], codigoDescuent
     if (data.fecha_expiracion && new Date(data.fecha_expiracion) < new Date()) throw new Error('Codigo de descuento expirado')
     if (data.limite_usos && Number(data.usos_actuales || 0) >= Number(data.limite_usos)) throw new Error('Codigo de descuento sin usos disponibles')
 
+    const applicableSubtotal = data.curso_id
+      ? Number(pricesByCourseId.get(Number(data.curso_id)) || 0)
+      : subtotal
+    if (applicableSubtotal <= 0) throw new Error('Codigo de descuento no aplica a los cursos seleccionados')
+
     const valor = Number(data.valor || 0)
-    descuentoMonto = data.tipo === 'porcentaje' ? Math.round(subtotal * valor / 100) : valor
-    descuentoMonto = Math.max(0, Math.min(descuentoMonto, subtotal))
-    descuento = { codigo: data.codigo, tipo: data.tipo, valor, monto: descuentoMonto }
+    descuentoMonto = data.tipo === 'porcentaje' ? Math.round(applicableSubtotal * valor / 100) : valor
+    descuentoMonto = Math.max(0, Math.min(descuentoMonto, applicableSubtotal))
+    descuento = { codigo: data.codigo, tipo: data.tipo, valor, monto: descuentoMonto, curso_id: data.curso_id || null }
   }
 
   return {

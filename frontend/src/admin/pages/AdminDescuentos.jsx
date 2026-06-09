@@ -5,7 +5,17 @@ import ConfirmModal from '../components/ConfirmModal'
 import Toast from '../components/Toast'
 import { useToast } from '../hooks/useToast'
 
-const EMPTY = { codigo: '', tipo: 'porcentaje', valor: '', activo: true, fecha_expiracion: '', limite_usos: '', descripcion: '' }
+const EMPTY = {
+  codigo: '',
+  tipo: 'porcentaje',
+  valor: '',
+  activo: true,
+  fecha_expiracion: '',
+  limite_usos: '',
+  descripcion: '',
+  alcance: 'todos',
+  curso_id: '',
+}
 
 function Badge({ activo }) {
   return <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${activo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>{activo ? 'Activo' : 'Inactivo'}</span>
@@ -14,6 +24,7 @@ function Badge({ activo }) {
 export default function AdminDescuentos() {
   const { toasts, toast, remove } = useToast()
   const [descuentos, setDescuentos] = useState([])
+  const [cursos, setCursos]         = useState([])
   const [loading, setLoading]       = useState(true)
   const [form, setForm]             = useState(EMPTY)
   const [editId, setEditId]         = useState(null)
@@ -24,9 +35,18 @@ export default function AdminDescuentos() {
   useEffect(() => { loadData() }, [])
 
   async function loadData() {
-    try { const r = await api.getDescuentos(); setDescuentos(r.data || []) }
-    catch { toast('Error cargando descuentos', 'error') }
-    finally { setLoading(false) }
+    try {
+      const [discountsRes, coursesRes] = await Promise.all([
+        api.getDescuentos(),
+        api.getCursos({ 'pagination[pageSize]': 500 }),
+      ])
+      setDescuentos(discountsRes.data || [])
+      setCursos(coursesRes.data || [])
+    } catch {
+      toast('Error cargando descuentos', 'error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   function openCreate() { setEditId(null); setForm(EMPTY); setShowForm(true) }
@@ -42,6 +62,8 @@ export default function AdminDescuentos() {
       fecha_expiracion: a.fecha_expiracion ? a.fecha_expiracion.slice(0, 16) : '',
       limite_usos: a.limite_usos ?? '',
       descripcion: a.descripcion || '',
+      alcance: a.curso_id ? 'curso' : 'todos',
+      curso_id: a.curso_id || '',
     })
     setShowForm(true)
   }
@@ -60,6 +82,7 @@ export default function AdminDescuentos() {
         fecha_expiracion: form.fecha_expiracion || null,
         limite_usos: form.limite_usos ? Number(form.limite_usos) : null,
         descripcion: form.descripcion,
+        curso_id: form.alcance === 'curso' && form.curso_id ? Number(form.curso_id) : null,
       }
       if (editId) {
         await api.updateDescuento(editId, data)
@@ -71,8 +94,11 @@ export default function AdminDescuentos() {
         toast('Descuento creado')
       }
       cancel()
-    } catch (err) { toast(err.message || 'Error al guardar', 'error') }
-    finally { setSaving(false) }
+    } catch (err) {
+      toast(err.message || 'Error al guardar', 'error')
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function handleDelete() {
@@ -80,8 +106,11 @@ export default function AdminDescuentos() {
       await api.deleteDescuento(deleteTarget.id)
       setDescuentos(p => p.filter(x => x.id !== deleteTarget.id))
       toast('Descuento eliminado')
-    } catch { toast('Error al eliminar', 'error') }
-    finally { setDeleteTarget(null) }
+    } catch {
+      toast('Error al eliminar', 'error')
+    } finally {
+      setDeleteTarget(null)
+    }
   }
 
   async function toggleActivo(d) {
@@ -89,7 +118,13 @@ export default function AdminDescuentos() {
     try {
       await api.updateDescuento(d.id, { activo: next })
       setDescuentos(p => p.map(x => x.id === d.id ? { ...x, attributes: { ...x.attributes, activo: next } } : x))
-    } catch { toast('Error al actualizar', 'error') }
+    } catch {
+      toast('Error al actualizar', 'error')
+    }
+  }
+
+  function courseTitle(id, row) {
+    return row?.cursos?.titulo || cursos.find(c => Number(c.id) === Number(id))?.attributes?.titulo || `Curso #${id}`
   }
 
   return (
@@ -97,23 +132,22 @@ export default function AdminDescuentos() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-black text-gray-900">Descuentos</h1>
-          <p className="text-gray-400 text-sm mt-0.5">{descuentos.length} códigos de descuento</p>
+          <p className="text-gray-400 text-sm mt-0.5">{descuentos.length} codigos de descuento</p>
         </div>
         <button onClick={openCreate} className="flex items-center gap-2 bg-[#003d7a] text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#002d5a] transition-colors">
           <span className="material-icons text-[18px]">add</span>
-          Nuevo código
+          Nuevo codigo
         </button>
       </div>
 
-      {/* Modal form */}
       {showForm && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl">
-            <h2 className="font-bold text-gray-900 text-lg mb-5">{editId ? 'Editar descuento' : 'Nuevo código de descuento'}</h2>
+          <div className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h2 className="font-bold text-gray-900 text-lg mb-5">{editId ? 'Editar descuento' : 'Nuevo codigo de descuento'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Código *</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Codigo *</label>
                   <input required value={form.codigo} onChange={e => setForm(p => ({ ...p, codigo: e.target.value.toUpperCase() }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm font-mono outline-none focus:border-[#003d7a] uppercase" placeholder="VERANO20" />
                 </div>
                 <div>
@@ -129,25 +163,43 @@ export default function AdminDescuentos() {
                   <p className="text-xs text-gray-400 mt-1">{form.tipo === 'porcentaje' ? 'Ej: 20 = 20% de descuento' : 'Monto en CLP'}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Límite de usos</label>
-                  <input type="number" min={1} value={form.limite_usos} onChange={e => setForm(p => ({ ...p, limite_usos: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#003d7a]" placeholder="Sin límite" />
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Limite de usos</label>
+                  <input type="number" min={1} value={form.limite_usos} onChange={e => setForm(p => ({ ...p, limite_usos: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#003d7a]" placeholder="Sin limite" />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Fecha de expiración</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Alcance del codigo</label>
+                  <select value={form.alcance} onChange={e => setForm(p => ({ ...p, alcance: e.target.value, curso_id: e.target.value === 'todos' ? '' : p.curso_id }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#003d7a]">
+                    <option value="todos">Todas las compras</option>
+                    <option value="curso">Curso especifico</option>
+                  </select>
+                </div>
+                {form.alcance === 'curso' && (
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Curso</label>
+                    <select required value={form.curso_id} onChange={e => setForm(p => ({ ...p, curso_id: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#003d7a]">
+                      <option value="">Selecciona un curso...</option>
+                      {cursos.map(c => (
+                        <option key={c.id} value={c.id}>{c.attributes?.titulo}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Fecha de expiracion</label>
                   <input type="datetime-local" value={form.fecha_expiracion} onChange={e => setForm(p => ({ ...p, fecha_expiracion: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#003d7a]" />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Descripción interna</label>
-                  <input value={form.descripcion} onChange={e => setForm(p => ({ ...p, descripcion: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#003d7a]" placeholder="Campaña de verano 2025..." />
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Descripcion interna</label>
+                  <input value={form.descripcion} onChange={e => setForm(p => ({ ...p, descripcion: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#003d7a]" placeholder="Campana de verano 2025..." />
                 </div>
               </div>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" checked={form.activo} onChange={e => setForm(p => ({ ...p, activo: e.target.checked }))} className="w-4 h-4 accent-[#003d7a]" />
-                <span className="text-sm font-medium text-gray-700">Código activo</span>
+                <span className="text-sm font-medium text-gray-700">Codigo activo</span>
               </label>
               <div className="flex gap-3 pt-1">
                 <button type="submit" disabled={saving} className="flex-1 bg-[#003d7a] text-white py-2.5 rounded-xl font-semibold text-sm hover:bg-[#002d5a] disabled:opacity-60">
-                  {saving ? 'Guardando...' : editId ? 'Guardar' : 'Crear código'}
+                  {saving ? 'Guardando...' : editId ? 'Guardar' : 'Crear codigo'}
                 </button>
                 <button type="button" onClick={cancel} className="px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-50">Cancelar</button>
               </div>
@@ -162,14 +214,14 @@ export default function AdminDescuentos() {
         ) : descuentos.length === 0 ? (
           <div className="text-center py-16 text-gray-400">
             <span className="material-icons text-4xl mb-2 block">local_offer</span>
-            <p>Sin códigos de descuento</p>
+            <p>Sin codigos de descuento</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
-                  {['Código', 'Descuento', 'Usos', 'Expira', 'Estado', ''].map(h => (
+                  {['Codigo', 'Descuento', 'Alcance', 'Usos', 'Expira', 'Estado', ''].map(h => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
@@ -186,10 +238,23 @@ export default function AdminDescuentos() {
                       <td className="px-4 py-3 text-sm font-semibold text-gray-900">
                         {a.tipo === 'porcentaje' ? `${a.valor}%` : fmtClp(a.valor)}
                       </td>
+                      <td className="px-4 py-3 text-sm text-gray-500 max-w-[220px]">
+                        {a.curso_id ? (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold bg-blue-50 text-blue-700 px-2 py-1 rounded-lg">
+                            <span className="material-icons text-[14px]">school</span>
+                            <span className="truncate">{courseTitle(a.curso_id, a)}</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold bg-gray-100 text-gray-600 px-2 py-1 rounded-lg">
+                            <span className="material-icons text-[14px]">shopping_cart</span>
+                            Todas
+                          </span>
+                        )}
+                      </td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         {a.usos_actuales || 0}{a.limite_usos ? ` / ${a.limite_usos}` : ''}
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-500">{a.fecha_expiracion ? fmtDate(a.fecha_expiracion) : '—'}</td>
+                      <td className="px-4 py-3 text-sm text-gray-500">{a.fecha_expiracion ? fmtDate(a.fecha_expiracion) : '-'}</td>
                       <td className="px-4 py-3">
                         <button onClick={() => toggleActivo(d)}>
                           <Badge activo={a.activo} />
@@ -217,7 +282,7 @@ export default function AdminDescuentos() {
       <ConfirmModal
         open={!!deleteTarget}
         title="Eliminar descuento"
-        message={`¿Eliminar el código "${deleteTarget?.attributes?.codigo}"?`}
+        message={`Eliminar el codigo "${deleteTarget?.attributes?.codigo}"?`}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
         danger

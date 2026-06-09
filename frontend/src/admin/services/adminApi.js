@@ -301,7 +301,7 @@ export async function deleteCategoria(id) {
 }
 
 export async function getDescuentos() {
-  const rows = await selectList('descuentos')
+  const rows = await selectList('descuentos', '*, cursos(id,titulo)')
   return { data: rows.map(strapiWrap), meta: { pagination: { total: rows.length } } }
 }
 

@@ -1,0 +1,2 @@
+ALTER TABLE public.descuentos
+ADD COLUMN IF NOT EXISTS curso_id INTEGER REFERENCES public.cursos(id) ON DELETE SET NULL;
