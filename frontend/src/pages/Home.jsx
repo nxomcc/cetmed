@@ -123,9 +123,9 @@ export default function Home() {
       {/* ── Hero + Stats: juntos forman 100vh ─────── */}
       <div className="flex flex-col" style={{ minHeight: 'calc(100vh - 96px)' }}>
       <section className="hero">
-        <div className="max-w-7xl mx-auto px-4 py-24 relative z-10 w-full">
-          <div className="max-w-2xl">
-            <div className="section-label text-white mb-4" data-reveal>
+        <div className="max-w-7xl mx-auto px-4 py-16 sm:py-24 relative z-10 w-full">
+          <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left">
+            <div className="section-label text-white mb-4 justify-center lg:justify-start" data-reveal>
               OTEC Certificado SENCE · Coquimbo, Chile
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-6" data-reveal data-delay="1">
@@ -134,19 +134,19 @@ export default function Home() {
             <p className="text-white/80 text-lg leading-relaxed mb-8 max-w-xl" data-reveal data-delay="2">
               Cursos diseñados para llevar tu perfil al siguiente nivel.
             </p>
-            <div className="flex flex-wrap gap-3" data-reveal data-delay="3">
-              <Link to="/cursos" className="btn-primary text-base px-6 py-3">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center lg:justify-start gap-3" data-reveal data-delay="3">
+              <Link to="/cursos" className="btn-primary text-base px-6 py-3 justify-center">
                 <span className="material-icons">school</span>
                 Ver todos los cursos
               </Link>
-              <Link to="/contacto" className="btn-outline text-base px-6 py-3">
+              <Link to="/contacto" className="btn-outline text-base px-6 py-3 justify-center">
                 <span className="material-icons">chat</span>
                 Hablar con un asesor
               </Link>
             </div>
 
             {/* Trust pills */}
-            <div className="flex flex-wrap gap-3 mt-10" data-reveal data-delay="4">
+            <div className="flex flex-wrap justify-center lg:justify-start gap-3 mt-10" data-reveal data-delay="4">
               {['✓ Certificado SENCE','✓ Clases presenciales y online'].map(t => (
                 <span key={t} className="bg-white/10 backdrop-blur text-white/90 text-sm px-3 py-1.5 rounded-full border border-white/20">
                   {t}
@@ -155,10 +155,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Decorative circles */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-white/5 -mr-32 hidden lg:block" />
-        <div className="absolute right-16 top-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-white/5 hidden lg:block" />
       </section>
 
       {/* ── Stats strip ───────────────────────────── */}
@@ -174,14 +170,14 @@ export default function Home() {
       {/* ── Featured Courses ──────────────────────── */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-12" data-reveal>
+          <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 mb-12 text-center sm:text-left" data-reveal>
             <div>
               <SectionLabel>Cursos destacados</SectionLabel>
               <h2 className="text-3xl sm:text-4xl font-black text-[var(--text-dark)]">
                 Los más elegidos por nuestros alumnos
               </h2>
             </div>
-            <Link to="/cursos" className="btn-ghost shrink-0">
+            <Link to="/cursos" className="btn-ghost shrink-0 justify-center">
               Ver todos
               <span className="material-icons text-sm">arrow_forward</span>
             </Link>
@@ -201,7 +197,7 @@ export default function Home() {
       <section className="py-20 bg-[var(--bg-light)]">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div data-reveal="left">
+            <div data-reveal="left" className="text-center lg:text-left">
               <SectionLabel>Quiénes somos</SectionLabel>
               <h2 className="text-3xl sm:text-4xl font-black text-[var(--text-dark)] mb-6">
                 CETMED Capacitaciones
@@ -209,18 +205,18 @@ export default function Home() {
               <p className="text-[var(--text-body)] leading-relaxed mb-6 text-lg">
                 Somos un OTEC que ejecuta Capacitación y Formación complementaria dirigido a Personas Naturales, Trabajadores, Profesionales, Empresas Públicas o Privadas, con el más alto Nivel de Calidad posible según la Norma Chilena 2728:2015, SENCE y demás requisitos Legales aplicables.
               </p>
-              <div className="flex flex-wrap gap-3 mb-8">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8">
                 {['OTEC SENCE','Norma NCh 2728'].map(c => (
                   <span key={c} className="tag text-sm px-3 py-1">{c}</span>
                 ))}
               </div>
-              <Link to="/nosotros" className="btn-primary">
+              <Link to="/nosotros" className="btn-primary justify-center">
                 Conoce más sobre CETMED
                 <span className="material-icons text-sm">arrow_forward</span>
               </Link>
             </div>
  
-            <div data-reveal="right" className="relative">
+            <div data-reveal="right" className="relative max-w-xl mx-auto lg:max-w-none">
               <img
                 src="/images/about/portafolio-servicios-capacitacion.png"
                 alt="CETMED Portafolio de Servicios"
@@ -273,7 +269,7 @@ export default function Home() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div data-reveal="left">
+            <div data-reveal="left" className="text-center lg:text-left">
               <SectionLabel>Servicio especializado</SectionLabel>
               <h2 className="text-3xl sm:text-4xl font-black text-[var(--text-dark)] mb-6">
                 Diagnóstico de Necesidades de Capacitación (DNC)
@@ -281,13 +277,13 @@ export default function Home() {
               <p className="text-[var(--text-body)] leading-relaxed mb-8 text-lg">
                 El servicio de Diagnóstico de Necesidades de Capacitación (DNC) es un proceso que identifica las áreas de conocimiento, habilidades y actitudes que los empleados necesitan mejorar para optimizar su desempeño y el de la empresa, permitiendo una capacitación más efectiva.
               </p>
-              <Link to="/contacto" className="btn-primary">
+              <Link to="/contacto" className="btn-primary justify-center">
                 Solicitar DNC
                 <span className="material-icons text-sm">arrow_forward</span>
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-4" data-reveal="right">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" data-reveal="right">
               {[
                 { icon:'search', title:'Diagnóstico', desc:'Identificamos las brechas de conocimiento de tu equipo.' },
                 { icon:'analytics', title:'Análisis', desc:'Evaluamos competencias actuales frente a las requeridas.' },
@@ -310,14 +306,14 @@ export default function Home() {
       {/* ── Latest news ───────────────────────────── */}
       <section className="py-20 bg-[var(--bg-light)]">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-12" data-reveal>
+          <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 mb-12 text-center sm:text-left" data-reveal>
             <div>
               <SectionLabel>Está pasando</SectionLabel>
               <h2 className="text-3xl sm:text-4xl font-black text-[var(--text-dark)]">
                 Últimas noticias
               </h2>
             </div>
-            <Link to="/noticias" className="btn-ghost shrink-0">
+            <Link to="/noticias" className="btn-ghost shrink-0 justify-center">
               Ver todas
               <span className="material-icons text-sm">arrow_forward</span>
             </Link>

@@ -11,8 +11,13 @@ body {
   overflow-x: hidden;
   background: #fff;
   color: #4a4a4a;
+  overflow-wrap: anywhere;
 }
 img, video, svg { display: block; max-width: 100%; }
+
+main {
+  min-width: 0;
+}
 
 /* ── CSS Variables ───────────────────────── */
 :root {
@@ -162,6 +167,7 @@ img, video, svg { display: block; max-width: 100%; }
   align-items: center;
   gap: 0.4rem;
   transition: var(--transition);
+  text-align: center;
 }
 .btn-primary:hover {
   background: var(--accent-dark);
@@ -181,6 +187,7 @@ img, video, svg { display: block; max-width: 100%; }
   align-items: center;
   gap: 0.4rem;
   transition: var(--transition);
+  text-align: center;
 }
 .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.1); transform: translateY(-2px); }
 .btn-ghost {
@@ -197,6 +204,7 @@ img, video, svg { display: block; max-width: 100%; }
   align-items: center;
   gap: 0.35rem;
   transition: var(--transition);
+  text-align: center;
 }
 .btn-ghost:hover { border-color: var(--primary); background: rgba(0,61,122,0.05); }
 
@@ -211,6 +219,7 @@ img, video, svg { display: block; max-width: 100%; }
   letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-bottom: 0.75rem;
+  text-align: center;
 }
 .section-label::before {
   content: '';
@@ -272,6 +281,32 @@ img, video, svg { display: block; max-width: 100%; }
   padding: 4rem 0;
   position: relative;
   overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .page-hero {
+    padding: 3rem 0;
+    text-align: center;
+  }
+
+  .page-hero .section-label {
+    justify-content: center;
+  }
+
+  .btn-primary,
+  .btn-outline,
+  .btn-ghost {
+    justify-content: center;
+  }
+
+  .form-control {
+    font-size: 16px;
+  }
+
+  .course-card {
+    max-width: 30rem;
+    margin-inline: auto;
+  }
 }
 
 /* ── Stats strip ─────────────────────────── */

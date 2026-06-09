@@ -27,11 +27,11 @@ export default function Navbar({ onCartOpen }) {
   return (
     <>
       <nav className={`navbar${scrolled ? ' scrolled' : ''}`}>
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 no-underline">
+          <Link to="/" className="flex items-center gap-2 no-underline min-w-0">
             <img src={LOGO_URL} alt="CETMED" className="h-10 w-auto object-contain" />
-            <span className="font-black text-xl tracking-tight" style={{ color:'var(--primary)', letterSpacing:'-0.02em' }}>
+            <span className="font-black text-xl tracking-tight truncate" style={{ color:'var(--primary)', letterSpacing:'-0.02em' }}>
               CETMED
             </span>
           </Link>

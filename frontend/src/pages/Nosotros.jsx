@@ -41,7 +41,7 @@ export default function Nosotros() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
-            <div data-reveal="left">
+            <div data-reveal="left" className="text-center lg:text-left">
               <SectionLabel>Nuestra identidad</SectionLabel>
               <h2 className="text-3xl font-black text-[var(--text-dark)] mb-4">
                 CETMED Capacitaciones
@@ -49,13 +49,13 @@ export default function Nosotros() {
               <p className="text-[var(--text-body)] leading-relaxed mb-6 text-lg">
                 {MISION}
               </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3">
                 {['OTEC SENCE','Norma NCh 2728:2015'].map(c => (
                   <span key={c} className="tag text-sm px-3 py-1">{c}</span>
                 ))}
               </div>
             </div>
-            <div data-reveal="right">
+            <div data-reveal="right" className="max-w-xl mx-auto lg:max-w-none">
               <img
                 src="/images/about/portafolio-servicios-capacitacion.png"
                 alt="CETMED Portafolio de Servicios"
@@ -133,7 +133,7 @@ export default function Nosotros() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {VALORES.map((v,i) => (
                 <div key={v.title}
-                  className="flex gap-4 p-5 bg-[var(--bg-light)] rounded-xl border border-[var(--border)] hover:border-[var(--primary)]/30 transition-colors"
+                  className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 p-5 bg-[var(--bg-light)] rounded-xl border border-[var(--border)] hover:border-[var(--primary)]/30 transition-colors"
                   data-reveal data-delay={String(i%3+1)}>
                   <span className="material-icons text-[var(--accent)] text-2xl mt-0.5 shrink-0">{v.icon}</span>
                   <div>

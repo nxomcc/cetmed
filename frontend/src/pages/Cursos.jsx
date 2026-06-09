@@ -58,7 +58,7 @@ export default function Cursos() {
       {/* Hero */}
       <section className="page-hero">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-xl text-white">
+          <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left text-white">
             <SectionLabel><span className="text-white/70">Catálogo de cursos</span></SectionLabel>
             <h1 className="text-4xl font-black mt-2 mb-3">Todos los cursos</h1>
             <p className="text-white/70">Más de 120 programas certificados. Encuentra el que impulsa tu carrera.</p>
@@ -68,11 +68,11 @@ export default function Cursos() {
  
       <section className="py-12">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex flex-col lg:flex-row gap-8 items-stretch lg:items-start">
             
             {/* Sidebar Filters */}
             <aside className="w-full lg:w-80 shrink-0">
-              <div className="bg-white rounded-2xl border border-[var(--border)] p-5 sticky top-24 space-y-6">
+              <div className="bg-white rounded-2xl border border-[var(--border)] p-5 lg:sticky lg:top-24 space-y-6">
                 <div>
                   <h4 className="font-black text-[var(--text-dark)] text-xs uppercase tracking-wider mb-2">Buscar</h4>
                   <div className="relative">
@@ -119,7 +119,7 @@ export default function Cursos() {
               ) : (
                 <>
                   {/* Results header */}
-                  <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center justify-center sm:justify-between mb-5 text-center sm:text-left">
                     <p className="text-sm text-[var(--text-muted)]">
                       {filtered.length} curso{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
                     </p>

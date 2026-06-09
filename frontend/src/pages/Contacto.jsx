@@ -90,17 +90,17 @@ export default function Contacto() {
 
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-3 gap-10">
+          <div className="grid lg:grid-cols-3 gap-10 items-start">
 
             {/* Info */}
-            <div className="space-y-6">
+            <div className="space-y-6 max-w-xl mx-auto lg:max-w-none lg:mx-0 w-full">
               {[
                 { icon:'location_on',  title:'Dirección',    content:'Coquimbo, Región de Coquimbo, Chile' },
                 { icon:'phone',        title:'Teléfono',     content:'+56 9 2778 1966', href:'tel:+56927781966' },
                 { icon:'email',        title:'Email',        content:'contacto@cetmed.cl', href:'mailto:contacto@cetmed.cl' },
                 { icon:'access_time',  title:'Horario',      content:'Lun–Jue 09:00–13:30 · Vie 09:00–13:00' },
               ].map(d => (
-                <div key={d.title} className="flex gap-4 p-5 bg-[var(--bg-light)] rounded-xl border border-[var(--border)]" data-reveal>
+                <div key={d.title} className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 p-5 bg-[var(--bg-light)] rounded-xl border border-[var(--border)]" data-reveal>
                   <div className="w-11 h-11 bg-[var(--primary)] rounded-xl flex items-center justify-center shrink-0">
                     <span className="material-icons text-white text-lg">{d.icon}</span>
                   </div>
@@ -127,7 +127,7 @@ export default function Contacto() {
 
             {/* Form */}
             <div className="lg:col-span-2" data-reveal>
-              <div className="bg-white rounded-2xl border border-[var(--border)] p-8">
+              <div className="bg-white rounded-2xl border border-[var(--border)] p-5 sm:p-8">
                 <h2 className="text-2xl font-black text-[var(--text-dark)] mb-6">Envíanos un mensaje</h2>
 
                 {sent ? (
@@ -155,7 +155,7 @@ export default function Contacto() {
                       </label>
                     </div>
                     {/* Tipo */}
-                    <div className="flex gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {['persona','empresa'].map(t => (
                         <label key={t} className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border cursor-pointer transition-all text-sm font-semibold ${
                           form.tipo === t ? 'border-[var(--primary)] bg-[var(--primary)]/5 text-[var(--primary)]' : 'border-[var(--border)] text-[var(--text-muted)]'

@@ -77,15 +77,15 @@ export default function CourseCard({ curso, onCartOpen }) {
           {titulo}
         </h3>
 
-        <div className="flex items-center justify-between mt-auto pt-3 border-t border-[var(--border)]">
-          <div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-auto pt-3 border-t border-[var(--border)]">
+          <div className="text-center sm:text-left">
             <p className="text-xs text-[var(--text-muted)]">Precio</p>
             <p className="font-black text-[var(--primary)] text-lg">{fmt(precio)}</p>
           </div>
           <button
             onClick={handleAdd}
             disabled={!activo || added}
-            className={`flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all ${
+            className={`flex items-center justify-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all w-full sm:w-auto ${
               !activo
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : added
