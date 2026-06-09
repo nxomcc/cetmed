@@ -8,13 +8,33 @@ import useCart from '../hooks/useCart'
 
 /* ── Mock data fallback (when CMS offline) ────────── */
 const MOCK_CURSOS = [
-  { id:1, attributes:{ titulo:'Técnicas de primeros auxilios básicos RCP Y DEA', precio:0, modalidad:'E-Learning', horas:16, slug:'primeros-auxilios-rcp-dea', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/primeros-auxilios-rcp-dea.jpg' } } } } },
-  { id:2, attributes:{ titulo:'Gestor de inclusión laboral', precio:0, modalidad:'Presencial', horas:40, slug:'gestor-inclusion-laboral', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/gestor-inclusion-laboral.jpg' } } } } },
-  { id:3, attributes:{ titulo:'Técnicas de trabajo seguro en espacios confinados', precio:0, modalidad:'E-Learning', horas:16, slug:'trabajo-seguro-espacios-confinados', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-seguro-espacios-confinados.jpg' } } } } },
-  { id:4, attributes:{ titulo:'Técnicas de seguridad en el montaje y desmontaje de andamios', precio:0, modalidad:'E-Learning', horas:16, slug:'seguridad-andamios', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/seguridad-andamios.jpg' } } } } },
-  { id:5, attributes:{ titulo:'Manejo de extintores portátiles', precio:0, modalidad:'E-Learning', horas:8, slug:'manejo-extintores', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/manejo-extintores.jpg' } } } } },
-  { id:6, attributes:{ titulo:'Procedimientos para trabajo en altura física', precio:0, modalidad:'Presencial', horas:16, slug:'trabajo-en-altura', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-en-altura.jpg' } } } } },
+  { id:1, attributes:{ titulo:'Técnicas de trabajo seguro en espacios confinados', precio:0, modalidad:'E-Learning', horas:16, slug:'tecnicas-de-trabajo-seguro-en-espacios-confinados', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-seguro-espacios-confinados.jpg' } } } } },
+  { id:2, attributes:{ titulo:'Técnicas de seguridad en el montaje y desmontaje de andamios', precio:0, modalidad:'E-Learning', horas:16, slug:'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-deandamios', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/seguridad-andamios.jpg' } } } } },
+  { id:3, attributes:{ titulo:'Gestor de inclusión laboral', precio:0, modalidad:'Presencial', horas:40, slug:'gestor-de-inclusion-laboral', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/gestor-inclusion-laboral.jpg' } } } } },
+  { id:4, attributes:{ titulo:'Técnicas de primeros auxilios básicos RCP Y DEA', precio:0, modalidad:'E-Learning', horas:36, slug:'tecnicas-de-primeros-auxilios-basicos-rcp-y-dea', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/primeros-auxilios-rcp-dea.jpg' } } } } },
+  { id:5, attributes:{ titulo:'Manejo de extintores portátiles', precio:0, modalidad:'E-Learning', horas:8, slug:'manejo-de-extintores-portatiles', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/manejo-extintores.jpg' } } } } },
+  { id:6, attributes:{ titulo:'Manejo de sustancias peligrosas', precio:0, modalidad:'E-Learning', horas:16, slug:'manejo-de-sustancias-peligrosas', franquicia_sence:true, imagen:{ data:null } } },
+  { id:7, attributes:{ titulo:'Procedimientos para trabajo en altura física', precio:0, modalidad:'Presencial', horas:16, slug:'procedimientos-para-trabajo-en-altura-fisica', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-en-altura.jpg' } } } } },
+  { id:8, attributes:{ titulo:'Aislamiento y bloqueo (LOTO)', precio:0, modalidad:'E-Learning', horas:16, slug:'aislamiento-y-bloqueo-loto', franquicia_sence:true, imagen:{ data:null } } },
 ]
+
+const HOME_COURSE_SLUGS = [
+  'tecnicas-de-trabajo-seguro-en-espacios-confinados',
+  'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-deandamios',
+  'gestor-de-inclusion-laboral',
+  'tecnicas-de-primeros-auxilios-basicos-rcp-y-dea',
+  'manejo-de-extintores-portatiles',
+  'manejo-de-sustancias-peligrosas',
+  'procedimientos-para-trabajo-en-altura-fisica',
+  'aislamiento-y-bloqueo-loto',
+]
+
+function sortHomeCourses(data) {
+  const bySlug = new Map((data || []).map(c => [c.attributes?.slug, c]))
+  const featured = HOME_COURSE_SLUGS.map(slug => bySlug.get(slug)).filter(Boolean)
+  if (featured.length) return featured
+  return data || []
+}
 
 const MOCK_NOTICIAS = [
   { id:1, attributes:{ titulo:'CETMED renueva certificación SENCE para 2025', resumen:'Nuestro centro supera con éxito el proceso de renovación anual de la certificación SENCE, reafirmando nuestro compromiso con la calidad formativa.', slug:'renovacion-sence-2025', publishedAt:'2025-04-01', imagen:{data:null} } },
@@ -23,9 +43,9 @@ const MOCK_NOTICIAS = [
 ]
 
 const STATS = [
-  { icon:'school',    value:'2.800+', label:'Profesionales capacitados' },
-  { icon:'menu_book', value:'120+',   label:'Cursos disponibles' },
-  { icon:'verified',  value:'15+',    label:'Años de experiencia' },
+  { icon:'school',    value:'+500', label:'Profesionales capacitados' },
+  { icon:'menu_book', value:'+50',  label:'Cursos disponibles' },
+  { icon:'verified',  value:'+3',   label:'Años de experiencia' },
   { icon:'star',      value:'98%',    label:'Satisfacción de alumnos' },
 ]
 
@@ -61,8 +81,8 @@ function useCountUp(target, active) {
     }, 20)
     return () => clearInterval(id)
   }, [active, target])
-  const suffix = target.replace(/[\d,]/g,'')
-  return `${val.toLocaleString('es-CL')}${suffix}`
+  const [, prefix = '', suffix = ''] = target.match(/^(\D*)[\d.,]+(\D*)$/) || []
+  return `${prefix}${val.toLocaleString('es-CL')}${suffix}`
 }
 
 function StatItem({ icon, value, label, active }) {
@@ -84,14 +104,9 @@ export default function Home() {
   const { addItem } = useCart()
 
   useEffect(() => {
-    getCursos({'pagination[pageSize]':12}).then(d => {
+    getCursos({'pagination[pageSize]':100}).then(d => {
       if (d?.data?.length) {
-        const sorted = [...d.data].sort((x, y) => {
-          const xSence = x.attributes?.franquicia_sence ? 1 : 0
-          const ySence = y.attributes?.franquicia_sence ? 1 : 0
-          return ySence - xSence
-        })
-        setCursos(sorted)
+        setCursos(sortHomeCourses(d.data))
       }
     }).catch(()=>{})
     getNoticias({'pagination[pageSize]':3}).then(d => { if (d?.data?.length) setNoticias(d.data) }).catch(()=>{})
@@ -173,7 +188,7 @@ export default function Home() {
           </div>
  
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {cursos.slice(0,6).map((c,i) => (
+            {cursos.slice(0,8).map((c,i) => (
               <div key={c.id} className="h-full">
                 <CourseCard curso={c} />
               </div>

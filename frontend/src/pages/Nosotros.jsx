@@ -17,6 +17,10 @@ const VALORES = [
   { icon:'bolt',      title:'Excelencia',     desc:'Nos exigimos el más alto estándar en docencia y servicio.' },
 ]
 
+const MISION = 'Somos un OTEC que ejecuta Capacitación y Formación complementaria dirigido a Personas Naturales, Trabajadores, Profesionales, Empresas Públicas o Privadas, con el más alto Nivel de Calidad posible según la Norma Chilena 2728:2015, SENCE y demás requisitos Legales aplicables.'
+
+const VISION = 'Ser reconocidos como un ente Capacitador por ofrecer Servicios de Capacitación de Calidad, generando valor agregado a los participantes y demás partes interesadas, cumpliendo las metas establecidas en nuestra organización y diferenciándonos por innovar en los métodos de aprendizaje llevados a cabo en el intercambio de los Saberes.'
+
 export default function Nosotros() {
   return (
     <>
@@ -43,7 +47,7 @@ export default function Nosotros() {
                 CETMED Capacitaciones
               </h2>
               <p className="text-[var(--text-body)] leading-relaxed mb-6 text-lg">
-                Somos un OTEC que ejecuta Capacitación y Formación complementaria dirigido a Personas Naturales, Trabajadores, Profesionales, Empresas Públicas o Privadas, con el más alto Nivel de Calidad posible según la Norma Chilena 2728:2015, SENCE y demás requisitos Legales aplicables.
+                {MISION}
               </p>
               <div className="flex flex-wrap gap-3">
                 {['OTEC SENCE','Norma NCh 2728:2015'].map(c => (
@@ -60,6 +64,26 @@ export default function Nosotros() {
                 className="rounded-2xl w-full shadow-lift"
               />
             </div>
+          </div>
+
+          {/* Misión y visión */}
+          <div className="grid lg:grid-cols-2 gap-6 mb-20">
+            {[
+              { icon:'flag', title:'Misión', desc:MISION },
+              { icon:'visibility', title:'Visión', desc:VISION },
+            ].map((item, i) => (
+              <div
+                key={item.title}
+                className="p-6 bg-[var(--bg-light)] rounded-xl border border-[var(--border)]"
+                data-reveal
+                data-delay={String(i + 1)}>
+                <div className="w-12 h-12 bg-[var(--primary)]/10 rounded-xl flex items-center justify-center mb-4">
+                  <span className="material-icons text-[var(--primary)]">{item.icon}</span>
+                </div>
+                <h3 className="text-2xl font-black text-[var(--text-dark)] mb-3">{item.title}</h3>
+                <p className="text-[var(--text-body)] leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
           </div>
 
           {/* Certificaciones */}
