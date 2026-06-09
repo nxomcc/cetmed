@@ -15,6 +15,7 @@ const EMPTY = {
   descripcion: '',
   alcance: 'todos',
   curso_id: '',
+  curso_query: '',
 }
 
 function Badge({ activo }) {
@@ -68,6 +69,7 @@ export default function AdminDescuentos() {
       descripcion: a.descripcion || '',
       alcance: a.curso_id ? 'curso' : 'todos',
       curso_id: a.curso_id || '',
+      curso_query: a.curso_id ? courseTitle(a.curso_id, a) : '',
     })
     setShowForm(true)
   }
@@ -78,6 +80,9 @@ export default function AdminDescuentos() {
     e.preventDefault()
     setSaving(true)
     try {
+      if (form.alcance === 'curso' && !form.curso_id) {
+        throw new Error('Selecciona un curso de la lista')
+      }
       const data = {
         codigo: form.codigo.toUpperCase().trim(),
         tipo: form.tipo,
@@ -131,6 +136,10 @@ export default function AdminDescuentos() {
     return row?.cursos?.titulo || cursos.find(c => Number(c.id) === Number(id))?.titulo || `Curso #${id}`
   }
 
+  const filteredCursos = cursos
+    .filter(c => !form.curso_query || c.titulo?.toLowerCase().includes(form.curso_query.toLowerCase()))
+    .slice(0, 8)
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -180,12 +189,30 @@ export default function AdminDescuentos() {
                 {form.alcance === 'curso' && (
                   <div className="sm:col-span-2">
                     <label className="block text-sm font-semibold text-gray-700 mb-1">Curso</label>
-                    <select required value={form.curso_id} onChange={e => setForm(p => ({ ...p, curso_id: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#003d7a]">
-                      <option value="">Selecciona un curso...</option>
-                      {cursos.map(c => (
-                        <option key={c.id} value={c.id}>{c.titulo}</option>
+                    <input
+                      value={form.curso_query}
+                      onChange={e => {
+                        const value = e.target.value
+                        const exact = cursos.find(c => c.titulo?.toLowerCase() === value.toLowerCase())
+                        setForm(p => ({ ...p, curso_query: value, curso_id: exact?.id || '' }))
+                      }}
+                      className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#003d7a]"
+                      placeholder="Escribe para buscar un curso..."
+                    />
+                    <div className="mt-2 max-h-44 overflow-y-auto rounded-xl border border-gray-100 bg-gray-50 p-1">
+                      {filteredCursos.length === 0 ? (
+                        <p className="px-3 py-2 text-xs text-gray-400">Sin cursos coincidentes</p>
+                      ) : filteredCursos.map(c => (
+                        <button
+                          key={c.id}
+                          type="button"
+                          onClick={() => setForm(p => ({ ...p, curso_id: c.id, curso_query: c.titulo }))}
+                          className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${Number(form.curso_id) === Number(c.id) ? 'bg-[#003d7a] text-white' : 'text-gray-700 hover:bg-white'}`}
+                        >
+                          {c.titulo}
+                        </button>
                       ))}
-                    </select>
+                    </div>
                   </div>
                 )}
                 <div className="sm:col-span-2">
