@@ -228,7 +228,7 @@ export default function Home() {
                 decoding="async"
                 className="rounded-2xl w-full shadow-hero object-cover"
               />
-              <div className="absolute -bottom-5 -left-5 bg-[var(--accent)] text-[var(--primary-dark)] rounded-2xl p-5 font-black shadow-lift hidden sm:block">
+              <div className="absolute -bottom-5 -left-5 bg-[var(--accent)] text-[var(--primary-dark)] rounded-2xl p-5 min-w-[184px] text-center font-black shadow-lift hidden sm:block">
                 <div className="text-3xl">+500</div>
                 <div className="text-sm font-semibold">alumnos capacitados</div>
               </div>

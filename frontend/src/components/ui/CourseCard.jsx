@@ -41,8 +41,7 @@ export default function CourseCard({ curso, onCartOpen }) {
     <Link to={`/cursos/${slug}`} className="course-card group no-underline">
       {/* Image */}
       <div className="relative overflow-hidden aspect-[16/9] bg-[var(--bg-light)]">
-        <img src={imgSrc} alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover scale-110 blur-md opacity-25" />
-        <img src={imgSrc} alt={titulo} loading="lazy" decoding="async" className="relative z-10 w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105" />
+        <img src={imgSrc} alt={titulo} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         {a?.franquicia_sence && (
           <span className="absolute top-3 right-3 tag font-bold" style={{ background:'#fff', color:'var(--primary)', border:'1.5px solid var(--accent)' }}>SENCE</span>
