@@ -229,7 +229,7 @@ export default function Home() {
                 className="rounded-2xl w-full shadow-hero object-cover"
               />
               <div className="absolute -bottom-5 -left-5 bg-[var(--accent)] text-[var(--primary-dark)] rounded-2xl p-5 font-black shadow-lift hidden sm:block">
-                <div className="text-3xl">+2.800</div>
+                <div className="text-3xl">+500</div>
                 <div className="text-sm font-semibold">alumnos capacitados</div>
               </div>
             </div>
