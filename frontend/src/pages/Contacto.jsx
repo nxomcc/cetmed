@@ -98,7 +98,7 @@ export default function Contacto() {
                 { icon:'location_on',  title:'Dirección',    content:'Coquimbo, Región de Coquimbo, Chile' },
                 { icon:'phone',        title:'Teléfono',     content:'+56 9 2778 1966', href:'tel:+56927781966' },
                 { icon:'email',        title:'Email',        content:'contacto@cetmed.cl', href:'mailto:contacto@cetmed.cl' },
-                { icon:'access_time',  title:'Horario',      content:'Lun–Vie 09:00–18:00' },
+                { icon:'access_time',  title:'Horario',      content:'Lun–Jue 09:00–13:30 · Vie 09:00–13:00' },
               ].map(d => (
                 <div key={d.title} className="flex gap-4 p-5 bg-[var(--bg-light)] rounded-xl border border-[var(--border)]" data-reveal>
                   <div className="w-11 h-11 bg-[var(--primary)] rounded-xl flex items-center justify-center shrink-0">

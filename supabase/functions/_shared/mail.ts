@@ -7,7 +7,7 @@ function escapeHtml(value: string) {
     .replaceAll("'", '&#039;')
 }
 
-async function sendMail(to: string, subject: string, html: string) {
+export async function sendMail(to: string, subject: string, html: string) {
   const url = Deno.env.get('MAIL_WEBHOOK_URL')
   const token = Deno.env.get('MAIL_WEBHOOK_TOKEN')
   if (!url || !token) {
@@ -30,6 +30,28 @@ async function sendMail(to: string, subject: string, html: string) {
   }
 
   return { ok: true }
+}
+
+export async function sendLeadEmail(lead: any) {
+  const internalTo = Deno.env.get('MAIL_INTERNAL_TO') || 'contacto@cetmed.cl'
+  const subject = `Nuevo contacto web: ${lead.nombre || 'Sin nombre'}`
+  const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.5;color:#1f2937">
+      <h2>Nuevo mensaje desde el formulario CETMED</h2>
+      <p><strong>Nombre:</strong> ${escapeHtml(lead.nombre || '')}</p>
+      <p><strong>Email:</strong> ${escapeHtml(lead.email || '')}</p>
+      <p><strong>Telefono:</strong> ${escapeHtml(lead.telefono || '')}</p>
+      <p><strong>RUT:</strong> ${escapeHtml(lead.rut || '')}</p>
+      <p><strong>Empresa:</strong> ${escapeHtml(lead.empresa || '')}</p>
+      <p><strong>Tipo:</strong> ${escapeHtml(lead.tipo || '')}</p>
+      <p><strong>Area:</strong> ${escapeHtml(lead.area || '')}</p>
+      <p><strong>Curso ID:</strong> ${escapeHtml(lead.curso_id || '')}</p>
+      <p><strong>Mensaje:</strong></p>
+      <p>${escapeHtml(lead.mensaje || '').replaceAll('\n', '<br>')}</p>
+    </div>
+  `
+
+  return sendMail(internalTo, subject, html)
 }
 
 export async function sendEnrollmentEmails(order: any, enrollment: any) {

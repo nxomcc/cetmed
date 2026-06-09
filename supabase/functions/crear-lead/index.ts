@@ -1,5 +1,6 @@
 import { handleOptions, json } from '../_shared/cors.ts'
 import { isHoneypotFilled } from '../_shared/honeypot.ts'
+import { sendLeadEmail } from '../_shared/mail.ts'
 import { serviceClient } from '../_shared/supabase.ts'
 
 Deno.serve(async (req) => {
@@ -34,6 +35,9 @@ Deno.serve(async (req) => {
       .single()
 
     if (error) throw error
+    sendLeadEmail(data).catch((mailError) => {
+      console.warn('[MAIL] Lead notification failed:', mailError?.message || mailError)
+    })
     return json(req, data, 201)
   } catch (error) {
     return json(req, { error: error.message || 'Error creando lead' }, 500)
