@@ -29,11 +29,24 @@ const HOME_COURSE_SLUGS = [
   'aislamiento-y-bloqueo-loto',
 ]
 
+const HOME_SENCE_SLUGS = new Set(HOME_COURSE_SLUGS)
+
+function withHomeSenceTag(course) {
+  if (!course?.attributes?.slug || !HOME_SENCE_SLUGS.has(course.attributes.slug)) return course
+  return {
+    ...course,
+    attributes: {
+      ...course.attributes,
+      franquicia_sence: true,
+    },
+  }
+}
+
 function sortHomeCourses(data) {
   const bySlug = new Map((data || []).map(c => [c.attributes?.slug, c]))
-  const featured = HOME_COURSE_SLUGS.map(slug => bySlug.get(slug)).filter(Boolean)
+  const featured = HOME_COURSE_SLUGS.map(slug => bySlug.get(slug)).filter(Boolean).map(withHomeSenceTag)
   if (featured.length) return featured
-  return data || []
+  return (data || []).map(withHomeSenceTag)
 }
 
 const MOCK_NOTICIAS = [

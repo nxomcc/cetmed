@@ -12,6 +12,9 @@
  *
  * Import into DB and copy images into Supabase Storage:
  *   node backend/src/import-old-courses.js --import --upload-images
+ *
+ * Prefer local images extracted from a WordPress/cPanel backup:
+ *   node backend/src/import-old-courses.js --import --upload-images --image-dir scratch/old-wordpress-images
  */
 const fs = require('fs')
 const path = require('path')
@@ -32,6 +35,9 @@ const args = new Set(process.argv.slice(2))
 const shouldImport = args.has('--import')
 const dryRun = args.has('--dry-run') || !shouldImport
 const uploadImages = args.has('--upload-images')
+const localImageDir = resolveLocalImageDir(
+  getArgValue('--image-dir') || getArgValue('--local-image-dir') || process.env.OLD_WP_IMAGE_DIR
+)
 
 const ENTITY_MAP = {
   amp: '&',
@@ -140,6 +146,24 @@ function filenameFromUrl(url = '', fallback = 'course-image.jpg') {
   return decodeURIComponent(path.basename(pathname) || fallback)
 }
 
+function getArgValue(name) {
+  const argv = process.argv.slice(2)
+  const inlinePrefix = `${name}=`
+  const inline = argv.find(arg => arg.startsWith(inlinePrefix))
+  if (inline) return inline.slice(inlinePrefix.length)
+
+  const index = argv.indexOf(name)
+  if (index >= 0 && argv[index + 1] && !argv[index + 1].startsWith('--')) {
+    return argv[index + 1]
+  }
+  return null
+}
+
+function resolveLocalImageDir(value) {
+  if (!value) return ''
+  return path.resolve(process.cwd(), value)
+}
+
 function contentTypeFromFilename(filename) {
   const ext = path.extname(filename).toLowerCase()
   if (ext === '.png') return 'image/png'
@@ -159,6 +183,27 @@ async function fetchBuffer(url) {
   if (!res.ok) throw new Error(`GET ${url} failed with ${res.status}`)
   const contentType = res.headers.get('content-type') || contentTypeFromFilename(filenameFromUrl(url))
   return { buffer: Buffer.from(await res.arrayBuffer()), contentType }
+}
+
+function readLocalImageBuffer(course, filename) {
+  if (!localImageDir) return null
+  const candidates = [
+    filename,
+    course.img_name,
+    course.img_url ? filenameFromUrl(course.img_url) : null,
+  ].filter(Boolean)
+
+  for (const candidate of [...new Set(candidates)]) {
+    const filePath = path.join(localImageDir, path.basename(candidate))
+    if (!fs.existsSync(filePath)) continue
+    return {
+      buffer: fs.readFileSync(filePath),
+      contentType: contentTypeFromFilename(filePath),
+      source: filePath,
+    }
+  }
+
+  return null
 }
 
 function extractAccordionSections(html) {
@@ -530,7 +575,8 @@ async function uploadImageToSupabase(course) {
   const filename = course.img_name || filenameFromUrl(course.img_url, `${course.slug}.jpg`)
   const ext = path.extname(filename) || '.jpg'
   const storagePath = `courses/${course.slug}${ext}`
-  const { buffer, contentType } = await fetchBuffer(course.img_url)
+  const localImage = readLocalImageBuffer(course, filename)
+  const { buffer, contentType } = localImage || await fetchBuffer(course.img_url)
 
   const { error } = await sb.storage.from(bucket).upload(storagePath, buffer, {
     contentType,
@@ -654,7 +700,7 @@ async function main() {
   fs.writeFileSync(OUTPUT_PATH, `${JSON.stringify(courses, null, 2)}\n`)
 
   const report = summarize(courses)
-  console.log(JSON.stringify({ output: OUTPUT_PATH, dryRun, uploadImages, ...report }, null, 2))
+  console.log(JSON.stringify({ output: OUTPUT_PATH, dryRun, uploadImages, localImageDir: localImageDir || null, ...report }, null, 2))
 
   if (shouldImport) {
     await upsertImport(courses)

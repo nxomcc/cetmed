@@ -10,6 +10,10 @@ build/
 !frontend/dist/**
 supabase/.temp/
 CHECKLIST_DESARROLLO.md
+scratch/legacy-course-image-map.json
+scratch/old-wordpress-image-*.json
+scratch/old-wordpress-images/
+scratch/old-wordpress-images-raw/
 
 
 # Env files (keep example)

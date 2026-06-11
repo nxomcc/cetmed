@@ -92,7 +92,7 @@ export default function CursoDetalle() {
   )
 
   const { id, attributes: a } = curso
-  const imgSrc = getCourseImageUrl(a?.imagen?.data, a.titulo)
+  const imgSrc = getCourseImageUrl(a?.imagen?.data, a.titulo, slug)
   const added = inCart(id)
   const activo = a.activo !== false
   const courseMeta = getCourseMeta(a)
@@ -116,7 +116,7 @@ export default function CursoDetalle() {
           </div>
           <div className="flex flex-wrap gap-2 mb-3">
             {a.categoria?.data && (
-              <span className="tag bg-white/20 text-white">{a.categoria.data.attributes.nombre}</span>
+              <span className="tag bg-white text-[var(--primary-dark)] border border-white/80 shadow-sm font-bold">{a.categoria.data.attributes.nombre}</span>
             )}
             {a.franquicia_sence && (
               <span className="tag bg-[var(--accent)] text-[var(--primary-dark)]">SENCE</span>
@@ -141,18 +141,6 @@ export default function CursoDetalle() {
                 onError={event => { event.currentTarget.src = COURSE_PLACEHOLDER }}
                 className="w-full rounded-2xl shadow-lift aspect-video object-cover"
               />
-
-              <div className="grid sm:grid-cols-2 gap-3">
-                {courseMeta.map(item => (
-                  <div key={item.label} className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-white p-4">
-                    <span className="material-icons text-[var(--primary)]">{item.icon}</span>
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-[var(--text-muted)] font-bold">{item.label}</p>
-                      <p className="font-bold text-[var(--text-dark)]">{item.value}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
 
               {a.descripcion && (
                 <div>

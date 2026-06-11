@@ -9,6 +9,7 @@
     "build": "npm run build --prefix frontend",
     "extract:old-courses": "node backend/src/import-old-courses.js --dry-run",
     "import:old-courses": "node backend/src/import-old-courses.js --import --upload-images",
+    "import:old-courses:local-images": "node backend/src/import-old-courses.js --import --upload-images --image-dir scratch/old-wordpress-images",
     "install:all": "npm install --prefix frontend && npm install --prefix backend"
   },
   "devDependencies": {

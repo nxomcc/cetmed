@@ -13,7 +13,7 @@ export default function CourseCard({ curso, onCartOpen }) {
   const modalidad = a?.modalidad || 'Presencial'
   const categoria = a?.categoria?.data?.attributes?.nombre
   const imgData = a?.imagen?.data
-  const imgSrc  = getCourseImageUrl(imgData, titulo)
+  const imgSrc  = getCourseImageUrl(imgData, titulo, slug)
 
   const added = inCart(id)
 

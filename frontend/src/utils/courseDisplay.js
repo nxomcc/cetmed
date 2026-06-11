@@ -1,3 +1,5 @@
+import { LEGACY_COURSE_IMAGES } from './legacyCourseImages'
+
 export const COURSE_PLACEHOLDER = 'https://placehold.co/800x450/003d7a/ffffff?text=CETMED'
 
 export const MODALIDAD_ICON = {
@@ -20,9 +22,11 @@ export function fmtPrice(value) {
   }).format(price)
 }
 
-export function getCourseImageUrl(media, title = 'CETMED') {
+export function getCourseImageUrl(media, title = 'CETMED', slug = '') {
   const url = media?.data?.attributes?.url || media?.attributes?.url || media?.url
-  if (!url) return `https://placehold.co/800x450/003d7a/ffffff?text=${encodeURIComponent(title || 'CETMED')}`
+  if (!url) {
+    return LEGACY_COURSE_IMAGES[slug] || `https://placehold.co/800x450/003d7a/ffffff?text=${encodeURIComponent(title || 'CETMED')}`
+  }
   if (url.startsWith('http') || url.startsWith('/')) return url
   const base = import.meta.env.VITE_CMS_URL || 'http://localhost:1337'
   return `${base}${url}`

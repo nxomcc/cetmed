@@ -134,6 +134,12 @@ Para importar a la base nueva y copiar imagenes al bucket de Supabase:
 npm run import:old-courses
 ```
 
+Si las imagenes se rescataron desde el backup de cPanel/WordPress, dejarlas en `scratch/old-wordpress-images` y ejecutar:
+
+```bash
+npm run import:old-courses:local-images
+```
+
 Variables necesarias:
 
 ```bash
@@ -148,4 +154,5 @@ Notas:
 - La importacion es idempotente por `slug`.
 - Si un curso ya tiene `moodle_course_id`, no se borra.
 - Si no se usa `--upload-images`, las imagenes quedan referenciadas desde `old.cetmed.cl`.
+- Si se usa `--image-dir`, el importador prefiere la imagen local por nombre de archivo y solo recurre a la URL antigua si no la encuentra.
 - Los precios u horas que no existan en WordPress quedan vacios/0; no se inventan valores.
