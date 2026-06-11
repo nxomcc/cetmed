@@ -460,22 +460,17 @@ export async function getUser(id) {
 }
 
 export async function createUser(data) {
-  const { password, ...profile } = data
-  const { data: row, error } = await supabase.from('users').insert(profile).select('*').single()
-  if (error) throw error
-  return fmtUser(row)
+  const response = await invokeFunction('gestionar-usuario-admin', { action: 'create', ...data })
+  return fmtUser(response.user)
 }
 
 export async function updateUser(id, data) {
-  const { password, ...profile } = data
-  const { data: row, error } = await supabase.from('users').update(profile).eq('id', id).select('*').single()
-  if (error) throw error
-  return fmtUser(row)
+  const response = await invokeFunction('gestionar-usuario-admin', { action: 'update', id, ...data })
+  return fmtUser(response.user)
 }
 
 export async function deleteUser(id) {
-  const { error } = await supabase.from('users').delete().eq('id', id)
-  if (error) throw error
+  await invokeFunction('gestionar-usuario-admin', { action: 'delete', id })
   return null
 }
 

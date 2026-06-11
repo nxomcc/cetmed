@@ -64,7 +64,13 @@ export default function AdminUsuarios() {
     setSaving(true)
     try {
       if (modal === 'create') {
-        await createUser({ username: form.username.trim(), email: form.email.trim(), password: form.password })
+        await createUser({
+          username: form.username.trim(),
+          email: form.email.trim(),
+          password: form.password,
+          role: form.role || 'editor',
+          blocked: form.blocked,
+        })
         toast('Usuario creado', 'success')
       } else {
         const payload = { username: form.username.trim(), email: form.email.trim(), role: form.role, blocked: form.blocked }
@@ -282,20 +288,18 @@ export default function AdminUsuarios() {
                 />
               </div>
 
-              {isEditMode && (
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">Rol</label>
-                  <select
-                    value={form.role}
-                    onChange={e => setForm(p => ({ ...p, role: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003d7a] focus:ring-2 focus:ring-[#003d7a]/10 bg-white"
-                  >
-                    {roles.map(r => (
-                      <option key={r.type} value={r.type}>{ROLE_LABEL[r.type] || r.name}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Rol</label>
+                <select
+                  value={form.role}
+                  onChange={e => setForm(p => ({ ...p, role: e.target.value }))}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003d7a] focus:ring-2 focus:ring-[#003d7a]/10 bg-white"
+                >
+                  {roles.map(r => (
+                    <option key={r.type} value={r.type}>{ROLE_LABEL[r.type] || r.name}</option>
+                  ))}
+                </select>
+              </div>
 
               {isEditMode && (
                 <label className="flex items-center gap-3 cursor-pointer">
