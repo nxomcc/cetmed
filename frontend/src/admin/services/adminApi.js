@@ -308,11 +308,24 @@ export async function getDescuentos() {
   return { data: rows.map(strapiWrap), meta: { pagination: { total: rows.length } } }
 }
 
-export async function getCursosForSelect() {
-  const [courses, categories] = await Promise.all([
-    selectList('cursos', 'id,titulo,categoria_id,modalidad,moodle_course_id', 'titulo', true),
+export async function getCursosForSelect(options = {}) {
+  await requireSession()
+  let coursesQuery = supabase
+    .from('cursos')
+    .select('id,titulo,categoria_id,modalidad,moodle_course_id,activo,published_at')
+    .order('titulo', { ascending: true })
+    .limit(500)
+
+  if (options.webOnly) {
+    coursesQuery = coursesQuery.not('published_at', 'is', null)
+  }
+
+  const [coursesResult, categories] = await Promise.all([
+    coursesQuery,
     selectList('categorias', 'id,nombre', 'nombre', true),
   ])
+  if (coursesResult.error) throw coursesResult.error
+  const courses = coursesResult.data || []
   const categoriesById = new Map(categories.map(category => [Number(category.id), category]))
   return courses.map(row => {
     const category = categoriesById.get(Number(row.categoria_id))
@@ -323,6 +336,8 @@ export async function getCursosForSelect() {
       categoria_nombre: category?.nombre || 'Sin categoria',
       modalidad: row.modalidad || null,
       moodle_course_id: row.moodle_course_id || null,
+      activo: row.activo !== false,
+      published_at: row.published_at || null,
     }
   })
 }
@@ -366,7 +381,7 @@ export async function getAlumnosMatriculados() {
     supabase
       .from('pedidos')
       .select('id,nombre_cliente,email_cliente,telefono_cliente,items,estado,payment_id,created_at,notas')
-      .eq('estado', 'completado')
+      .in('estado', ['completado', 'suspendido'])
       .order('created_at', { ascending: false })
       .limit(500),
     getCursosForSelect(),
@@ -380,6 +395,7 @@ export async function getAlumnosMatriculados() {
     email: row.email_cliente,
     telefono: row.telefono_cliente,
     fecha: row.created_at,
+    estado: row.estado,
     notas: row.notas,
     manual: String(row.payment_id || '').startsWith('MANUAL-'),
     cursos: getOrderItems(row).map(item => {
@@ -411,6 +427,14 @@ export async function updatePedido(id, payload) {
   const { data, error } = await supabase.from('pedidos').update({ ...body, updated_at: new Date().toISOString() }).eq('id', id).select('*').single()
   if (error) throw error
   return { data: strapiWrap(data) }
+}
+
+export async function suspendAlumnoRegistro(id, suspended = true) {
+  return updatePedido(id, { estado: suspended ? 'suspendido' : 'completado' })
+}
+
+export async function deleteAlumnoRegistro(id) {
+  return updatePedido(id, { estado: 'eliminado' })
 }
 
 export async function getLeads() {

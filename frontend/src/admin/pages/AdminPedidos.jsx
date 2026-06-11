@@ -11,6 +11,8 @@ const ESTADO_STYLES = {
   fallido: 'bg-red-100 text-red-700',
   rechazado: 'bg-red-100 text-red-700',
   reembolsado: 'bg-gray-100 text-gray-600',
+  suspendido: 'bg-red-100 text-red-700',
+  eliminado: 'bg-gray-100 text-gray-500',
 }
 
 export default function AdminPedidos() {
@@ -73,7 +75,7 @@ export default function AdminPedidos() {
         </div>
         <select value={filterEstado} onChange={e => setFilterEstado(e.target.value)} className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white">
           <option value="">Todos los estados</option>
-          {['pendiente', 'completado', 'fallido', 'rechazado', 'reembolsado'].map(e => <option key={e}>{e}</option>)}
+          {['pendiente', 'completado', 'suspendido', 'eliminado', 'fallido', 'rechazado', 'reembolsado'].map(e => <option key={e}>{e}</option>)}
         </select>
       </div>
 
@@ -174,7 +176,7 @@ export default function AdminPedidos() {
               <div>
                 <p className="text-gray-400 text-xs mb-1">Cambiar estado</p>
                 <div className="flex gap-2 flex-wrap">
-                  {['pendiente', 'completado', 'fallido', 'rechazado', 'reembolsado'].map(e => (
+                  {['pendiente', 'completado', 'suspendido', 'eliminado', 'fallido', 'rechazado', 'reembolsado'].map(e => (
                     <button
                       key={e}
                       onClick={() => changeEstado(selected, e)}

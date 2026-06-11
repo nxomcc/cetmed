@@ -62,7 +62,7 @@ export default function AdminMatriculas() {
   const [result, setResult] = useState(null)
 
   useEffect(() => {
-    api.getCursosForSelect()
+    api.getCursosForSelect({ webOnly: true })
       .then(rows => setCursos(rows || []))
       .catch(() => toast('No se pudieron cargar los cursos', 'error'))
       .finally(() => setLoading(false))
@@ -74,7 +74,6 @@ export default function AdminMatriculas() {
       .filter(c => mode !== 'moodle' || usesMoodleAccess(c))
       .filter(c => !selected.some(s => Number(s.id) === Number(c.id)))
       .filter(c => !text || c.titulo?.toLowerCase().includes(text))
-      .slice(0, 10)
   }, [cursos, mode, query, selected])
 
   function changeMode(nextMode) {

@@ -48,11 +48,21 @@ function blankEdit(alumno) {
   }
 }
 
+const STATUS_META = {
+  completado: { label: 'Activo', icon: 'check_circle', tone: 'bg-blue-100 text-[#003d7a]' },
+  suspendido: { label: 'Suspendido', icon: 'block', tone: 'bg-red-100 text-red-700' },
+}
+
+function statusMeta(status) {
+  return STATUS_META[status] || { label: status || 'Activo', icon: 'info', tone: 'bg-gray-100 text-gray-600' }
+}
+
 export default function AdminAlumnos() {
   const { toasts, toast, remove } = useToast()
   const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [actioningId, setActioningId] = useState(null)
   const [matriculas, setMatriculas] = useState([])
   const [selected, setSelected] = useState(null)
   const [edit, setEdit] = useState(blankEdit(null))
@@ -108,6 +118,36 @@ export default function AdminAlumnos() {
     }
   }
 
+  async function toggleSuspension(alumno) {
+    const willSuspend = alumno.estado !== 'suspendido'
+    setActioningId(alumno.id)
+    try {
+      await api.suspendAlumnoRegistro(alumno.id, willSuspend)
+      setMatriculas(prev => prev.map(item => item.id === alumno.id ? { ...item, estado: willSuspend ? 'suspendido' : 'completado' } : item))
+      if (selected?.id === alumno.id) setSelected(prev => prev ? { ...prev, estado: willSuspend ? 'suspendido' : 'completado' } : prev)
+      toast(willSuspend ? 'Alumno suspendido' : 'Alumno reactivado', 'success')
+    } catch (error) {
+      toast(error.message || 'No se pudo actualizar el estado del alumno', 'error')
+    } finally {
+      setActioningId(null)
+    }
+  }
+
+  async function removeAlumno(alumno) {
+    if (!window.confirm(`¿Eliminar a ${alumno.nombre || alumno.email} de la lista de alumnos?`)) return
+    setActioningId(alumno.id)
+    try {
+      await api.deleteAlumnoRegistro(alumno.id)
+      setMatriculas(prev => prev.filter(item => item.id !== alumno.id))
+      if (selected?.id === alumno.id) closeAlumno()
+      toast('Alumno eliminado de la lista', 'success')
+    } catch (error) {
+      toast(error.message || 'No se pudo eliminar el alumno', 'error')
+    } finally {
+      setActioningId(null)
+    }
+  }
+
   const filtered = useMemo(() => {
     const text = query.trim().toLowerCase()
     if (!text) return matriculas
@@ -115,6 +155,7 @@ export default function AdminAlumnos() {
       alumno.nombre?.toLowerCase().includes(text)
       || alumno.email?.toLowerCase().includes(text)
       || alumno.telefono?.toLowerCase().includes(text)
+      || alumno.estado?.toLowerCase().includes(text)
       || alumno.cursos?.some(course => course.titulo?.toLowerCase().includes(text))
     )
   }, [matriculas, query])
@@ -124,9 +165,11 @@ export default function AdminAlumnos() {
     let courseRegistrations = 0
     let moodleRegistrations = 0
     let generalRegistrations = 0
+    let suspended = 0
 
     for (const alumno of matriculas) {
       if (alumno.email) uniqueEmails.add(alumno.email.toLowerCase())
+      if (alumno.estado === 'suspendido') suspended += 1
       for (const course of alumno.cursos || []) {
         courseRegistrations += 1
         if (usesMoodleAccess(course)) moodleRegistrations += 1
@@ -140,6 +183,7 @@ export default function AdminAlumnos() {
       courseRegistrations,
       moodleRegistrations,
       generalRegistrations,
+      suspended,
     }
   }, [matriculas])
 
@@ -154,13 +198,14 @@ export default function AdminAlumnos() {
         </p>
       </div>
 
-      <div className="grid sm:grid-cols-2 xl:grid-cols-5 gap-3">
+      <div className="grid sm:grid-cols-2 xl:grid-cols-6 gap-3">
         {[
           { label: 'Alumnos únicos', value: stats.students, icon: 'groups', tone: 'bg-blue-50 text-[#003d7a]' },
           { label: 'Matrículas', value: stats.matriculas, icon: 'receipt_long', tone: 'bg-gray-50 text-gray-700' },
           { label: 'Registros curso', value: stats.courseRegistrations, icon: 'school', tone: 'bg-gray-50 text-gray-700' },
           { label: 'Con Moodle', value: stats.moodleRegistrations, icon: 'computer', tone: 'bg-green-50 text-green-700' },
           { label: 'Registro general', value: stats.generalRegistrations, icon: 'event_note', tone: 'bg-amber-50 text-amber-700' },
+          { label: 'Suspendidos', value: stats.suspended, icon: 'block', tone: 'bg-red-50 text-red-700' },
         ].map(item => (
           <div key={item.label} className="bg-white rounded-2xl border border-gray-100 p-4">
             <div className={`w-9 h-9 rounded-xl ${item.tone} flex items-center justify-center mb-3`}>
@@ -216,11 +261,13 @@ export default function AdminAlumnos() {
               <tbody className="divide-y divide-gray-50">
                 {filtered.map(alumno => {
                   const hasMoodle = alumno.cursos?.some(usesMoodleAccess)
+                  const suspended = alumno.estado === 'suspendido'
+                  const status = statusMeta(alumno.estado)
                   return (
                     <tr
                       key={alumno.id}
                       onDoubleClick={() => openAlumno(alumno)}
-                      className="hover:bg-blue-50/40 transition-colors cursor-default"
+                      className={`hover:bg-blue-50/40 transition-colors cursor-default ${suspended ? 'bg-red-50/30' : ''}`}
                       title="Doble clic para abrir ficha"
                     >
                       <td className="px-4 py-3">
@@ -233,10 +280,18 @@ export default function AdminAlumnos() {
                         <p className="text-xs text-gray-400">{alumno.cursos?.length || 0} curso{alumno.cursos?.length === 1 ? '' : 's'}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-bold ${hasMoodle ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
-                          <span className="material-icons text-[14px]">{hasMoodle ? 'computer' : 'event_note'}</span>
-                          {hasMoodle ? 'Moodle' : 'General'}
-                        </span>
+                        <div className="flex flex-wrap gap-1.5">
+                          <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-bold ${hasMoodle ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                            <span className="material-icons text-[14px]">{hasMoodle ? 'computer' : 'event_note'}</span>
+                            {hasMoodle ? 'Moodle' : 'General'}
+                          </span>
+                          {suspended && (
+                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-bold ${status.tone}`}>
+                              <span className="material-icons text-[14px]">{status.icon}</span>
+                              {status.label}
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-gray-500 text-xs">{formatDate(alumno.fecha)}</td>
                       <td className="px-4 py-3">
@@ -244,8 +299,14 @@ export default function AdminAlumnos() {
                           <a href={emailHref(alumno)} className="p-1.5 rounded-lg text-gray-400 hover:text-[#003d7a] hover:bg-blue-50" title="Enviar correo">
                             <span className="material-icons text-[16px]">mail</span>
                           </a>
-                          <button onClick={() => openAlumno(alumno)} className="p-1.5 rounded-lg text-gray-400 hover:text-[#003d7a] hover:bg-blue-50" title="Ver ficha">
-                            <span className="material-icons text-[16px]">open_in_new</span>
+                          <button onClick={() => openAlumno(alumno)} className="p-1.5 rounded-lg text-gray-400 hover:text-[#003d7a] hover:bg-blue-50" title="Editar alumno">
+                            <span className="material-icons text-[16px]">edit</span>
+                          </button>
+                          <button onClick={() => toggleSuspension(alumno)} disabled={actioningId === alumno.id} className="p-1.5 rounded-lg text-gray-400 hover:text-amber-700 hover:bg-amber-50 disabled:opacity-50" title={suspended ? 'Reactivar alumno' : 'Suspender alumno'}>
+                            <span className="material-icons text-[16px]">{suspended ? 'check_circle' : 'block'}</span>
+                          </button>
+                          <button onClick={() => removeAlumno(alumno)} disabled={actioningId === alumno.id} className="p-1.5 rounded-lg text-gray-400 hover:text-red-700 hover:bg-red-50 disabled:opacity-50" title="Eliminar alumno">
+                            <span className="material-icons text-[16px]">delete_outline</span>
                           </button>
                         </div>
                       </td>
@@ -315,10 +376,20 @@ export default function AdminAlumnos() {
             </div>
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-t border-gray-100">
-              <a href={emailHref(selected)} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50">
-                <span className="material-icons text-[18px]">mail</span>
-                Enviar correo
-              </a>
+              <div className="flex flex-wrap gap-2">
+                <a href={emailHref(selected)} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                  <span className="material-icons text-[18px]">mail</span>
+                  Enviar correo
+                </a>
+                <button onClick={() => toggleSuspension(selected)} disabled={actioningId === selected.id} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50">
+                  <span className="material-icons text-[18px]">{selected.estado === 'suspendido' ? 'check_circle' : 'block'}</span>
+                  {selected.estado === 'suspendido' ? 'Reactivar' : 'Suspender'}
+                </button>
+                <button onClick={() => removeAlumno(selected)} disabled={actioningId === selected.id} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-red-100 text-sm font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50">
+                  <span className="material-icons text-[18px]">delete_outline</span>
+                  Eliminar
+                </button>
+              </div>
               <div className="flex justify-end gap-3">
                 <button onClick={closeAlumno} className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 rounded-xl hover:bg-gray-100 transition-colors">
                   Cancelar
