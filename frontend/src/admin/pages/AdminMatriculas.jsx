@@ -181,7 +181,8 @@ export default function AdminMatriculas() {
                 <p className="px-3 py-2 text-xs text-gray-400">Sin cursos coincidentes</p>
               ) : filteredCursos.map(course => (
                 <button key={course.id} type="button" onClick={() => addCourse(course)} className="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-white transition-colors">
-                  {course.titulo}
+                  <span className="font-semibold">{course.titulo}</span>
+                  <span className="block text-xs text-gray-400 mt-0.5">{course.modalidad || 'Sin modalidad'}{course.moodle_course_id ? ` · Moodle #${course.moodle_course_id}` : ' · Coordinación'}</span>
                 </button>
               ))}
             </div>
@@ -208,7 +209,10 @@ export default function AdminMatriculas() {
                 {selected.map(course => (
                   <div key={course.id} className="flex items-start gap-2 rounded-xl bg-gray-50 px-3 py-2">
                     <span className="material-icons text-[18px] text-[#003d7a] mt-0.5">school</span>
-                    <p className="flex-1 text-sm font-semibold text-gray-700 leading-snug">{course.titulo}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-700 leading-snug">{course.titulo}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{course.moodle_course_id ? `Acceso Moodle #${course.moodle_course_id}` : 'Correo de coordinación'}</p>
+                    </div>
                     <button type="button" onClick={() => removeCourse(course.id)} className="text-gray-400 hover:text-red-600">
                       <span className="material-icons text-[18px]">close</span>
                     </button>
@@ -222,9 +226,9 @@ export default function AdminMatriculas() {
             <div className="bg-green-50 border border-green-200 rounded-2xl p-5 text-sm text-green-800">
               <p className="font-bold mb-2">Matricula completada</p>
               <p>Pedido manual #{result.orderId}</p>
-              <p>Cursos matriculados: {result.enrollment?.enrolled?.length || 0}</p>
-              {!!result.enrollment?.missingMoodleCourseIds?.length && (
-                <p className="mt-2 text-amber-700">Hay cursos sin ID Moodle configurado.</p>
+              <p>Cursos con acceso Moodle: {result.enrollment?.enrolled?.length || 0}</p>
+              {!!result.enrollment?.coordinationCourses?.length && (
+                <p className="mt-2 text-amber-700">{result.enrollment.coordinationCourses.length} curso(s) se enviaron como coordinación, sin usuario ni contraseña Moodle.</p>
               )}
               {result.mail?.error && <p className="mt-2 text-amber-700">No se pudo enviar correo: {result.mail.error}</p>}
             </div>

@@ -111,3 +111,41 @@ where url like 'https://cetmed.cl/wp-content%';
 2. En Edge Functions dejar `ENABLE_PAYMENT_SIMULATION=true`.
 3. Desde frontend o consola llamar `simular-compra-moodle`.
 4. Verificar que el pedido queda `completado` y que el alumno aparece matriculado en Moodle.
+
+## 6. Migracion de cursos desde WordPress antiguo
+
+El extractor lee cursos publicados desde `http://old.cetmed.cl`, filtra entradas por categorias de cursos y cruza productos WooCommerce publicos cuando existen.
+
+Para revisar lo que se importaria sin tocar la base:
+
+```bash
+npm run extract:old-courses
+```
+
+Genera:
+
+```text
+scratch/old-wordpress-courses.json
+```
+
+Para importar a la base nueva y copiar imagenes al bucket de Supabase:
+
+```bash
+npm run import:old-courses
+```
+
+Variables necesarias:
+
+```bash
+DATABASE_URL=...
+SUPABASE_URL=...
+SUPABASE_SERVICE_KEY=...
+SUPABASE_BUCKET=cetmed
+```
+
+Notas:
+
+- La importacion es idempotente por `slug`.
+- Si un curso ya tiene `moodle_course_id`, no se borra.
+- Si no se usa `--upload-images`, las imagenes quedan referenciadas desde `old.cetmed.cl`.
+- Los precios u horas que no existan en WordPress quedan vacios/0; no se inventan valores.

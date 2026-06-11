@@ -7,6 +7,8 @@
     "backend": "npm run dev --prefix backend",
     "app": "npm run dev --prefix frontend",
     "build": "npm run build --prefix frontend",
+    "extract:old-courses": "node backend/src/import-old-courses.js --dry-run",
+    "import:old-courses": "node backend/src/import-old-courses.js --import --upload-images",
     "install:all": "npm install --prefix frontend && npm install --prefix backend"
   },
   "devDependencies": {

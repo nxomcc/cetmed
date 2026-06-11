@@ -1,17 +1,6 @@
 import { Link } from 'react-router-dom'
 import useCart from '../../hooks/useCart'
-
-function fmt(n) {
-  return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(n)
-}
-
-const PLACEHOLDER = 'https://placehold.co/400x240/003d7a/ffffff?text=CETMED'
-
-const MODALIDAD_ICON = {
-  Presencial: 'place',
-  'E-Learning': 'computer',
-  'Blended': 'sync_alt',
-}
+import { COURSE_PLACEHOLDER, MODALIDAD_ICON, fmtPrice, getCourseImageUrl } from '../../utils/courseDisplay'
 
 export default function CourseCard({ curso, onCartOpen }) {
   const { addItem, inCart } = useCart()
@@ -24,9 +13,7 @@ export default function CourseCard({ curso, onCartOpen }) {
   const modalidad = a?.modalidad || 'Presencial'
   const categoria = a?.categoria?.data?.attributes?.nombre
   const imgData = a?.imagen?.data
-  const imgSrc  = imgData?.attributes?.url
-    ? (imgData.attributes.url.startsWith('http') || imgData.attributes.url.startsWith('/') ? imgData.attributes.url : `http://localhost:1337${imgData.attributes.url}`)
-    : PLACEHOLDER
+  const imgSrc  = getCourseImageUrl(imgData, titulo)
 
   const added = inCart(id)
 
@@ -41,7 +28,14 @@ export default function CourseCard({ curso, onCartOpen }) {
     <Link to={`/cursos/${slug}`} className="course-card group no-underline">
       {/* Image */}
       <div className="relative overflow-hidden aspect-[16/9] bg-[var(--bg-light)]">
-        <img src={imgSrc} alt={titulo} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <img
+          src={imgSrc}
+          alt={titulo}
+          loading="lazy"
+          decoding="async"
+          onError={e => { e.currentTarget.src = COURSE_PLACEHOLDER }}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         {a?.franquicia_sence && (
           <span className="absolute top-3 right-3 tag font-bold" style={{ background:'#fff', color:'var(--primary)', border:'1.5px solid var(--accent)' }}>SENCE</span>
@@ -80,7 +74,7 @@ export default function CourseCard({ curso, onCartOpen }) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-auto pt-3 border-t border-[var(--border)]">
           <div className="text-center sm:text-left">
             <p className="text-xs text-[var(--text-muted)]">Precio</p>
-            <p className="font-black text-[var(--primary)] text-lg">{fmt(precio)}</p>
+            <p className="font-black text-[var(--primary)] text-lg">{fmtPrice(precio)}</p>
           </div>
           <button
             onClick={handleAdd}

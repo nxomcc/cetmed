@@ -223,7 +223,7 @@ export default function AdminCursoForm() {
             <div>
               <label className="label">Modalidad</label>
               <select value={form.modalidad} onChange={e => set('modalidad', e.target.value)} className="field">
-                {['Presencial', 'E-Learning', 'Blended', 'In Company'].map(m => <option key={m}>{m}</option>)}
+                {['Presencial', 'E-Learning', 'Online sincrónico', 'Blended', 'In Company'].map(m => <option key={m}>{m}</option>)}
               </select>
             </div>
             <div>
@@ -249,14 +249,15 @@ export default function AdminCursoForm() {
                 className="field"
                 placeholder="Ej: 42"
               />
+              <p className="text-xs text-gray-400 mt-1">Solo para cursos e-learning asincrónicos enlazados al aula virtual. En presenciales o sincrónicos déjalo vacío.</p>
             </div>
           </div>
 
           <div className="border border-gray-100 rounded-xl p-4 bg-gray-50/60 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <h3 className="font-bold text-sm text-gray-900">Vinculacion Moodle</h3>
-                <p className="text-xs text-gray-500 mt-0.5">Busca un curso existente o crea uno nuevo en Moodle.</p>
+                <h3 className="font-bold text-sm text-gray-900">Vinculación Moodle</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Úsalo solo cuando el alumno deba recibir acceso automático al aula virtual.</p>
               </div>
               <div className="flex gap-2">
                 <button

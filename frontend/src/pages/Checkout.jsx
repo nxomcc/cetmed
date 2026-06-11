@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom'
 import useCart from '../hooks/useCart'
 import { crearPagoGetnet, validarDescuento } from '../services/api'
 import SectionLabel from '../components/ui/SectionLabel'
+import { COURSE_PLACEHOLDER, fmtPrice } from '../utils/courseDisplay'
 
 function fmt(n) {
   return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(n)
@@ -203,13 +204,20 @@ export default function Checkout() {
                   {items.map(i => (
                     <div key={i.id} className="flex gap-3">
                       {i.imagen && (
-                        <img src={i.imagen} alt={i.titulo} loading="lazy" decoding="async" className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                        <img
+                          src={i.imagen}
+                          alt={i.titulo}
+                          loading="lazy"
+                          decoding="async"
+                          onError={e => { e.currentTarget.src = COURSE_PLACEHOLDER }}
+                          className="w-12 h-12 rounded-lg object-cover shrink-0"
+                        />
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-[var(--text-dark)] line-clamp-2">{i.titulo}</p>
                         <p className="text-xs text-[var(--text-muted)]">{i.modalidad}</p>
                       </div>
-                      <p className="text-sm font-bold shrink-0">{fmt(i.precio)}</p>
+                      <p className="text-sm font-bold shrink-0">{fmtPrice(i.precio)}</p>
                     </div>
                   ))}
                 </div>

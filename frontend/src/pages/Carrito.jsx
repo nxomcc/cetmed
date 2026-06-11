@@ -1,10 +1,7 @@
 import { Link } from 'react-router-dom'
 import useCart from '../hooks/useCart'
 import SectionLabel from '../components/ui/SectionLabel'
-
-function fmt(n) {
-  return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(n)
-}
+import { COURSE_PLACEHOLDER, fmtPrice } from '../utils/courseDisplay'
 
 export default function Carrito() {
   const { items, removeItem, clearCart, total } = useCart()
@@ -40,12 +37,13 @@ export default function Carrito() {
                   className="flex gap-4 p-5 bg-white rounded-2xl border border-[var(--border)] shadow-card">
                   {item.imagen && (
                     <img src={item.imagen} alt={item.titulo} loading="lazy" decoding="async"
+                      onError={e => { e.currentTarget.src = COURSE_PLACEHOLDER }}
                       className="w-24 h-24 object-cover rounded-xl shrink-0" />
                   )}
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-[var(--text-dark)] leading-tight mb-1">{item.titulo}</h3>
                     <span className="tag text-xs">{item.modalidad}</span>
-                    <p className="mt-2 font-black text-[var(--primary)] text-xl">{fmt(item.precio)}</p>
+                    <p className="mt-2 font-black text-[var(--primary)] text-xl">{fmtPrice(item.precio)}</p>
                   </div>
                   <button onClick={() => removeItem(item.id)}
                     className="shrink-0 p-2 text-[var(--text-muted)] hover:text-red-500 transition-colors self-start">
@@ -69,14 +67,14 @@ export default function Carrito() {
                   {items.map(i => (
                     <div key={i.id} className="flex justify-between text-sm">
                       <span className="text-[var(--text-muted)] line-clamp-1 flex-1 mr-2">{i.titulo}</span>
-                      <span className="font-semibold shrink-0">{fmt(i.precio)}</span>
+                      <span className="font-semibold shrink-0">{fmtPrice(i.precio)}</span>
                     </div>
                   ))}
                 </div>
 
                 <div className="border-t border-[var(--border)] pt-4 mb-5 flex justify-between items-center">
                   <span className="text-[var(--text-muted)] text-sm">Total</span>
-                  <span className="text-2xl font-black text-[var(--primary)]">{fmt(total)}</span>
+                  <span className="text-2xl font-black text-[var(--primary)]">{fmtPrice(total)}</span>
                 </div>
 
                 <p className="text-xs text-[var(--text-muted)] mb-4">

@@ -310,7 +310,7 @@ export async function getDescuentos() {
 
 export async function getCursosForSelect() {
   const [courses, categories] = await Promise.all([
-    selectList('cursos', 'id,titulo,categoria_id,moodle_course_id', 'titulo', true),
+    selectList('cursos', 'id,titulo,categoria_id,modalidad,moodle_course_id', 'titulo', true),
     selectList('categorias', 'id,nombre', 'nombre', true),
   ])
   const categoriesById = new Map(categories.map(category => [Number(category.id), category]))
@@ -321,6 +321,7 @@ export async function getCursosForSelect() {
       titulo: row.titulo,
       categoria_id: row.categoria_id || null,
       categoria_nombre: category?.nombre || 'Sin categoria',
+      modalidad: row.modalidad || null,
       moodle_course_id: row.moodle_course_id || null,
     }
   })

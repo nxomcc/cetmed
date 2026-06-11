@@ -1,23 +1,79 @@
-import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { getCurso, registerCursoView } from '../services/api'
 import useCart from '../hooks/useCart'
 import SectionLabel from '../components/ui/SectionLabel'
+import {
+  COURSE_PLACEHOLDER,
+  fmtPrice,
+  getContentBlocks,
+  getCourseImageUrl,
+  getCourseMeta,
+  getTextBlocks,
+} from '../utils/courseDisplay'
 
-function fmt(n) {
-  return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(n)
+function TextBlocks({ text }) {
+  const blocks = getTextBlocks(text)
+  if (!blocks.length) return null
+
+  return (
+    <div className="space-y-3 text-[var(--text-body)] leading-relaxed">
+      {blocks.map((block, index) => block.type === 'list' ? (
+        <ul key={index} className="space-y-2">
+          {block.items.map((item, itemIndex) => (
+            <li key={`${index}-${itemIndex}`} className="flex items-start gap-2">
+              <span className="material-icons text-[var(--primary)] text-sm mt-1 shrink-0">fiber_manual_record</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p key={index}>{block.text}</p>
+      ))}
+    </div>
+  )
+}
+
+function ContentBlocks({ contenidos }) {
+  const blocks = getContentBlocks(contenidos)
+  if (!blocks.length) return null
+
+  return (
+    <div className="space-y-5">
+      {blocks.map((block, index) => (
+        <div key={index} className="space-y-2">
+          {block.title && (
+            <h4 className="font-bold text-[var(--primary)]">{block.title}</h4>
+          )}
+          {block.items.length > 0 && (
+            <ul className="space-y-2">
+              {block.items.map((item, itemIndex) => (
+                <li key={`${index}-${itemIndex}`} className="flex items-start gap-2 text-[var(--text-body)] leading-relaxed">
+                  <span className="material-icons text-[var(--primary)] text-sm mt-1 shrink-0">check_circle</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export default function CursoDetalle() {
   const { slug } = useParams()
-  const [curso, setCurso]   = useState(null)
+  const [curso, setCurso] = useState(null)
   const [loading, setLoading] = useState(true)
   const { addItem, inCart } = useCart()
 
   useEffect(() => {
     setLoading(true)
     getCurso(slug)
-      .then(d => { setCurso(d || null); if (d?.id) registerCursoView(d.id) })
+      .then(data => {
+        setCurso(data || null)
+        if (data?.id) registerCursoView(data.id)
+      })
       .catch(() => setCurso(null))
       .finally(() => setLoading(false))
   }, [slug])
@@ -36,12 +92,11 @@ export default function CursoDetalle() {
   )
 
   const { id, attributes: a } = curso
-  const imgSrc = a?.imagen?.data?.attributes?.url
-    ? (a.imagen.data.attributes.url.startsWith('http') || a.imagen.data.attributes.url.startsWith('/') ? a.imagen.data.attributes.url : `http://localhost:1337${a.imagen.data.attributes.url}`)
-    : `https://placehold.co/800x400/003d7a/ffffff?text=${encodeURIComponent(a.titulo)}`
-
+  const imgSrc = getCourseImageUrl(a?.imagen?.data, a.titulo)
   const added = inCart(id)
   const activo = a.activo !== false
+  const courseMeta = getCourseMeta(a)
+  const contentBlocks = getContentBlocks(a.contenidos)
 
   function handleAdd() {
     if (!activo) return
@@ -50,7 +105,6 @@ export default function CursoDetalle() {
 
   return (
     <>
-      {/* Hero */}
       <section className="page-hero">
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="flex items-center gap-2 text-white/60 text-sm mb-4">
@@ -78,52 +132,60 @@ export default function CursoDetalle() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Main */}
             <div className="lg:col-span-2 space-y-8">
-              <img src={imgSrc} alt={a.titulo} loading="eager" decoding="async" className="w-full rounded-2xl shadow-lift aspect-video object-cover" />
+              <img
+                src={imgSrc}
+                alt={a.titulo}
+                loading="eager"
+                decoding="async"
+                onError={event => { event.currentTarget.src = COURSE_PLACEHOLDER }}
+                className="w-full rounded-2xl shadow-lift aspect-video object-cover"
+              />
 
-              {/* Descripción */}
-              <div>
-                <SectionLabel>Descripción del curso</SectionLabel>
-                <p className="text-[var(--text-body)] leading-relaxed mt-2">{a.descripcion}</p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {courseMeta.map(item => (
+                  <div key={item.label} className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-white p-4">
+                    <span className="material-icons text-[var(--primary)]">{item.icon}</span>
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-[var(--text-muted)] font-bold">{item.label}</p>
+                      <p className="font-bold text-[var(--text-dark)]">{item.value}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              {/* Objetivo */}
+              {a.descripcion && (
+                <div>
+                  <SectionLabel>Descripción del curso</SectionLabel>
+                  <TextBlocks text={a.descripcion} />
+                </div>
+              )}
+
               {a.objetivo && (
                 <div className="p-6 bg-[var(--bg-light)] rounded-2xl border border-[var(--border)]">
                   <h3 className="font-bold text-[var(--primary)] mb-2 flex items-center gap-2">
                     <span className="material-icons text-lg">flag</span>
                     Objetivo del curso
                   </h3>
-                  <p className="text-[var(--text-body)] leading-relaxed">{a.objetivo}</p>
+                  <TextBlocks text={a.objetivo} />
                 </div>
               )}
 
-              {/* Contenidos */}
-              {a.contenidos?.length > 0 && (
+              {contentBlocks.length > 0 && (
                 <div>
                   <h3 className="font-bold text-[var(--text-dark)] mb-4 flex items-center gap-2">
                     <span className="material-icons text-[var(--accent)]">menu_book</span>
                     Contenidos del programa
                   </h3>
-                  <ul className="space-y-2">
-                    {a.contenidos.map((c, i) => (
-                      <li key={i} className="flex items-start gap-2 text-[var(--text-body)]">
-                        <span className="material-icons text-[var(--primary)] text-sm mt-0.5 shrink-0">check_circle</span>
-                        {c}
-                      </li>
-                    ))}
-                  </ul>
+                  <ContentBlocks contenidos={a.contenidos} />
                 </div>
               )}
             </div>
 
-            {/* Sidebar */}
             <aside className="space-y-5">
-              {/* Price card */}
               <div className="bg-white rounded-2xl border-2 border-[var(--primary)] p-6 sticky top-20">
                 <p className="text-sm text-[var(--text-muted)] mb-1">Precio del curso</p>
-                <p className="text-4xl font-black text-[var(--primary)] mb-1">{fmt(a.precio)}</p>
+                <p className="text-4xl font-black text-[var(--primary)] mb-1">{fmtPrice(a.precio)}</p>
                 {a.franquicia_sence && (
                   <p className="text-xs text-green-600 flex items-center gap-1 mb-5">
                     <span className="material-icons text-sm">verified</span>
@@ -155,26 +217,19 @@ export default function CursoDetalle() {
                   Consultar disponibilidad
                 </Link>
 
-                {/* Details list */}
                 <div className="mt-5 pt-5 border-t border-[var(--border)] space-y-3 text-sm">
-                  {[
-                    { icon:'schedule',    label:'Duración',   value: a.horas ? `${a.horas} horas` : '—' },
-                    { icon:'place',       label:'Modalidad',  value: a.modalidad || '—' },
-                    { icon:'verified',    label:'Certificado',value: 'Sí, incluido' },
-                    { icon:'groups',      label:'Nivel',      value: a.nivel || 'Básico-Intermedio' },
-                  ].map(d => (
-                    <div key={d.label} className="flex items-center justify-between">
+                  {courseMeta.map(item => (
+                    <div key={item.label} className="flex items-center justify-between gap-4">
                       <span className="flex items-center gap-1.5 text-[var(--text-muted)]">
-                        <span className="material-icons text-sm">{d.icon}</span>
-                        {d.label}
+                        <span className="material-icons text-sm">{item.icon}</span>
+                        {item.label}
                       </span>
-                      <span className="font-semibold text-[var(--text-dark)]">{d.value}</span>
+                      <span className="font-semibold text-[var(--text-dark)] text-right">{item.value}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Contact card */}
               <div className="bg-[var(--bg-light)] rounded-2xl p-5 text-sm">
                 <h4 className="font-bold text-[var(--text-dark)] mb-2">¿Tienes dudas?</h4>
                 <p className="text-[var(--text-muted)] mb-3">Nuestros asesores te orientan sin costo.</p>
