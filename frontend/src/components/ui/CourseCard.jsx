@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import useCart from '../../hooks/useCart'
-import { COURSE_PLACEHOLDER, MODALIDAD_ICON, fmtPrice, getCourseImageUrl } from '../../utils/courseDisplay'
+import { MODALIDAD_ICON, fmtPrice, getCourseImageUrl, handleCourseImageError } from '../../utils/courseDisplay'
 
 export default function CourseCard({ curso, onCartOpen }) {
   const { addItem, inCart } = useCart()
@@ -33,7 +33,7 @@ export default function CourseCard({ curso, onCartOpen }) {
           alt={titulo}
           loading="lazy"
           decoding="async"
-          onError={e => { e.currentTarget.src = COURSE_PLACEHOLDER }}
+          onError={event => handleCourseImageError(event, slug, titulo)}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />

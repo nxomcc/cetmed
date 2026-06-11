@@ -4,12 +4,12 @@ import { getCurso, registerCursoView } from '../services/api'
 import useCart from '../hooks/useCart'
 import SectionLabel from '../components/ui/SectionLabel'
 import {
-  COURSE_PLACEHOLDER,
   fmtPrice,
   getContentBlocks,
   getCourseImageUrl,
   getCourseMeta,
   getTextBlocks,
+  handleCourseImageError,
 } from '../utils/courseDisplay'
 
 function TextBlocks({ text }) {
@@ -138,7 +138,7 @@ export default function CursoDetalle() {
                 alt={a.titulo}
                 loading="eager"
                 decoding="async"
-                onError={event => { event.currentTarget.src = COURSE_PLACEHOLDER }}
+                onError={event => handleCourseImageError(event, slug, a.titulo)}
                 className="w-full rounded-2xl shadow-lift aspect-video object-cover"
               />
 

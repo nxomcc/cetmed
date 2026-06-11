@@ -25,11 +25,39 @@ export function fmtPrice(value) {
 export function getCourseImageUrl(media, title = 'CETMED', slug = '') {
   const url = media?.data?.attributes?.url || media?.attributes?.url || media?.url
   if (!url) {
-    return LEGACY_COURSE_IMAGES[slug] || `https://placehold.co/800x450/003d7a/ffffff?text=${encodeURIComponent(title || 'CETMED')}`
+    return getLegacyCourseImageUrl(slug) || getCoursePlaceholder(title)
   }
   if (url.startsWith('http') || url.startsWith('/')) return url
   const base = import.meta.env.VITE_CMS_URL || 'http://localhost:1337'
   return `${base}${url}`
+}
+
+export function getLegacyCourseImageUrl(slug = '') {
+  return LEGACY_COURSE_IMAGES[slug] || ''
+}
+
+export function getCoursePlaceholder(title = 'CETMED') {
+  return `https://placehold.co/800x450/003d7a/ffffff?text=${encodeURIComponent(title || 'CETMED')}`
+}
+
+export function handleCourseImageError(event, slug = '', title = 'CETMED') {
+  const image = event.currentTarget
+  const legacyUrl = getLegacyCourseImageUrl(slug)
+  const currentPath = (() => {
+    try {
+      return new URL(image.currentSrc || image.src, window.location.origin).pathname
+    } catch {
+      return image.getAttribute('src') || ''
+    }
+  })()
+
+  if (legacyUrl && currentPath !== legacyUrl) {
+    image.src = legacyUrl
+    return
+  }
+
+  image.onerror = null
+  image.src = getCoursePlaceholder(title)
 }
 
 export function getCourseMeta(attributes = {}) {
