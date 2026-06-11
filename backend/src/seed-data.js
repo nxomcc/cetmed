@@ -237,20 +237,20 @@ async function seed() {
     "contenidos": "[]",
     "precio": 88000,
     "horas": 16,
-    "modalidad": "E-Learning",
+    "modalidad": "E-Learning asincrónico",
     "nivel": "Básico",
     "cat_slug": "construccion",
     "img_name": "trabajo-en-altura.jpg"
   },
   {
     "titulo": "Técnicas de seguridad en el montaje y desmontaje de andamios",
-    "slug": "tecnicas-de-seguridad-en-el-montaje-y-desmontaje-deandamios",
+    "slug": "tecnicas-de-seguridad-en-el-montaje-y-desmontaje-de-andamios",
     "descripcion": "Este curso entrega herramientas pr?cticas para realizar el montaje, uso y desmontaje de andamios con criterios de seguridad. La formaci?n aborda identificaci?n de riesgos, revisi?n de componentes, medidas preventivas y buenas pr?cticas para trabajos en altura y faenas de construcci?n.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 132000,
     "horas": 24,
-    "modalidad": "E-Learning",
+    "modalidad": "E-Learning asincrónico",
     "nivel": "Básico",
     "cat_slug": "servicio-personas",
     "img_name": "andamioss.jpg"
@@ -263,7 +263,7 @@ async function seed() {
     "contenidos": "[]",
     "precio": 264000,
     "horas": 48,
-    "modalidad": "E-Learning",
+    "modalidad": "E-Learning asincrónico",
     "nivel": "Básico",
     "cat_slug": "procesos-industriales",
     "img_name": "trabajo-seguro.jpg"
@@ -276,7 +276,7 @@ async function seed() {
     "contenidos": "[]",
     "precio": 198000,
     "horas": 36,
-    "modalidad": "E-Learning",
+    "modalidad": "E-Learning asincrónico",
     "nivel": "Básico",
     "cat_slug": "ciencias-tecnicas",
     "img_name": "inclusion.jpg"
@@ -289,7 +289,7 @@ async function seed() {
     "contenidos": "[]",
     "precio": 198000,
     "horas": 36,
-    "modalidad": "E-Learning",
+    "modalidad": "E-Learning asincrónico",
     "nivel": "Básico",
     "cat_slug": "salud",
     "img_name": "auxilio-1.jpg"
@@ -302,7 +302,7 @@ async function seed() {
     "contenidos": "[]",
     "precio": 88000,
     "horas": 16,
-    "modalidad": "E-Learning",
+    "modalidad": "E-Learning asincrónico",
     "nivel": "Básico",
     "cat_slug": "procesos-industriales",
     "img_name": "sustancia-peligrosa.jpg"
@@ -315,7 +315,7 @@ async function seed() {
     "contenidos": "[]",
     "precio": 108000,
     "horas": 16,
-    "modalidad": "E-Learning",
+    "modalidad": "E-Learning asincrónico",
     "nivel": "Básico",
     "cat_slug": "procesos-industriales",
     "img_name": "extintores2.jpg"
@@ -328,7 +328,7 @@ async function seed() {
     "contenidos": "[]",
     "precio": 88000,
     "horas": 12,
-    "modalidad": "E-Learning",
+    "modalidad": "E-Learning asincrónico",
     "nivel": "Básico",
     "cat_slug": "procesos-industriales",
     "img_name": "bloqueo-LOTO.png"

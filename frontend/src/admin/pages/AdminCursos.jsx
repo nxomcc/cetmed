@@ -102,7 +102,7 @@ export default function AdminCursos() {
         </select>
         <select value={filterMod} onChange={e => setFilterMod(e.target.value)} className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white">
           <option value="">Todas las modalidades</option>
-          {['Presencial', 'E-Learning', 'Blended', 'In Company'].map(m => <option key={m}>{m}</option>)}
+          {['Presencial', 'E-Learning', 'E-Learning asincrónico', 'Online sincrónico', 'Blended', 'In Company'].map(m => <option key={m}>{m}</option>)}
         </select>
       </div>
 

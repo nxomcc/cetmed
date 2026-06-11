@@ -5,6 +5,7 @@ export const COURSE_PLACEHOLDER = 'https://placehold.co/800x450/003d7a/ffffff?te
 export const MODALIDAD_ICON = {
   Presencial: 'place',
   'E-Learning': 'computer',
+  'E-Learning asincrónico': 'computer',
   Blended: 'sync_alt',
   'B-Learning': 'sync_alt',
   'Online sincrónico': 'live_tv',

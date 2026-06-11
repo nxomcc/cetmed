@@ -8,14 +8,14 @@ import useCart from '../hooks/useCart'
 
 /* ── Mock data fallback (when CMS offline) ────────── */
 const MOCK_CURSOS = [
-  { id:1, attributes:{ titulo:'Técnicas de trabajo seguro en espacios confinados', precio:0, modalidad:'E-Learning', horas:16, slug:'tecnicas-de-trabajo-seguro-en-espacios-confinados', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-seguro-espacios-confinados.jpg' } } } } },
-  { id:2, attributes:{ titulo:'Técnicas de seguridad en el montaje y desmontaje de andamios', precio:0, modalidad:'E-Learning', horas:16, slug:'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-de-andamios', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/seguridad-andamios.jpg' } } } } },
-  { id:3, attributes:{ titulo:'Gestor de inclusión laboral', precio:0, modalidad:'Presencial', horas:40, slug:'gestor-de-inclusion-laboral', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/gestor-inclusion-laboral.jpg' } } } } },
-  { id:4, attributes:{ titulo:'Técnicas de primeros auxilios básicos RCP Y DEA', precio:0, modalidad:'E-Learning', horas:36, slug:'tecnicas-de-primeros-auxilios-basicos-rcp-y-dea', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/primeros-auxilios-rcp-dea.jpg' } } } } },
-  { id:5, attributes:{ titulo:'Manejo de extintores portátiles', precio:0, modalidad:'E-Learning', horas:8, slug:'manejo-de-extintores-portatiles', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/manejo-extintores.jpg' } } } } },
-  { id:6, attributes:{ titulo:'Manejo de sustancias peligrosas', precio:0, modalidad:'E-Learning', horas:16, slug:'manejo-de-sustancias-peligrosas', franquicia_sence:true, imagen:{ data:null } } },
-  { id:7, attributes:{ titulo:'Procedimientos para trabajo en altura física', precio:0, modalidad:'Presencial', horas:16, slug:'procedimientos-para-trabajo-en-altura-fisica', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-en-altura.jpg' } } } } },
-  { id:8, attributes:{ titulo:'Aislamiento y bloqueo (LOTO)', precio:0, modalidad:'E-Learning', horas:16, slug:'aislamiento-y-bloqueo-loto', franquicia_sence:true, imagen:{ data:null } } },
+  { id:1, attributes:{ titulo:'Técnicas de trabajo seguro en espacios confinados', precio:0, modalidad:'E-Learning asincrónico', horas:16, slug:'tecnicas-de-trabajo-seguro-en-espacios-confinados', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-seguro-espacios-confinados.jpg' } } } } },
+  { id:2, attributes:{ titulo:'Técnicas de seguridad en el montaje y desmontaje de andamios', precio:0, modalidad:'E-Learning asincrónico', horas:16, slug:'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-de-andamios', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/seguridad-andamios.jpg' } } } } },
+  { id:3, attributes:{ titulo:'Gestor de inclusión laboral', precio:0, modalidad:'E-Learning asincrónico', horas:40, slug:'gestor-de-inclusion-laboral', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/gestor-inclusion-laboral.jpg' } } } } },
+  { id:4, attributes:{ titulo:'Técnicas de primeros auxilios básicos RCP Y DEA', precio:0, modalidad:'E-Learning asincrónico', horas:36, slug:'tecnicas-de-primeros-auxilios-basicos-rcp-y-dea', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/primeros-auxilios-rcp-dea.jpg' } } } } },
+  { id:5, attributes:{ titulo:'Manejo de extintores portátiles', precio:0, modalidad:'E-Learning asincrónico', horas:8, slug:'manejo-de-extintores-portatiles', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/manejo-extintores.jpg' } } } } },
+  { id:6, attributes:{ titulo:'Manejo de sustancias peligrosas', precio:0, modalidad:'E-Learning asincrónico', horas:16, slug:'manejo-de-sustancias-peligrosas', franquicia_sence:true, imagen:{ data:null } } },
+  { id:7, attributes:{ titulo:'Procedimientos para trabajo en altura física', precio:0, modalidad:'E-Learning asincrónico', horas:16, slug:'procedimientos-para-trabajo-en-altura-fisica', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-en-altura.jpg' } } } } },
+  { id:8, attributes:{ titulo:'Aislamiento y bloqueo (LOTO)', precio:0, modalidad:'E-Learning asincrónico', horas:16, slug:'aislamiento-y-bloqueo-loto', franquicia_sence:true, imagen:{ data:null } } },
 ]
 
 const HOME_COURSE_SLUGS = [

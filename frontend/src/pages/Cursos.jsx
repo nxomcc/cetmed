@@ -4,7 +4,7 @@ import { getCursos, getCategorias } from '../services/api'
 import CourseCard from '../components/ui/CourseCard'
 import SectionLabel from '../components/ui/SectionLabel'
 
-const MODALIDADES = ['Todos', 'Presencial', 'E-Learning', 'B-Learning']
+const MODALIDADES = ['Todos', 'Presencial', 'E-Learning', 'E-Learning asincrónico', 'B-Learning']
 
 export default function Cursos() {
   const [searchParams, setSearchParams] = useSearchParams()

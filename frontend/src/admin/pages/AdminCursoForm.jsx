@@ -223,7 +223,7 @@ export default function AdminCursoForm() {
             <div>
               <label className="label">Modalidad</label>
               <select value={form.modalidad} onChange={e => set('modalidad', e.target.value)} className="field">
-                {['Presencial', 'E-Learning', 'Online sincrónico', 'Blended', 'In Company'].map(m => <option key={m}>{m}</option>)}
+                {['Presencial', 'E-Learning', 'E-Learning asincrónico', 'Online sincrónico', 'Blended', 'In Company'].map(m => <option key={m}>{m}</option>)}
               </select>
             </div>
             <div>
