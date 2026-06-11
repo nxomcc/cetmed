@@ -132,7 +132,7 @@ export default function CursoDetalle() {
               </span>
             )}
             {a.franquicia_sence && (
-              <span className="tag bg-[var(--accent)] text-[var(--primary-dark)]">Franquicia SENCE</span>
+              <span className="relative z-30 tag sence-badge font-bold">Franquicia SENCE</span>
             )}
             {!activo && (
               <span className="tag bg-white/20 text-white">No disponible</span>
