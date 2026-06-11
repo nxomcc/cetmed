@@ -51,7 +51,7 @@ export default function AdminCursoForm() {
             moodle_course_id: a.moodle_course_id || '',
             contenidos: a.contenidos ? JSON.stringify(a.contenidos, null, 2) : '',
           })
-          setCurrentImage(imgSrc(a.imagen))
+          setCurrentImage(imgSrc(a.imagen, a.titulo, a.slug))
         })
         .catch(() => toast('Error cargando curso', 'error'))
         .finally(() => setLoading(false))

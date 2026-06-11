@@ -1,4 +1,8 @@
-export function imgSrc(media) {
+import { getCourseImageUrl } from '../../utils/courseDisplay'
+
+export function imgSrc(media, title = '', slug = '') {
+  if (slug) return getCourseImageUrl(media, title, slug)
+
   const url = media?.data?.attributes?.url
   if (!url) return null
   const base = import.meta.env.VITE_CMS_URL || 'http://localhost:1337'

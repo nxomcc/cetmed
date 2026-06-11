@@ -40,6 +40,7 @@ export const LEGACY_COURSE_IMAGES = {
   'manejo-de-sustancias-peligrosas': '/images/courses/old/manejo-de-sustancias-peligrosas.jpg',
   'manejo-de-extintores-portatiles': '/images/courses/old/manejo-de-extintores-portatiles.jpg',
   'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-deandamios': '/images/courses/old/tecnicas-de-seguridad-en-el-montaje-y-desmontaje-deandamios.jpg',
+  'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-de-andamios': '/images/courses/old/tecnicas-de-seguridad-en-el-montaje-y-desmontaje-deandamios.jpg',
   'tecnicas-de-trabajo-seguro-en-espacios-confinados': '/images/courses/old/tecnicas-de-trabajo-seguro-en-espacios-confinados.jpg',
   'gestor-de-inclusion-laboral': '/images/courses/old/gestor-de-inclusion-laboral.jpg',
   'tecnicas-de-primeros-auxilios-basicos-rcp-y-dea': '/images/courses/old/tecnicas-de-primeros-auxilios-basicos-rcp-y-dea.jpg',

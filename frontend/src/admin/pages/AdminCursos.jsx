@@ -127,7 +127,7 @@ export default function AdminCursos() {
               <tbody className="divide-y divide-gray-50">
                 {filtered.map(c => {
                   const a = c.attributes
-                  const thumb = imgSrc(a.imagen)
+                  const thumb = imgSrc(a.imagen, a.titulo, a.slug)
                   return (
                     <tr key={c.id} className="hover:bg-gray-50/50">
                       <td className="px-4 py-3">

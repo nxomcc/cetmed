@@ -24,8 +24,10 @@ export function fmtPrice(value) {
 
 export function getCourseImageUrl(media, title = 'CETMED', slug = '') {
   const url = media?.data?.attributes?.url || media?.attributes?.url || media?.url
+  const legacyUrl = getLegacyCourseImageUrl(slug)
+  if (legacyUrl && isOldWordPressAsset(url)) return legacyUrl
   if (!url) {
-    return getLegacyCourseImageUrl(slug) || getCoursePlaceholder(title)
+    return legacyUrl || getCoursePlaceholder(title)
   }
   if (url.startsWith('http') || url.startsWith('/')) return url
   const base = import.meta.env.VITE_CMS_URL || 'http://localhost:1337'
@@ -34,6 +36,11 @@ export function getCourseImageUrl(media, title = 'CETMED', slug = '') {
 
 export function getLegacyCourseImageUrl(slug = '') {
   return LEGACY_COURSE_IMAGES[slug] || ''
+}
+
+function isOldWordPressAsset(url = '') {
+  return /^https?:\/\/(?:www\.)?cetmed\.cl\/wp-content\/uploads\//i.test(String(url || ''))
+    || /^https?:\/\/old\.cetmed\.cl\/wp-content\/uploads\//i.test(String(url || ''))
 }
 
 export function getCoursePlaceholder(title = 'CETMED') {
