@@ -384,12 +384,23 @@ export async function getAlumnosMatriculados() {
     manual: String(row.payment_id || '').startsWith('MANUAL-'),
     cursos: getOrderItems(row).map(item => {
       const course = coursesById.get(Number(item.id))
+      const paymentId = String(row.payment_id || '')
+      const rowMode = paymentId.startsWith('MANUAL-GENERAL-')
+        ? 'general'
+        : paymentId.startsWith('MANUAL-MOODLE-')
+          ? 'moodle'
+          : null
+      const itemMode = item.enrollment_mode || item.access_mode || rowMode
+      const moodleCourseId = itemMode === 'general'
+        ? null
+        : item.moodle_course_id || course?.moodle_course_id || null
       return {
         id: item.id,
         titulo: item.titulo || item.title || course?.titulo || `Curso #${item.id}`,
         categoria: course?.categoria_nombre || 'Sin categoria',
         modalidad: item.modalidad || course?.modalidad || null,
-        moodle_course_id: item.moodle_course_id || course?.moodle_course_id || null,
+        enrollment_mode: itemMode,
+        moodle_course_id: moodleCourseId,
       }
     }),
   }))

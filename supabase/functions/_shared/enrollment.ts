@@ -12,7 +12,7 @@ function normalizeModality(value: string | null | undefined) {
     .toLowerCase()
 }
 
-function usesAutomaticMoodleAccess(course: any) {
+export function usesAutomaticMoodleAccess(course: any) {
   if (!course?.moodle_course_id) return false
   const modality = normalizeModality(course.modalidad)
   if (modality.includes('asincron')) return true
@@ -36,7 +36,11 @@ function coursePayload(course: any) {
   }
 }
 
-export async function enrollOrderCourses(sb: any, order: any, options: { resetExistingPassword?: boolean } = {}) {
+export async function enrollOrderCourses(
+  sb: any,
+  order: any,
+  options: { resetExistingPassword?: boolean; mode?: 'auto' | 'moodle' | 'general' } = {},
+) {
   const items = parseItems(order)
   if (!items.length) {
     return {
@@ -60,8 +64,14 @@ export async function enrollOrderCourses(sb: any, order: any, options: { resetEx
     if (curso) selectedCourses.push(curso)
   }
 
-  const moodleCourses = selectedCourses.filter(usesAutomaticMoodleAccess)
-  const coordinationCourses = selectedCourses.filter((course: any) => !usesAutomaticMoodleAccess(course)).map(coursePayload)
+  const mode = options.mode || 'auto'
+  const moodleCourses = mode === 'general'
+    ? []
+    : selectedCourses.filter(usesAutomaticMoodleAccess)
+  const coordinationCourses = (mode === 'general'
+    ? selectedCourses
+    : selectedCourses.filter((course: any) => !usesAutomaticMoodleAccess(course))
+  ).map(coursePayload)
 
   let moodleUser = null
   let createdUser = false

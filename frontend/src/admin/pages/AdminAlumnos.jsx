@@ -11,6 +11,8 @@ function normalizeModality(value) {
 }
 
 function usesMoodleAccess(course) {
+  if (course?.enrollment_mode === 'general') return false
+  if (course?.enrollment_mode === 'moodle') return true
   if (!course?.moodle_course_id) return false
   const modality = normalizeModality(course.modalidad)
   if (modality.includes('asincron')) return true
@@ -21,15 +23,39 @@ function usesMoodleAccess(course) {
   return true
 }
 
-function courseAccessLabel(course) {
-  return usesMoodleAccess(course) ? `Moodle #${course.moodle_course_id}` : 'Registro general'
+function formatDate(value) {
+  if (!value) return '-'
+  return new Date(value).toLocaleDateString('es-CL')
+}
+
+function courseSummary(courses = []) {
+  if (!courses.length) return 'Sin cursos'
+  if (courses.length === 1) return courses[0].titulo
+  return `${courses[0].titulo} +${courses.length - 1}`
+}
+
+function emailHref(alumno) {
+  const subject = encodeURIComponent('Información de tu matrícula CETMED')
+  return `mailto:${alumno.email || ''}?subject=${subject}`
+}
+
+function blankEdit(alumno) {
+  return {
+    nombre: alumno?.nombre || '',
+    email: alumno?.email || '',
+    telefono: alumno?.telefono || '',
+    notas: alumno?.notas || '',
+  }
 }
 
 export default function AdminAlumnos() {
   const { toasts, toast, remove } = useToast()
-  const [studentQuery, setStudentQuery] = useState('')
+  const [query, setQuery] = useState('')
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [matriculas, setMatriculas] = useState([])
+  const [selected, setSelected] = useState(null)
+  const [edit, setEdit] = useState(blankEdit(null))
 
   useEffect(() => {
     loadMatriculas()
@@ -47,36 +73,51 @@ export default function AdminAlumnos() {
     }
   }
 
-  const groupedMatriculas = useMemo(() => {
-    const text = studentQuery.trim().toLowerCase()
-    const groups = new Map()
+  function openAlumno(alumno) {
+    setSelected(alumno)
+    setEdit(blankEdit(alumno))
+  }
 
-    for (const matricula of matriculas) {
-      const matchesStudent = !text
-        || matricula.nombre?.toLowerCase().includes(text)
-        || matricula.email?.toLowerCase().includes(text)
-        || matricula.cursos?.some(course => course.titulo?.toLowerCase().includes(text))
+  function closeAlumno() {
+    setSelected(null)
+    setEdit(blankEdit(null))
+  }
 
-      if (!matchesStudent) continue
-
-      for (const course of matricula.cursos || []) {
-        const categoryName = course.categoria || 'Sin categoría'
-        if (!groups.has(categoryName)) groups.set(categoryName, new Map())
-        const coursesMap = groups.get(categoryName)
-        if (!coursesMap.has(course.id)) {
-          coursesMap.set(course.id, { ...course, alumnos: [] })
-        }
-        coursesMap.get(course.id).alumnos.push(matricula)
-      }
+  async function saveAlumno() {
+    if (!selected) return
+    if (!edit.nombre.trim() || !edit.email.trim()) {
+      toast('Nombre y email son obligatorios', 'error')
+      return
     }
 
-    return [...groups.entries()]
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([categoria, coursesMap]) => ({
-        categoria,
-        cursos: [...coursesMap.values()].sort((a, b) => a.titulo.localeCompare(b.titulo)),
-      }))
-  }, [matriculas, studentQuery])
+    setSaving(true)
+    try {
+      await api.updatePedido(selected.id, {
+        nombre_cliente: edit.nombre.trim(),
+        email_cliente: edit.email.trim().toLowerCase(),
+        telefono_cliente: edit.telefono.trim() || null,
+        notas: edit.notas.trim() || null,
+      })
+      toast('Alumno actualizado', 'success')
+      await loadMatriculas()
+      closeAlumno()
+    } catch (error) {
+      toast(error.message || 'No se pudo actualizar el alumno', 'error')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const filtered = useMemo(() => {
+    const text = query.trim().toLowerCase()
+    if (!text) return matriculas
+    return matriculas.filter(alumno =>
+      alumno.nombre?.toLowerCase().includes(text)
+      || alumno.email?.toLowerCase().includes(text)
+      || alumno.telefono?.toLowerCase().includes(text)
+      || alumno.cursos?.some(course => course.titulo?.toLowerCase().includes(text))
+    )
+  }, [matriculas, query])
 
   const stats = useMemo(() => {
     const uniqueEmails = new Set()
@@ -84,9 +125,9 @@ export default function AdminAlumnos() {
     let moodleRegistrations = 0
     let generalRegistrations = 0
 
-    for (const matricula of matriculas) {
-      if (matricula.email) uniqueEmails.add(matricula.email.toLowerCase())
-      for (const course of matricula.cursos || []) {
+    for (const alumno of matriculas) {
+      if (alumno.email) uniqueEmails.add(alumno.email.toLowerCase())
+      for (const course of alumno.cursos || []) {
         courseRegistrations += 1
         if (usesMoodleAccess(course)) moodleRegistrations += 1
         else generalRegistrations += 1
@@ -109,7 +150,7 @@ export default function AdminAlumnos() {
       <div>
         <h1 className="text-2xl font-black text-gray-900">Lista de alumnos</h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          Registro general de alumnos matriculados en cursos Moodle, presenciales, sincrónicos o de coordinación.
+          Registro general de alumnos. Doble clic en una fila para ver o editar la ficha.
         </p>
       </div>
 
@@ -136,9 +177,9 @@ export default function AdminAlumnos() {
           <div className="relative max-w-md w-full">
             <span className="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[18px]">search</span>
             <input
-              value={studentQuery}
-              onChange={e => setStudentQuery(e.target.value)}
-              placeholder="Buscar por alumno, email o curso..."
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Buscar por nombre, email, teléfono o curso..."
               className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl outline-none focus:border-[#003d7a] focus:ring-2 focus:ring-[#003d7a]/10"
             />
           </div>
@@ -149,60 +190,148 @@ export default function AdminAlumnos() {
         </div>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center py-16 bg-white rounded-2xl border border-gray-100">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003d7a]" />
-        </div>
-      ) : groupedMatriculas.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 text-gray-400">
-          <span className="material-icons text-4xl mb-2 block">group_off</span>
-          No hay alumnos matriculados para mostrar
-        </div>
-      ) : groupedMatriculas.map(group => (
-        <section key={group.categoria} className="space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="material-icons text-[#003d7a]">category</span>
-            <h2 className="text-lg font-black text-gray-900">{group.categoria}</h2>
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+        {loading ? (
+          <div className="flex justify-center py-16">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003d7a]" />
           </div>
-          <div className="grid xl:grid-cols-2 gap-4">
-            {group.cursos.map(course => (
-              <div key={course.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                <div className="px-5 py-4 border-b border-gray-100 bg-gray-50">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="font-bold text-gray-900">{course.titulo}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        {course.alumnos.length} alumno{course.alumnos.length !== 1 ? 's' : ''} · {course.modalidad || 'Sin modalidad'}
-                      </p>
-                    </div>
-                    <span className={`shrink-0 text-[10px] font-bold px-2 py-1 rounded-full ${usesMoodleAccess(course) ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
-                      {courseAccessLabel(course)}
-                    </span>
-                  </div>
-                </div>
-                <div className="divide-y divide-gray-50">
-                  {course.alumnos.map(alumno => (
-                    <div key={`${course.id}-${alumno.id}`} className="px-5 py-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="font-semibold text-sm text-gray-900 truncate">{alumno.nombre || 'Sin nombre'}</p>
-                          <p className="text-xs text-gray-500 truncate">{alumno.email}</p>
-                          {alumno.telefono && <p className="text-xs text-gray-400 mt-0.5">{alumno.telefono}</p>}
-                        </div>
-                        <span className={`shrink-0 text-[10px] font-bold px-2 py-1 rounded-full ${alumno.manual ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
-                          {alumno.manual ? 'Manual' : 'Compra'}
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-16 text-gray-400">
+            <span className="material-icons text-4xl mb-2 block">group_off</span>
+            No hay alumnos para mostrar
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-100 bg-gray-50">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Alumno</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Teléfono</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Cursos</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tipo</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Fecha</th>
+                  <th className="px-4 py-3" />
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {filtered.map(alumno => {
+                  const hasMoodle = alumno.cursos?.some(usesMoodleAccess)
+                  return (
+                    <tr
+                      key={alumno.id}
+                      onDoubleClick={() => openAlumno(alumno)}
+                      className="hover:bg-blue-50/40 transition-colors cursor-default"
+                      title="Doble clic para abrir ficha"
+                    >
+                      <td className="px-4 py-3">
+                        <p className="font-semibold text-gray-900">{alumno.nombre || 'Sin nombre'}</p>
+                        <p className="text-xs text-gray-500">{alumno.email}</p>
+                      </td>
+                      <td className="px-4 py-3 text-gray-600">{alumno.telefono || '-'}</td>
+                      <td className="px-4 py-3">
+                        <p className="font-medium text-gray-800 line-clamp-1">{courseSummary(alumno.cursos)}</p>
+                        <p className="text-xs text-gray-400">{alumno.cursos?.length || 0} curso{alumno.cursos?.length === 1 ? '' : 's'}</p>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-bold ${hasMoodle ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                          <span className="material-icons text-[14px]">{hasMoodle ? 'computer' : 'event_note'}</span>
+                          {hasMoodle ? 'Moodle' : 'General'}
                         </span>
+                      </td>
+                      <td className="px-4 py-3 text-gray-500 text-xs">{formatDate(alumno.fecha)}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center justify-end gap-1">
+                          <a href={emailHref(alumno)} className="p-1.5 rounded-lg text-gray-400 hover:text-[#003d7a] hover:bg-blue-50" title="Enviar correo">
+                            <span className="material-icons text-[16px]">mail</span>
+                          </a>
+                          <button onClick={() => openAlumno(alumno)} className="p-1.5 rounded-lg text-gray-400 hover:text-[#003d7a] hover:bg-blue-50" title="Ver ficha">
+                            <span className="material-icons text-[16px]">open_in_new</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {selected && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) closeAlumno() }}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <div>
+                <h2 className="font-bold text-gray-900">Ficha del alumno</h2>
+                <p className="text-xs text-gray-400">Registro #{selected.id}</p>
+              </div>
+              <button onClick={closeAlumno} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400">
+                <span className="material-icons text-[20px]">close</span>
+              </button>
+            </div>
+
+            <div className="p-6 space-y-5">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nombre</label>
+                  <input value={edit.nombre} onChange={e => setEdit(p => ({ ...p, nombre: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003d7a] focus:ring-2 focus:ring-[#003d7a]/10" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+                  <input type="email" value={edit.email} onChange={e => setEdit(p => ({ ...p, email: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003d7a] focus:ring-2 focus:ring-[#003d7a]/10" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">Teléfono</label>
+                  <input value={edit.telefono} onChange={e => setEdit(p => ({ ...p, telefono: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003d7a] focus:ring-2 focus:ring-[#003d7a]/10" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">Fecha</label>
+                  <input value={formatDate(selected.fecha)} readOnly className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm bg-gray-50 text-gray-500" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Notas internas</label>
+                <textarea value={edit.notas} onChange={e => setEdit(p => ({ ...p, notas: e.target.value }))} rows={3} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003d7a] focus:ring-2 focus:ring-[#003d7a]/10 resize-none" />
+              </div>
+
+              <div>
+                <h3 className="font-bold text-sm text-gray-900 mb-3">Cursos inscritos</h3>
+                <div className="space-y-2">
+                  {(selected.cursos || []).map(course => (
+                    <div key={`${selected.id}-${course.id}`} className="flex items-start justify-between gap-3 rounded-xl bg-gray-50 px-4 py-3">
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">{course.titulo}</p>
+                        <p className="text-xs text-gray-400">{course.categoria || 'Sin categoría'} · {course.modalidad || 'Sin modalidad'}</p>
                       </div>
-                      <p className="text-[11px] text-gray-400 mt-2">{alumno.fecha ? new Date(alumno.fecha).toLocaleDateString('es-CL') : ''}</p>
-                      {alumno.notas && <p className="text-[11px] text-gray-400 mt-1 line-clamp-2">{alumno.notas}</p>}
+                      <span className={`shrink-0 text-[10px] font-bold px-2 py-1 rounded-full ${usesMoodleAccess(course) ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                        {usesMoodleAccess(course) ? `Moodle #${course.moodle_course_id}` : 'General'}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
-            ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-t border-gray-100">
+              <a href={emailHref(selected)} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                <span className="material-icons text-[18px]">mail</span>
+                Enviar correo
+              </a>
+              <div className="flex justify-end gap-3">
+                <button onClick={closeAlumno} className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 rounded-xl hover:bg-gray-100 transition-colors">
+                  Cancelar
+                </button>
+                <button onClick={saveAlumno} disabled={saving} className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#003d7a] text-white text-sm font-semibold rounded-xl hover:bg-[#002d5a] transition-colors disabled:opacity-60">
+                  {saving && <span className="animate-spin material-icons text-[16px]">refresh</span>}
+                  Guardar cambios
+                </button>
+              </div>
+            </div>
           </div>
-        </section>
-      ))}
+        </div>
+      )}
     </div>
   )
 }
