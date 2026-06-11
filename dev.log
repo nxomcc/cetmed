@@ -1,6 +1,0 @@
-
-> cetmed@1.0.0 dev
-> concurrently -n CMS,APP -c cyan,green "npm run develop --prefix cms" "npm run dev --prefix frontend"
-
-'concurrently' is not recognized as an internal or external command,
-operable program or batch file.

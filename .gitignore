@@ -2,6 +2,10 @@
 node_modules/
 .npm
 
+# Logs
+*.log
+dev*.log
+
 # Build output
 dist/
 build/
@@ -10,10 +14,7 @@ build/
 !frontend/dist/**
 supabase/.temp/
 CHECKLIST_DESARROLLO.md
-scratch/legacy-course-image-map.json
-scratch/old-wordpress-image-*.json
-scratch/old-wordpress-images/
-scratch/old-wordpress-images-raw/
+scratch/
 
 
 # Env files (keep example)
@@ -28,3 +29,4 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+.claude/
