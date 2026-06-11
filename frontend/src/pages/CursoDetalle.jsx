@@ -10,6 +10,7 @@ import {
   getCourseDescription,
   getCourseImageUrl,
   getCourseMeta,
+  getCourseObjective,
   getTextBlocks,
 } from '../utils/courseDisplay'
 
@@ -18,8 +19,12 @@ function TextBlocks({ text }) {
   if (!blocks.length) return null
 
   return (
-    <div className="space-y-3 text-[var(--text-body)] leading-relaxed">
-      {blocks.map((block, index) => block.type === 'list' ? (
+    <div className="space-y-4 text-[var(--text-body)] leading-8">
+      {blocks.map((block, index) => block.type === 'heading' ? (
+        <h4 key={index} className="pt-2 font-bold text-[var(--primary)]">
+          {block.text}
+        </h4>
+      ) : block.type === 'list' ? (
         <ul key={index} className="space-y-2">
           {block.items.map((item, itemIndex) => (
             <li key={`${index}-${itemIndex}`} className="flex items-start gap-2">
@@ -99,6 +104,7 @@ export default function CursoDetalle() {
   const courseMeta = getCourseMeta(a)
   const contentBlocks = getContentBlocks(a.contenidos)
   const description = getCourseDescription(a, slug)
+  const objective = getCourseObjective(a)
 
   function handleAdd() {
     if (!activo) return
@@ -118,7 +124,12 @@ export default function CursoDetalle() {
           </div>
           <div className="flex flex-wrap gap-2 mb-3">
             {a.categoria?.data && (
-              <span className="tag bg-white/10 text-white border border-white/50 shadow-sm font-bold">{a.categoria.data.attributes.nombre}</span>
+              <span
+                className="tag bg-white/10 border border-white/50 shadow-sm font-bold"
+                style={{ color: '#fff' }}
+              >
+                {a.categoria.data.attributes.nombre}
+              </span>
             )}
             {a.franquicia_sence && (
               <span className="tag bg-[var(--accent)] text-[var(--primary-dark)]">SENCE</span>
@@ -150,13 +161,13 @@ export default function CursoDetalle() {
                 </div>
               )}
 
-              {a.objetivo && (
+              {objective && (
                 <div className="p-6 bg-[var(--bg-light)] rounded-2xl border border-[var(--border)]">
                   <h3 className="font-bold text-[var(--primary)] mb-2 flex items-center gap-2">
                     <span className="material-icons text-lg">flag</span>
                     Objetivo del curso
                   </h3>
-                  <TextBlocks text={a.objetivo} />
+                  <TextBlocks text={objective} />
                 </div>
               )}
 

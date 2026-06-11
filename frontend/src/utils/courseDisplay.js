@@ -91,6 +91,10 @@ export function getCourseDescription(attributes = {}, slug = '') {
   return COURSE_DESCRIPTION_FALLBACKS[slug] || buildCourseDescription(attributes)
 }
 
+export function getCourseObjective(attributes = {}) {
+  return cleanObjective(attributes.objetivo)
+}
+
 function normalizeText(value) {
   return String(value || '')
     .replace(/\r\n/g, '\n')
@@ -147,20 +151,107 @@ function normalizeItem(value) {
 }
 
 export function getTextBlocks(text) {
-  const value = normalizeText(text)
+  const value = prepareDisplayText(text)
   if (!value) return []
   return value
     .split(/\n{2,}/)
     .map(block => block.trim())
     .filter(Boolean)
-    .map(block => {
-      const lines = block.split('\n').map(line => line.trim()).filter(Boolean)
-      const listLines = lines.filter(line => /^(?:[•*-]|\d{1,2}[.)-])\s+/.test(line))
-      if (listLines.length >= Math.max(2, Math.ceil(lines.length * 0.6))) {
-        return { type: 'list', items: lines.map(normalizeItem).filter(Boolean) }
-      }
-      return { type: 'paragraph', text: lines.join(' ') }
+    .flatMap(parseTextBlock)
+}
+
+const TEXT_HEADING_SOURCE = '(Objetivo\\s+General|Objetivos?\\s+Espec[ií]ficos?|P[uú]blico\\s+Objetivo|Contenidos?\\s+del\\s+curso)'
+const INLINE_HEADING_RE = new RegExp(`^${TEXT_HEADING_SOURCE}\\s*[:.-]?\\s+(.+)$`, 'i')
+const HEADING_RE = new RegExp(`(^|\\s+)${TEXT_HEADING_SOURCE}\\s*[:.-]?\\s*`, 'gi')
+
+function prepareDisplayText(value) {
+  return normalizeText(value)
+    .replace(/[ \t]+/g, ' ')
+    .replace(HEADING_RE, (_match, prefix, heading) => {
+      const separator = prefix && prefix.trim() ? prefix : ''
+      return `${separator}\n\n${heading}\n`
     })
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
+function normalizeHeading(value = '') {
+  const key = normalizeText(value)
+    .replace(/[:.-]+$/g, '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+
+  if (key === 'objetivo general') return 'Objetivo general'
+  if (key === 'objetivos especificos' || key === 'objetivo especifico') return 'Objetivos específicos'
+  if (key === 'publico objetivo') return 'Público objetivo'
+  if (key === 'contenidos del curso' || key === 'contenido del curso') return 'Contenidos del curso'
+  return ''
+}
+
+function splitLongParagraph(text) {
+  const clean = normalizeText(text)
+  if (clean.length < 280) return [clean]
+
+  const sentences = clean
+    .split(/(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÑ¿])/)
+    .map(item => item.trim())
+    .filter(Boolean)
+
+  if (sentences.length <= 1) return [clean]
+
+  const paragraphs = []
+  let current = ''
+  for (const sentence of sentences) {
+    const next = current ? `${current} ${sentence}` : sentence
+    if (current && next.length > 330) {
+      paragraphs.push(current)
+      current = sentence
+    } else {
+      current = next
+    }
+  }
+  if (current) paragraphs.push(current)
+  return paragraphs
+}
+
+function splitObjectiveItems(text) {
+  return normalizeText(text)
+    .replace(/\s+(?=(?:Conocer|Aplicar|Administrar|Identificar|Reconocer|Desarrollar|Utilizar|Comprender|Seleccionar|Diseñar|Fortalecer|Manejar|Implementar|Evaluar|Distinguir)\b)/g, '\n')
+    .split('\n')
+    .map(normalizeItem)
+    .filter(item => item.length > 8)
+}
+
+function parseTextBlock(block) {
+  const lines = block.split('\n').map(line => line.trim()).filter(Boolean)
+  if (!lines.length) return []
+
+  const inlineHeading = lines[0].match(INLINE_HEADING_RE)
+  if (inlineHeading) {
+    const rest = [inlineHeading[2], ...lines.slice(1)].join('\n').trim()
+    return parseTextBlock(`${inlineHeading[1]}\n${rest}`)
+  }
+
+  const heading = normalizeHeading(lines[0])
+  if (heading) {
+    const rest = lines.slice(1).join('\n').replace(/^[:.-]\s*/, '').trim()
+    const parsedRest = heading === 'Objetivos específicos' && rest
+      ? [{ type: 'list', items: splitObjectiveItems(rest) }]
+      : parseTextBlock(rest)
+
+    return [
+      { type: 'heading', text: heading },
+      ...parsedRest.filter(item => item.type !== 'list' || item.items.length),
+    ]
+  }
+
+  const listLines = lines.filter(line => /^(?:[•*-]|\d{1,2}[.)-])\s+/.test(line))
+  if (listLines.length >= Math.max(2, Math.ceil(lines.length * 0.6))) {
+    return [{ type: 'list', items: lines.map(normalizeItem).filter(Boolean) }]
+  }
+
+  return splitLongParagraph(lines.join(' ')).map(item => ({ type: 'paragraph', text: item }))
 }
 
 function normalizeContentEntry(entry) {
