@@ -154,7 +154,7 @@ export default function CursoDetalle() {
                 className="w-full rounded-2xl shadow-lift aspect-video"
               >
                 {a.franquicia_sence && (
-                  <span className="absolute top-4 right-4 tag font-bold bg-white text-[var(--primary)] border border-[var(--accent)] shadow-sm">
+                  <span className="absolute top-4 right-4 tag sence-badge font-bold">
                     SENCE
                   </span>
                 )}
@@ -241,9 +241,9 @@ export default function CursoDetalle() {
               <div className="bg-[var(--bg-light)] rounded-2xl p-5 text-sm">
                 <h4 className="font-bold text-[var(--text-dark)] mb-2">¿Tienes dudas?</h4>
                 <p className="text-[var(--text-muted)] mb-3">Nuestros asesores te orientan sin costo.</p>
-                <a href="tel:+56512200000" className="flex items-center gap-2 text-[var(--primary)] font-semibold hover:underline">
+                <a href="tel:+56927781966" className="flex items-center gap-2 text-[var(--primary)] font-semibold hover:underline">
                   <span className="material-icons text-sm">phone</span>
-                  +56 51 220 0000
+                  +56 9 2778 1966
                 </a>
               </div>
             </aside>

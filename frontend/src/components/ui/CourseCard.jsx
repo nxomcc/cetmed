@@ -37,7 +37,7 @@ export default function CourseCard({ curso, onCartOpen }) {
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         {a?.franquicia_sence && (
-          <span className="absolute top-3 right-3 tag font-bold" style={{ background:'#fff', color:'var(--primary)', border:'1.5px solid var(--accent)' }}>SENCE</span>
+          <span className="absolute top-3 right-3 tag sence-badge font-bold">SENCE</span>
         )}
         {!activo && (
           <span className="absolute top-3 left-3 tag font-bold bg-gray-900/80 text-white border-white/20">

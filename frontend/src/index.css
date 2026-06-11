@@ -257,6 +257,14 @@ main {
   letter-spacing: 0.04em;
 }
 
+.sence-badge {
+  background: #fff !important;
+  color: var(--primary) !important;
+  border: 1.5px solid var(--accent) !important;
+  box-shadow: 0 6px 18px rgba(0,37,84,0.16);
+  z-index: 30;
+}
+
 .course-image-frame > .course-image-img,
 .course-card > .relative.overflow-hidden > img {
   width: 100% !important;
