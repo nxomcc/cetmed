@@ -132,7 +132,7 @@ export default function CursoDetalle() {
               </span>
             )}
             {a.franquicia_sence && (
-              <span className="tag bg-[var(--accent)] text-[var(--primary-dark)]">SENCE</span>
+              <span className="tag bg-[var(--accent)] text-[var(--primary-dark)]">Franquicia SENCE</span>
             )}
             {!activo && (
               <span className="tag bg-white/20 text-white">No disponible</span>
@@ -152,7 +152,13 @@ export default function CursoDetalle() {
                 title={a.titulo}
                 loading="eager"
                 className="w-full rounded-2xl shadow-lift aspect-video"
-              />
+              >
+                {a.franquicia_sence && (
+                  <span className="absolute top-4 right-4 tag font-bold bg-white text-[var(--primary)] border border-[var(--accent)] shadow-sm">
+                    SENCE
+                  </span>
+                )}
+              </CourseImage>
 
               {description && (
                 <div>
@@ -187,10 +193,12 @@ export default function CursoDetalle() {
                 <p className="text-sm text-[var(--text-muted)] mb-1">Precio del curso</p>
                 <p className="text-4xl font-black text-[var(--primary)] mb-1">{fmtPrice(a.precio)}</p>
                 {a.franquicia_sence && (
-                  <p className="text-xs text-green-600 flex items-center gap-1 mb-5">
-                    <span className="material-icons text-sm">verified</span>
-                    Aplica franquicia tributaria SENCE
-                  </p>
+                  <div className="mb-5 rounded-xl border border-[var(--accent)] bg-[var(--accent)]/10 px-3 py-2">
+                    <p className="text-xs font-bold text-[var(--primary-dark)] flex items-center gap-1">
+                      <span className="material-icons text-sm">verified</span>
+                      Aplica franquicia tributaria SENCE
+                    </p>
+                  </div>
                 )}
 
                 <button onClick={handleAdd} disabled={!activo || added}

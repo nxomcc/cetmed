@@ -14,6 +14,7 @@ export default function Cursos() {
   const [search, setSearch]         = useState('')
   const [catActiva, setCatActiva]   = useState(searchParams.get('categoria') || 'Todos')
   const [modalidad, setModalidad]   = useState('Todos')
+  const [senceOnly, setSenceOnly]   = useState(searchParams.get('sence') === '1')
 
   useEffect(() => {
     Promise.all([
@@ -32,6 +33,7 @@ export default function Cursos() {
     } else {
       setCatActiva('Todos')
     }
+    setSenceOnly(searchParams.get('sence') === '1')
   }, [searchParams])
 
   function handleCategorySelect(cat) {
@@ -45,12 +47,32 @@ export default function Cursos() {
     setSearchParams(newParams)
   }
 
+  function handleSenceSelect(checked) {
+    setSenceOnly(checked)
+    const newParams = new URLSearchParams(searchParams)
+    if (checked) {
+      newParams.set('sence', '1')
+    } else {
+      newParams.delete('sence')
+    }
+    setSearchParams(newParams)
+  }
+
+  function clearFilters() {
+    setSearch('')
+    setModalidad('Todos')
+    setCatActiva('Todos')
+    setSenceOnly(false)
+    setSearchParams(new URLSearchParams())
+  }
+
   const filtered = cursos.filter(c => {
     const a = c.attributes
     const matchSearch = !search || a.titulo?.toLowerCase().includes(search.toLowerCase())
     const matchCat = catActiva === 'Todos' || a.categoria?.data?.attributes?.nombre === catActiva
     const matchMod = modalidad === 'Todos' || a.modalidad === modalidad
-    return matchSearch && matchCat && matchMod
+    const matchSence = !senceOnly || !!a.franquicia_sence
+    return matchSearch && matchCat && matchMod && matchSence
   })
 
   return (
@@ -105,6 +127,19 @@ export default function Cursos() {
                     <span className="material-icons absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none">arrow_drop_down</span>
                   </div>
                 </div>
+
+                <label className="flex items-center justify-between gap-4 rounded-xl border border-[var(--border)] bg-[var(--bg-light)] px-3 py-3 cursor-pointer">
+                  <span className="flex items-center gap-2 text-sm font-semibold text-[var(--text-dark)]">
+                    <span className="material-icons text-[var(--accent)] text-base">verified</span>
+                    Solo franquicia SENCE
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={senceOnly}
+                    onChange={e => handleSenceSelect(e.target.checked)}
+                    className="w-4 h-4 accent-[var(--primary)]"
+                  />
+                </label>
               </div>
             </aside>
  
@@ -130,7 +165,7 @@ export default function Cursos() {
                     <div className="text-center py-20 bg-white rounded-2xl border border-[var(--border)]">
                       <span className="material-icons text-5xl text-[var(--text-muted)] mb-4 block">search_off</span>
                       <p className="text-[var(--text-muted)]">No hay cursos que coincidan con tu búsqueda.</p>
-                      <button onClick={() => { setSearch(''); handleCategorySelect('Todos'); setModalidad('Todos') }}
+                      <button onClick={clearFilters}
                         className="btn-ghost mt-4">
                         Limpiar filtros
                       </button>

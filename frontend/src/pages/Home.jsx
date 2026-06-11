@@ -9,7 +9,7 @@ import useCart from '../hooks/useCart'
 /* ── Mock data fallback (when CMS offline) ────────── */
 const MOCK_CURSOS = [
   { id:1, attributes:{ titulo:'Técnicas de trabajo seguro en espacios confinados', precio:0, modalidad:'E-Learning', horas:16, slug:'tecnicas-de-trabajo-seguro-en-espacios-confinados', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-seguro-espacios-confinados.jpg' } } } } },
-  { id:2, attributes:{ titulo:'Técnicas de seguridad en el montaje y desmontaje de andamios', precio:0, modalidad:'E-Learning', horas:16, slug:'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-deandamios', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/seguridad-andamios.jpg' } } } } },
+  { id:2, attributes:{ titulo:'Técnicas de seguridad en el montaje y desmontaje de andamios', precio:0, modalidad:'E-Learning', horas:16, slug:'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-de-andamios', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/seguridad-andamios.jpg' } } } } },
   { id:3, attributes:{ titulo:'Gestor de inclusión laboral', precio:0, modalidad:'Presencial', horas:40, slug:'gestor-de-inclusion-laboral', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/gestor-inclusion-laboral.jpg' } } } } },
   { id:4, attributes:{ titulo:'Técnicas de primeros auxilios básicos RCP Y DEA', precio:0, modalidad:'E-Learning', horas:36, slug:'tecnicas-de-primeros-auxilios-basicos-rcp-y-dea', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/primeros-auxilios-rcp-dea.jpg' } } } } },
   { id:5, attributes:{ titulo:'Manejo de extintores portátiles', precio:0, modalidad:'E-Learning', horas:8, slug:'manejo-de-extintores-portatiles', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/manejo-extintores.jpg' } } } } },
@@ -20,7 +20,7 @@ const MOCK_CURSOS = [
 
 const HOME_COURSE_SLUGS = [
   'tecnicas-de-trabajo-seguro-en-espacios-confinados',
-  'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-deandamios',
+  'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-de-andamios',
   'gestor-de-inclusion-laboral',
   'tecnicas-de-primeros-auxilios-basicos-rcp-y-dea',
   'manejo-de-extintores-portatiles',
