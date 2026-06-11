@@ -257,6 +257,16 @@ main {
   letter-spacing: 0.04em;
 }
 
+.course-image-frame > .course-image-img,
+.course-card > .relative.overflow-hidden > img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  max-width: none !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+}
+
 /* ── Hero ────────────────────────────────── */
 .hero {
   flex: 1;

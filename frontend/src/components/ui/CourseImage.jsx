@@ -28,14 +28,14 @@ export default function CourseImage({
   }
 
   return (
-    <div className={`relative overflow-hidden bg-[var(--primary)] ${className}`}>
+    <div className={`course-image-frame relative overflow-hidden bg-[var(--primary)] ${className}`}>
       <img
         src={currentSrc}
         alt={title}
         loading={loading}
         decoding="async"
         onError={handleError}
-        className={`relative z-10 h-full w-full object-cover object-center ${imageClassName}`}
+        className={`course-image-img relative z-10 h-full w-full object-cover object-center ${imageClassName}`}
       />
       {children && (
         <div className="pointer-events-none absolute inset-0 z-20">
