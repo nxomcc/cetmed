@@ -55,6 +55,7 @@ export default function AdminMatriculas() {
   const [cursos, setCursos] = useState([])
   const [selected, setSelected] = useState([])
   const [query, setQuery] = useState('')
+  const [coursePickerOpen, setCoursePickerOpen] = useState(false)
   const [mode, setMode] = useState('general')
   const [form, setForm] = useState(EMPTY)
   const [loading, setLoading] = useState(true)
@@ -81,11 +82,13 @@ export default function AdminMatriculas() {
     setSelected([])
     setResult(null)
     setQuery('')
+    setCoursePickerOpen(false)
   }
 
   function addCourse(course) {
     setSelected(prev => [...prev, course])
     setQuery('')
+    setCoursePickerOpen(true)
   }
 
   function removeCourse(id) {
@@ -119,6 +122,7 @@ export default function AdminMatriculas() {
       setResult(response)
       setForm(EMPTY)
       setSelected([])
+      setCoursePickerOpen(false)
       toast(mode === 'moodle' ? 'Alumno matriculado en Moodle' : 'Alumno registrado', 'success')
     } catch (error) {
       toast(error.message || 'Error al registrar matrícula', 'error')
@@ -188,21 +192,45 @@ export default function AdminMatriculas() {
 
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cursos *</label>
-            <input value={query} onChange={e => setQuery(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003d7a] focus:ring-2 focus:ring-[#003d7a]/10" placeholder={mode === 'moodle' ? 'Buscar cursos con Moodle...' : 'Buscar cualquier curso...'} />
-            <div className="mt-2 rounded-xl border border-gray-100 bg-gray-50 p-1">
-              {loading ? (
-                <p className="px-3 py-2 text-xs text-gray-400">Cargando cursos...</p>
-              ) : filteredCursos.length === 0 ? (
-                <p className="px-3 py-2 text-xs text-gray-400">Sin cursos coincidentes</p>
-              ) : filteredCursos.map(course => (
-                <button key={course.id} type="button" onClick={() => addCourse(course)} className="w-full text-left px-3 py-1.5 rounded-lg text-sm text-gray-700 hover:bg-white transition-colors">
-                  <span className="font-semibold leading-snug">{course.titulo}</span>
-                  <span className="block text-[11px] text-gray-400 mt-0.5 leading-snug">
-                    {course.modalidad || 'Sin modalidad'} · {mode === 'moodle' ? courseAccessLabel(course) : 'Se registrará sin Moodle'}
-                  </span>
-                </button>
-              ))}
+            <div className="relative">
+              <input
+                value={query}
+                onFocus={() => setCoursePickerOpen(true)}
+                onChange={e => {
+                  setQuery(e.target.value)
+                  setCoursePickerOpen(true)
+                }}
+                onKeyDown={e => {
+                  if (e.key === 'Escape') setCoursePickerOpen(false)
+                }}
+                className="w-full border border-gray-200 rounded-xl pl-4 pr-11 py-2.5 text-sm outline-none focus:border-[#003d7a] focus:ring-2 focus:ring-[#003d7a]/10"
+                placeholder={mode === 'moodle' ? 'Buscar cursos con Moodle...' : 'Buscar cualquier curso...'}
+              />
+              <button
+                type="button"
+                onClick={() => setCoursePickerOpen(open => !open)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg text-gray-400 hover:text-[#003d7a] hover:bg-blue-50 transition-colors"
+                aria-label={coursePickerOpen ? 'Ocultar cursos' : 'Mostrar cursos'}
+              >
+                <span className={`material-icons text-[20px] transition-transform ${coursePickerOpen ? 'rotate-180' : ''}`}>expand_more</span>
+              </button>
             </div>
+            {coursePickerOpen && (
+              <div className="mt-2 rounded-xl border border-gray-100 bg-gray-50 p-1">
+                {loading ? (
+                  <p className="px-3 py-2 text-xs text-gray-400">Cargando cursos...</p>
+                ) : filteredCursos.length === 0 ? (
+                  <p className="px-3 py-2 text-xs text-gray-400">Sin cursos coincidentes</p>
+                ) : filteredCursos.map(course => (
+                  <button key={course.id} type="button" onClick={() => addCourse(course)} className="w-full text-left px-3 py-1.5 rounded-lg text-sm text-gray-700 hover:bg-white transition-colors">
+                    <span className="font-semibold leading-snug">{course.titulo}</span>
+                    <span className="block text-[11px] text-gray-400 mt-0.5 leading-snug">
+                      {course.modalidad || 'Sin modalidad'} · {mode === 'moodle' ? courseAccessLabel(course) : 'Se registrará sin Moodle'}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
