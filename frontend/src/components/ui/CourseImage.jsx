@@ -29,19 +29,13 @@ export default function CourseImage({
 
   return (
     <div className={`relative overflow-hidden bg-[var(--primary)] ${className}`}>
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 scale-110 bg-center bg-cover opacity-80 blur-lg"
-        style={{ backgroundImage: `url("${currentSrc}")` }}
-      />
-      <div aria-hidden="true" className="absolute inset-0 bg-black/10" />
       <img
         src={currentSrc}
         alt={title}
         loading={loading}
         decoding="async"
         onError={handleError}
-        className={`relative z-10 h-full w-full object-contain drop-shadow-sm ${imageClassName}`}
+        className={`relative z-10 h-full w-full object-cover object-center ${imageClassName}`}
       />
       {children && (
         <div className="pointer-events-none absolute inset-0 z-20">
