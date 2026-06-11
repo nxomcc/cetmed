@@ -397,7 +397,25 @@ function bestDescription(section, productParagraphs, excerpt) {
   const paragraph = productParagraphs.find(item => !/^(que aprendera|al finalizar|en particular)/i.test(normalizeKey(item)))
   if (paragraph) return trimEmbeddedSectionLabels(paragraph)
   if (excerpt && !/^contenidos?\s+del\s+curso/i.test(normalizeKey(excerpt))) return trimEmbeddedSectionLabels(excerpt)
-  return 'Descripción no disponible.'
+  return ''
+}
+
+function isMissingDescription(value = '') {
+  const key = normalizeKey(value)
+  return !key || key === 'sin descripcion' || key === 'descripcion no disponible'
+}
+
+function buildFallbackDescription({ title, category, modality, objective, contents }) {
+  const area = category?.nombre ? ` en el área de ${category.nombre}` : ''
+  const mode = modality ? ` en modalidad ${modality}` : ''
+  const objectiveText = isMissingDescription(objective) || normalizeKey(objective) === normalizeKey(DEFAULT_OBJECTIVE)
+    ? ''
+    : ` Su propósito principal es ${objective.replace(/\.$/, '').toLowerCase()}.`
+  const contentText = contents?.length
+    ? ` El programa aborda contenidos aplicados como ${contents.slice(0, 3).join(', ').replace(/\.$/, '')}.`
+    : ''
+
+  return `El curso ${title} entrega una formación práctica${area}${mode}, orientada a fortalecer competencias técnicas y habilidades aplicables al contexto laboral.${objectiveText}${contentText} Esta capacitación permite avanzar con una base clara, criterios de trabajo responsables y herramientas útiles para el desempeño profesional.`
 }
 
 function bestObjective(section, learningSection, productParagraphs) {
@@ -453,20 +471,27 @@ function buildCourse(post, categoriesById, mediaById, products) {
   const sectionItems = splitContentItems(contentSection)
   const productItems = extractListItems(productHtml)
   const contenidos = productItems.length > sectionItems.length ? productItems : sectionItems
+  const title = normalizeText(post.title.rendered)
+  const objective = bestObjective(objectiveSection, learningSection, productParagraphs)
+  const modality = inferModality(categorySlugs, post.title.rendered, `${pageText}\n${productText}`)
+  const normalizedContents = splitLongLearningItems(contenidos)
+  const description = bestDescription(descriptionSection, productParagraphs, excerpt)
 
   return {
     old_post_id: post.id,
     old_product_id: product?.id || null,
     old_url: post.link,
     old_product_url: product?.link || null,
-    titulo: normalizeText(post.title.rendered),
+    titulo: title,
     slug: post.slug,
-    descripcion: bestDescription(descriptionSection, productParagraphs, excerpt),
-    objetivo: bestObjective(objectiveSection, learningSection, productParagraphs),
-    contenidos: splitLongLearningItems(contenidos),
+    descripcion: isMissingDescription(description)
+      ? buildFallbackDescription({ title, category, modality, objective, contents: normalizedContents })
+      : description,
+    objetivo: objective,
+    contenidos: normalizedContents,
     precio: extractPrice(pageText) || product?.precio || extractPrice(productText),
     horas: extractHours(pageText) || extractHours(productText),
-    modalidad: inferModality(categorySlugs, post.title.rendered, `${pageText}\n${productText}`),
+    modalidad: modality,
     nivel: inferLevel(`${pageText}\n${productText}`),
     franquicia_sence: false,
     activo: true,

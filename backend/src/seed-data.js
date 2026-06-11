@@ -232,7 +232,7 @@ async function seed() {
   {
     "titulo": "Procedimientos para trabajo en altura física",
     "slug": "procedimientos-para-trabajo-en-altura-fisica",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso prepara a los participantes para desempeñar funciones de apoyo administrativo, convivencia escolar y mediación dentro de comunidades educativas. La formación aborda herramientas para acompañar procesos escolares, orientar a estudiantes y colaborar en la prevención y resolución de conflictos desde un enfoque práctico y formativo.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 88000,
@@ -245,7 +245,7 @@ async function seed() {
   {
     "titulo": "Técnicas de seguridad en el montaje y desmontaje de andamios",
     "slug": "tecnicas-de-seguridad-en-el-montaje-y-desmontaje-deandamios",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso entrega herramientas pr?cticas para realizar el montaje, uso y desmontaje de andamios con criterios de seguridad. La formaci?n aborda identificaci?n de riesgos, revisi?n de componentes, medidas preventivas y buenas pr?cticas para trabajos en altura y faenas de construcci?n.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 132000,
@@ -258,7 +258,7 @@ async function seed() {
   {
     "titulo": "Técnicas de trabajo seguro en espacios confinados",
     "slug": "tecnicas-de-trabajo-seguro-en-espacios-confinados",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso prepara a los participantes para reconocer riesgos, aplicar controles preventivos y ejecutar procedimientos seguros en espacios confinados. La formaci?n aborda permisos de trabajo, ventilaci?n, monitoreo atmosf?rico, uso de equipos y respuesta ante emergencias.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 264000,
@@ -271,7 +271,7 @@ async function seed() {
   {
     "titulo": "Gestor de inclusión laboral",
     "slug": "gestor-de-inclusion-laboral",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso entrega conocimientos y herramientas para promover procesos de inclusi?n laboral dentro de organizaciones p?blicas y privadas. La formaci?n aborda normativa vigente, ajustes razonables, acompa?amiento de personas trabajadoras y estrategias para fortalecer ambientes laborales accesibles y respetuosos.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 198000,
@@ -284,7 +284,7 @@ async function seed() {
   {
     "titulo": "Técnicas de primeros auxilios básicos RCP Y DEA",
     "slug": "tecnicas-de-primeros-auxilios-basicos-rcp-y-dea",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso entrega competencias esenciales para responder ante emergencias de salud, aplicando primeros auxilios b?sicos, reanimaci?n cardiopulmonar y uso de desfibrilador externo autom?tico. La formaci?n prioriza la actuaci?n r?pida, segura y ordenada frente a situaciones cr?ticas.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 198000,
@@ -297,7 +297,7 @@ async function seed() {
   {
     "titulo": "Manejo de sustancias peligrosas",
     "slug": "manejo-de-sustancias-peligrosas",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso entrega herramientas para identificar, almacenar, manipular y controlar sustancias peligrosas de forma segura. La formaci?n aborda clasificaci?n de riesgos, hojas de datos de seguridad, uso de elementos de protecci?n personal, se?alizaci?n y medidas de respuesta ante incidentes.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 88000,
@@ -310,7 +310,7 @@ async function seed() {
   {
     "titulo": "Manejo de extintores portátiles",
     "slug": "manejo-de-extintores-portatiles",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso capacita a los participantes en la identificaci?n de tipos de fuego y el uso correcto de extintores port?tiles. La formaci?n aborda prevenci?n, selecci?n del equipo adecuado, t?cnicas de operaci?n y criterios de seguridad para actuar oportunamente ante amagos de incendio.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 108000,
@@ -323,7 +323,7 @@ async function seed() {
   {
     "titulo": "Aislamiento y bloqueo (LOTO)",
     "slug": "aislamiento-y-bloqueo-loto",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso entrega competencias para aplicar procedimientos de aislamiento y bloqueo de energ?as peligrosas bajo metodolog?a LOTO. La formaci?n aborda identificaci?n de fuentes de energ?a, uso de dispositivos de bloqueo, verificaci?n de energ?a cero y control seguro de mantenciones.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 88000,
@@ -453,7 +453,7 @@ async function seed() {
   {
     "titulo": "Gestión del Tiempo y Organización Efectiva de los Equipos de Trabajo",
     "slug": "gestion-del-tiempo-y-organizacion-efectiva-de-los-equipos-de-trabajo",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso entrega herramientas para planificar tareas, priorizar actividades y organizar equipos de trabajo de manera eficiente. La formaci?n aborda gesti?n del tiempo, coordinaci?n, seguimiento de compromisos y h?bitos que favorecen la productividad individual y colectiva.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 0,
@@ -531,7 +531,7 @@ async function seed() {
   {
     "titulo": "Auxiliar Paramédico de Farmacia",
     "slug": "auxiliar-paramedico-de-farmacia-con-mencion-especializacion-en-terapias-complementarias-de-sistema-floral-de-bach",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso forma competencias para apoyar la gesti?n farmac?utica, la atenci?n de usuarios y el manejo responsable de medicamentos en contextos comunitarios y asistenciales. Adem?s, incorpora una menci?n orientada a terapias complementarias del sistema floral de Bach.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 208333,
@@ -687,7 +687,7 @@ async function seed() {
   {
     "titulo": "Monitor en Operación Turística y Atención al Visitante",
     "slug": "monitor-en-operacion-turistica-y-atencion-al-visitante",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso prepara a los participantes para apoyar la operaci?n tur?stica y brindar atenci?n de calidad a visitantes. La formaci?n aborda comunicaci?n, orientaci?n al cliente, gesti?n b?sica de experiencias, seguridad y promoci?n de servicios tur?sticos locales.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 350000,
@@ -752,7 +752,7 @@ async function seed() {
   {
     "titulo": "Inspector Educacional y Mediación Escolar",
     "slug": "inspector-educacional-y-mediacion-escolar",
-    "descripcion": "Descripción no disponible.",
+    "descripcion": "Este curso prepara a los participantes para desempe?ar funciones de apoyo administrativo, convivencia escolar y mediaci?n dentro de comunidades educativas. La formaci?n aborda herramientas para acompa?ar procesos escolares, orientar a estudiantes y colaborar en la prevenci?n y resoluci?n de conflictos desde un enfoque pr?ctico y formativo.",
     "objetivo": "Adquirir competencias y habilidades prácticas en el área del curso.",
     "contenidos": "[]",
     "precio": 450000,

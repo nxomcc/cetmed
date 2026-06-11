@@ -85,11 +85,58 @@ export function getCourseMeta(attributes = {}) {
   ]
 }
 
+export function getCourseDescription(attributes = {}, slug = '') {
+  const description = normalizeText(attributes.descripcion)
+  if (!isMissingCourseText(description)) return description
+  return COURSE_DESCRIPTION_FALLBACKS[slug] || buildCourseDescription(attributes)
+}
+
 function normalizeText(value) {
   return String(value || '')
     .replace(/\r\n/g, '\n')
     .replace(/\r/g, '\n')
     .trim()
+}
+
+function isMissingCourseText(value = '') {
+  const text = normalizeText(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\.+$/g, '')
+  return !text || text === 'sin descripcion' || text === 'descripcion no disponible'
+}
+
+function getCategoryName(attributes = {}) {
+  return attributes.categoria?.data?.attributes?.nombre || ''
+}
+
+function cleanObjective(value = '') {
+  const objective = normalizeText(value)
+  if (isMissingCourseText(objective)) return ''
+  const normalized = objective
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+  if (normalized.includes('adquirir competencias y habilidades practicas en el area del curso')) return ''
+  return objective.replace(/\.$/, '')
+}
+
+function buildCourseDescription(attributes = {}) {
+  const title = attributes.titulo || 'este curso'
+  const category = getCategoryName(attributes)
+  const modality = attributes.modalidad
+  const objective = cleanObjective(attributes.objetivo)
+  const area = category ? ` en el área de ${category}` : ''
+  const mode = modality ? ` en modalidad ${modality}` : ''
+  const objectiveText = objective ? ` Su propósito principal es ${objective.toLowerCase()}.` : ''
+
+  return `El curso ${title} entrega una formación práctica${area}${mode}, orientada a fortalecer competencias técnicas y habilidades aplicables al contexto laboral.${objectiveText} Esta capacitación permite avanzar con una base clara, criterios de trabajo responsables y herramientas útiles para el desempeño profesional.`
+}
+
+const COURSE_DESCRIPTION_FALLBACKS = {
+  'trabajo-en-equipo-y-comunicacion-efectiva-en-el-lugar-de-trabajo': 'Este curso entrega herramientas prácticas para fortalecer la colaboración, la comunicación efectiva y la coordinación dentro de equipos de trabajo. Está orientado a desarrollar habilidades para organizar tareas, resolver diferencias, entregar retroalimentación y mejorar la convivencia laboral, favoreciendo un desempeño más eficiente y participativo.',
+  'inspector-educacional-y-mediacion-escolar': 'Este curso prepara a los participantes para desempeñar funciones de apoyo administrativo, convivencia escolar y mediación dentro de comunidades educativas. La formación aborda herramientas para acompañar procesos escolares, orientar a estudiantes y colaborar en la prevención y resolución de conflictos desde un enfoque práctico y formativo.',
 }
 
 function normalizeItem(value) {

@@ -3,13 +3,14 @@ import { Link, useParams } from 'react-router-dom'
 import { getCurso, registerCursoView } from '../services/api'
 import useCart from '../hooks/useCart'
 import SectionLabel from '../components/ui/SectionLabel'
+import CourseImage from '../components/ui/CourseImage'
 import {
   fmtPrice,
   getContentBlocks,
+  getCourseDescription,
   getCourseImageUrl,
   getCourseMeta,
   getTextBlocks,
-  handleCourseImageError,
 } from '../utils/courseDisplay'
 
 function TextBlocks({ text }) {
@@ -97,6 +98,7 @@ export default function CursoDetalle() {
   const activo = a.activo !== false
   const courseMeta = getCourseMeta(a)
   const contentBlocks = getContentBlocks(a.contenidos)
+  const description = getCourseDescription(a, slug)
 
   function handleAdd() {
     if (!activo) return
@@ -116,7 +118,7 @@ export default function CursoDetalle() {
           </div>
           <div className="flex flex-wrap gap-2 mb-3">
             {a.categoria?.data && (
-              <span className="tag bg-white text-[var(--primary-dark)] border border-white/80 shadow-sm font-bold">{a.categoria.data.attributes.nombre}</span>
+              <span className="tag bg-white/10 text-white border border-white/50 shadow-sm font-bold">{a.categoria.data.attributes.nombre}</span>
             )}
             {a.franquicia_sence && (
               <span className="tag bg-[var(--accent)] text-[var(--primary-dark)]">SENCE</span>
@@ -133,19 +135,18 @@ export default function CursoDetalle() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
-              <img
+              <CourseImage
                 src={imgSrc}
-                alt={a.titulo}
+                slug={slug}
+                title={a.titulo}
                 loading="eager"
-                decoding="async"
-                onError={event => handleCourseImageError(event, slug, a.titulo)}
-                className="w-full rounded-2xl shadow-lift aspect-video object-cover"
+                className="w-full rounded-2xl shadow-lift aspect-video"
               />
 
-              {a.descripcion && (
+              {description && (
                 <div>
                   <SectionLabel>Descripción del curso</SectionLabel>
-                  <TextBlocks text={a.descripcion} />
+                  <TextBlocks text={description} />
                 </div>
               )}
 
