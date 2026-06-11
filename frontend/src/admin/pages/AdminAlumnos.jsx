@@ -375,26 +375,26 @@ export default function AdminAlumnos() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-t border-gray-100">
-              <div className="flex flex-wrap gap-2">
-                <a href={emailHref(selected)} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50">
-                  <span className="material-icons text-[18px]">mail</span>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-5 py-3 border-t border-gray-100">
+              <div className="flex flex-wrap items-center gap-2">
+                <a href={emailHref(selected)} className="h-9 inline-flex items-center justify-center gap-1.5 px-3 rounded-lg border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-gray-50 whitespace-nowrap">
+                  <span className="material-icons text-[16px]">mail</span>
                   Enviar correo
                 </a>
-                <button onClick={() => toggleSuspension(selected)} disabled={actioningId === selected.id} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50">
-                  <span className="material-icons text-[18px]">{selected.estado === 'suspendido' ? 'check_circle' : 'block'}</span>
+                <button onClick={() => toggleSuspension(selected)} disabled={actioningId === selected.id} className="h-9 inline-flex items-center justify-center gap-1.5 px-3 rounded-lg border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 whitespace-nowrap">
+                  <span className="material-icons text-[16px]">{selected.estado === 'suspendido' ? 'check_circle' : 'block'}</span>
                   {selected.estado === 'suspendido' ? 'Reactivar' : 'Suspender'}
                 </button>
-                <button onClick={() => removeAlumno(selected)} disabled={actioningId === selected.id} className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-red-100 text-sm font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50">
-                  <span className="material-icons text-[18px]">delete_outline</span>
+                <button onClick={() => removeAlumno(selected)} disabled={actioningId === selected.id} className="h-9 inline-flex items-center justify-center gap-1.5 px-3 rounded-lg border border-red-100 text-xs font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50 whitespace-nowrap">
+                  <span className="material-icons text-[16px]">delete_outline</span>
                   Eliminar
                 </button>
               </div>
-              <div className="flex justify-end gap-3">
-                <button onClick={closeAlumno} className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 rounded-xl hover:bg-gray-100 transition-colors">
+              <div className="flex items-center justify-end gap-2 shrink-0">
+                <button onClick={closeAlumno} className="h-9 px-3 text-xs font-semibold text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">
                   Cancelar
                 </button>
-                <button onClick={saveAlumno} disabled={saving} className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#003d7a] text-white text-sm font-semibold rounded-xl hover:bg-[#002d5a] transition-colors disabled:opacity-60">
+                <button onClick={saveAlumno} disabled={saving} className="h-9 inline-flex items-center gap-1.5 px-4 bg-[#003d7a] text-white text-xs font-semibold rounded-lg hover:bg-[#002d5a] transition-colors disabled:opacity-60 whitespace-nowrap">
                   {saving && <span className="animate-spin material-icons text-[16px]">refresh</span>}
                   Guardar cambios
                 </button>

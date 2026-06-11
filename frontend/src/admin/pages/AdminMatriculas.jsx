@@ -142,23 +142,23 @@ export default function AdminMatriculas() {
         </p>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-3">
+      <div className="grid md:grid-cols-2 gap-2">
         {Object.entries(MODES).map(([id, item]) => (
           <button
             key={id}
             type="button"
             onClick={() => changeMode(id)}
-            className={`text-left rounded-2xl border p-4 transition-colors ${
+            className={`text-left rounded-xl border px-3.5 py-3 transition-colors ${
               mode === id
                 ? 'border-[#003d7a] bg-blue-50 ring-1 ring-[#003d7a]/10'
                 : 'border-gray-100 bg-white hover:border-[#003d7a]/30'
             }`}
           >
-            <div className="flex items-start gap-3">
-              <span className={`material-icons mt-0.5 ${mode === id ? 'text-[#003d7a]' : 'text-gray-400'}`}>{item.icon}</span>
-              <div>
-                <p className="font-bold text-gray-900">{item.title}</p>
-                <p className="text-xs text-gray-500 mt-1 leading-relaxed">{item.description}</p>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className={`material-icons text-[19px] shrink-0 ${mode === id ? 'text-[#003d7a]' : 'text-gray-400'}`}>{item.icon}</span>
+              <div className="min-w-0">
+                <p className="font-bold text-sm text-gray-900 leading-tight">{item.title}</p>
+                <p className="text-[11px] text-gray-500 mt-0.5 leading-snug truncate">{item.description}</p>
               </div>
             </div>
           </button>
@@ -189,15 +189,15 @@ export default function AdminMatriculas() {
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cursos *</label>
             <input value={query} onChange={e => setQuery(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#003d7a] focus:ring-2 focus:ring-[#003d7a]/10" placeholder={mode === 'moodle' ? 'Buscar cursos con Moodle...' : 'Buscar cualquier curso...'} />
-            <div className="mt-2 max-h-56 overflow-y-auto rounded-xl border border-gray-100 bg-gray-50 p-1">
+            <div className="mt-2 rounded-xl border border-gray-100 bg-gray-50 p-1">
               {loading ? (
                 <p className="px-3 py-2 text-xs text-gray-400">Cargando cursos...</p>
               ) : filteredCursos.length === 0 ? (
                 <p className="px-3 py-2 text-xs text-gray-400">Sin cursos coincidentes</p>
               ) : filteredCursos.map(course => (
-                <button key={course.id} type="button" onClick={() => addCourse(course)} className="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-white transition-colors">
-                  <span className="font-semibold">{course.titulo}</span>
-                  <span className="block text-xs text-gray-400 mt-0.5">
+                <button key={course.id} type="button" onClick={() => addCourse(course)} className="w-full text-left px-3 py-1.5 rounded-lg text-sm text-gray-700 hover:bg-white transition-colors">
+                  <span className="font-semibold leading-snug">{course.titulo}</span>
+                  <span className="block text-[11px] text-gray-400 mt-0.5 leading-snug">
                     {course.modalidad || 'Sin modalidad'} · {mode === 'moodle' ? courseAccessLabel(course) : 'Se registrará sin Moodle'}
                   </span>
                 </button>
