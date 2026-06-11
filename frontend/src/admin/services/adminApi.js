@@ -388,6 +388,7 @@ export async function getAlumnosMatriculados() {
         id: item.id,
         titulo: item.titulo || item.title || course?.titulo || `Curso #${item.id}`,
         categoria: course?.categoria_nombre || 'Sin categoria',
+        modalidad: item.modalidad || course?.modalidad || null,
         moodle_course_id: item.moodle_course_id || course?.moodle_course_id || null,
       }
     }),

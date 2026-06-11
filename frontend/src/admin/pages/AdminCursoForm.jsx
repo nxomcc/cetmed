@@ -8,7 +8,7 @@ import { useToast } from '../hooks/useToast'
 const EMPTY = {
   titulo: '', slug: '', descripcion: '', objetivo: '', precio: 0,
   horas: '', modalidad: 'Presencial', nivel: 'Básico-Intermedio',
-  franquicia_sence: false, activo: true, categoria: null, moodle_course_id: '', contenidos: '',
+  franquicia_sence: false, activo: true, categoria: null, moodle_course_id: '',
 }
 
 export default function AdminCursoForm() {
@@ -49,7 +49,6 @@ export default function AdminCursoForm() {
             activo: !!a.activo,
             categoria: a.categoria?.data?.id || null,
             moodle_course_id: a.moodle_course_id || '',
-            contenidos: a.contenidos ? JSON.stringify(a.contenidos, null, 2) : '',
           })
           setCurrentImage(imgSrc(a.imagen, a.titulo, a.slug))
         })
@@ -135,11 +134,6 @@ export default function AdminCursoForm() {
         setUploading(false)
       }
 
-      let contenidosParsed = null
-      if (form.contenidos.trim()) {
-        try { contenidosParsed = JSON.parse(form.contenidos) } catch { toast('El campo "Contenidos" debe ser JSON válido.', 'error'); setSaving(false); return }
-      }
-
       const data = {
         titulo: form.titulo,
         slug: form.slug,
@@ -153,7 +147,6 @@ export default function AdminCursoForm() {
         activo: form.activo,
         categoria: form.categoria ? Number(form.categoria) : null,
         moodle_course_id: form.moodle_course_id ? Number(form.moodle_course_id) : null,
-        contenidos: contenidosParsed,
         ...(imageId !== undefined ? { imagen: imageId } : {}),
       }
 
@@ -334,10 +327,6 @@ export default function AdminCursoForm() {
           <div>
             <label className="label">Objetivo del curso</label>
             <textarea value={form.objetivo} onChange={e => set('objetivo', e.target.value)} rows={3} className="field resize-none" />
-          </div>
-          <div>
-            <label className="label">Contenidos (JSON)</label>
-            <textarea value={form.contenidos} onChange={e => set('contenidos', e.target.value)} rows={5} className="field resize-none font-mono text-xs" placeholder={'[{"modulo": "Módulo 1", "temas": ["Tema 1", "Tema 2"]}]'} />
           </div>
         </div>
 

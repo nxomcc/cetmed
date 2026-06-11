@@ -29,6 +29,7 @@ const NAV_GROUPS = [
     label: 'Alumnos',
     items: [
       { to: '/admin/matriculas', icon: 'how_to_reg', label: 'Matriculas' },
+      { to: '/admin/alumnos', icon: 'groups', label: 'Lista de alumnos' },
       { to: '/admin/leads', icon: 'contact_mail', label: 'Leads' },
     ],
   },

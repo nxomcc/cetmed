@@ -12,6 +12,7 @@ import AdminNoticiaForm from './pages/AdminNoticiaForm'
 import AdminCategorias from './pages/AdminCategorias'
 import AdminDescuentos from './pages/AdminDescuentos'
 import AdminMatriculas from './pages/AdminMatriculas'
+import AdminAlumnos    from './pages/AdminAlumnos'
 import AdminPedidos    from './pages/AdminPedidos'
 import AdminLeads      from './pages/AdminLeads'
 import AdminUsuarios   from './pages/AdminUsuarios'
@@ -41,6 +42,7 @@ export default function AdminWrapper() {
             <Route path="categorias"        element={<AdminCategorias />} />
             <Route path="descuentos"        element={<AdminDescuentos />} />
             <Route path="matriculas"         element={<AdminMatriculas />} />
+            <Route path="alumnos"           element={<AdminAlumnos />} />
             <Route path="pedidos"           element={<AdminPedidos />} />
             <Route path="leads"             element={<AdminLeads />} />
             <Route path="usuarios"          element={<AdminUsuarios />} />
