@@ -146,23 +146,23 @@ export default function AdminMatriculas() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-2">
+      <div className="flex flex-wrap gap-2">
         {Object.entries(MODES).map(([id, item]) => (
           <button
             key={id}
             type="button"
             onClick={() => changeMode(id)}
-            className={`text-left rounded-xl border px-3.5 py-3 transition-colors ${
+            className={`text-left rounded-lg border px-3 py-2 transition-colors w-full sm:w-auto sm:min-w-[260px] sm:max-w-[360px] ${
               mode === id
                 ? 'border-[#003d7a] bg-blue-50 ring-1 ring-[#003d7a]/10'
                 : 'border-gray-100 bg-white hover:border-[#003d7a]/30'
             }`}
           >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <span className={`material-icons text-[19px] shrink-0 ${mode === id ? 'text-[#003d7a]' : 'text-gray-400'}`}>{item.icon}</span>
+            <div className="flex items-center gap-2 min-w-0">
+              <span className={`material-icons text-[17px] shrink-0 ${mode === id ? 'text-[#003d7a]' : 'text-gray-400'}`}>{item.icon}</span>
               <div className="min-w-0">
-                <p className="font-bold text-sm text-gray-900 leading-tight">{item.title}</p>
-                <p className="text-[11px] text-gray-500 mt-0.5 leading-snug truncate">{item.description}</p>
+                <p className="font-bold text-[13px] text-gray-900 leading-tight">{item.title}</p>
+                <p className="text-[10px] text-gray-500 mt-0.5 leading-snug truncate">{item.description}</p>
               </div>
             </div>
           </button>
