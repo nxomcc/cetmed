@@ -1,12 +1,14 @@
 import { getCourseImageUrl } from '../../utils/courseDisplay'
+import { getNewsImageUrl } from '../../utils/newsDisplay'
 
-export function imgSrc(media, title = '', slug = '') {
+export function imgSrc(media, title = '', slug = '', type = 'course') {
+  if (type === 'news') return getNewsImageUrl(media, slug)
   if (slug) return getCourseImageUrl(media, title, slug)
 
   const url = media?.data?.attributes?.url
   if (!url) return null
   const base = import.meta.env.VITE_CMS_URL || 'http://localhost:1337'
-  return url.startsWith('http') ? url : `${base}${url}`
+  return url.startsWith('http') || url.startsWith('/') ? url : `${base}/${url.replace(/^\/+/, '')}`
 }
 
 export function fmtClp(n) {

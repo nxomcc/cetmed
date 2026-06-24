@@ -1,18 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getNoticia, registerNoticiaView } from '../services/api'
-
-const MOCK = {
-  id: 1,
-  attributes: {
-    titulo: 'CETMED renueva certificación SENCE para 2025',
-    resumen: 'Nuestro centro supera con éxito el proceso de renovación de la acreditación SENCE.',
-    contenido: 'CETMED ha superado satisfactoriamente el proceso de renovación de su acreditación como Organismo Técnico de Capacitación (OTEC) ante el Servicio Nacional de Capacitación y Empleo (SENCE), confirmando su estatus certificado para el periodo 2025-2026.\n\nEsta renovación, que involucra una exhaustiva evaluación de la calidad de nuestros programas, infraestructura y cuerpo docente, nos posiciona como uno de los centros de capacitación más confiables de la Región de Coquimbo.\n\nLa acreditación SENCE permite a nuestros alumnos y empresas clientes acceder a la franquicia tributaria, reduciendo significativamente el costo de la capacitación. Este beneficio es especialmente relevante para las PYMES de la región que buscan mejorar las competencias de sus trabajadores sin afectar su presupuesto operativo.',
-    publishedAt: '2025-04-01',
-    imagen: { data: null },
-    autor: { data: { attributes: { nombre: 'Equipo CETMED' } } },
-  }
-}
+import { getNewsImageUrl, handleNewsImageError } from '../utils/newsDisplay'
+import { FALLBACK_NEWS, findFallbackNews } from '../data/fallbackNews'
 
 function fmtDate(str) {
   if (!str) return ''
@@ -27,8 +17,12 @@ export default function NoticiaDetalle() {
   useEffect(() => {
     setLoading(true)
     getNoticia(slug)
-      .then(d => { const n = d || MOCK; setNoticia(n); if (n?.id) registerNoticiaView(n.id) })
-      .catch(() => setNoticia(MOCK))
+      .then(d => {
+        const n = d || findFallbackNews(slug) || FALLBACK_NEWS[0]
+        setNoticia(n)
+        if (Number.isInteger(n?.id)) registerNoticiaView(n.id)
+      })
+      .catch(() => setNoticia(findFallbackNews(slug) || FALLBACK_NEWS[0]))
       .finally(() => setLoading(false))
   }, [slug])
 
@@ -46,9 +40,7 @@ export default function NoticiaDetalle() {
   )
 
   const { attributes: a } = noticia
-  const imgSrc = a?.imagen?.data?.attributes?.url
-    ? (a.imagen.data.attributes.url.startsWith('http') ? a.imagen.data.attributes.url : `http://localhost:1337${a.imagen.data.attributes.url}`)
-    : `https://placehold.co/1200x500/003d7a/ffffff?text=${encodeURIComponent(a.titulo)}`
+  const imgSrc = getNewsImageUrl(a?.imagen?.data, a?.slug || slug)
 
   return (
     <>
@@ -78,7 +70,7 @@ export default function NoticiaDetalle() {
 
       <article className="py-16">
         <div className="max-w-3xl mx-auto px-4">
-          <img src={imgSrc} alt={a.titulo} loading="eager" decoding="async"
+          <img src={imgSrc} alt={a.titulo} loading="eager" decoding="async" onError={event => handleNewsImageError(event, a?.slug || slug)}
             className="w-full rounded-2xl shadow-lift aspect-video object-cover mb-10" />
 
           {a.resumen && (

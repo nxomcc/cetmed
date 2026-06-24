@@ -33,7 +33,7 @@ export default function AdminNoticiaForm() {
           contenido: a.contenido || '',
           publicado: !!a.publishedAt,
         })
-        setCurrentImage(imgSrc(a.imagen))
+        setCurrentImage(imgSrc(a.imagen, a.titulo, a.slug, 'news'))
       })
       .catch(() => toast('Error cargando noticia', 'error'))
       .finally(() => setLoading(false))

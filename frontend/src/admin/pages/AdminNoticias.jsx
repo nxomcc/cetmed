@@ -97,7 +97,7 @@ export default function AdminNoticias() {
               <tbody className="divide-y divide-gray-50">
                 {filtered.map(n => {
                   const a = n.attributes
-                  const thumb = imgSrc(a.imagen)
+                  const thumb = imgSrc(a.imagen, a.titulo, a.slug, 'news')
                   return (
                     <tr key={n.id} className="hover:bg-gray-50/50">
                       <td className="px-4 py-3">

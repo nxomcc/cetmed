@@ -5,6 +5,7 @@ import CourseCard from '../components/ui/CourseCard'
 import BlogCard from '../components/ui/BlogCard'
 import SectionLabel from '../components/ui/SectionLabel'
 import useCart from '../hooks/useCart'
+import { FALLBACK_NEWS } from '../data/fallbackNews'
 
 /* ── Mock data fallback (when CMS offline) ────────── */
 const MOCK_CURSOS = [
@@ -48,12 +49,6 @@ function sortHomeCourses(data) {
   if (featured.length) return featured
   return (data || []).map(withHomeSenceTag)
 }
-
-const MOCK_NOTICIAS = [
-  { id:1, attributes:{ titulo:'CETMED renueva certificación SENCE para 2025', resumen:'Nuestro centro supera con éxito el proceso de renovación anual de la certificación SENCE, reafirmando nuestro compromiso con la calidad formativa.', slug:'renovacion-sence-2025', publishedAt:'2025-04-01', imagen:{data:null} } },
-  { id:2, attributes:{ titulo:'Nueva oferta de cursos E-Learning disponible', resumen:'Ampliamos nuestra plataforma virtual con nuevos cursos en modalidad online para que puedas capacitarte desde donde estés.', slug:'nuevos-cursos-elearning', publishedAt:'2025-03-20', imagen:{data:null} } },
-  { id:3, attributes:{ titulo:'Alianza estratégica con empresas de la región', resumen:'Firmamos convenio con las principales empresas del sector productivo de Coquimbo para ofrecer capacitación con franquicia SENCE.', slug:'alianza-empresas-region', publishedAt:'2025-03-05', imagen:{data:null} } },
-]
 
 const STATS = [
   { icon:'school',    value:'+500', label:'Profesionales capacitados' },
@@ -111,7 +106,7 @@ function StatItem({ icon, value, label, active }) {
 
 export default function Home() {
   const [cursos, setCursos]   = useState(MOCK_CURSOS)
-  const [noticias, setNoticias] = useState(MOCK_NOTICIAS)
+  const [noticias, setNoticias] = useState(FALLBACK_NEWS)
   const [statsVisible, setStatsVisible] = useState(false)
   const statsRef = useRef(null)
   const { addItem } = useCart()
@@ -223,10 +218,15 @@ export default function Home() {
                   <span key={c} className="tag text-sm px-3 py-1">{c}</span>
                 ))}
               </div>
-              <Link to="/nosotros" className="btn-primary justify-center">
-                Conoce más sobre CETMED
-                <span className="material-icons text-sm">arrow_forward</span>
-              </Link>
+              <a
+                href="/docs/brochure-cetmed.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary justify-center"
+              >
+                Descarga nuestro brochure
+                <span className="material-icons text-sm">download</span>
+              </a>
             </div>
  
             <div data-reveal="right" className="relative max-w-xl mx-auto lg:max-w-none">

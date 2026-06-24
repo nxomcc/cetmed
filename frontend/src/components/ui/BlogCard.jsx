@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
-
-const PLACEHOLDER = 'https://placehold.co/400x240/003d7a/ffffff?text=Noticia'
+import { getNewsImageUrl, handleNewsImageError } from '../../utils/newsDisplay'
 
 function fmtDate(str) {
   if (!str) return ''
@@ -15,15 +14,13 @@ export default function BlogCard({ noticia }) {
   const fecha    = fmtDate(a?.publishedAt)
   const autor    = a?.autor?.data?.attributes?.nombre || 'CETMED'
   const imgData  = a?.imagen?.data
-  const imgSrc   = imgData?.attributes?.url
-    ? (imgData.attributes.url.startsWith('http') ? imgData.attributes.url : `http://localhost:1337${imgData.attributes.url}`)
-    : PLACEHOLDER
+  const imgSrc   = getNewsImageUrl(imgData, slug)
 
   return (
     <Link to={`/noticias/${slug}`} className="course-card group no-underline">
       {/* Image */}
       <div className="relative overflow-hidden aspect-[16/9]">
-        <img src={imgSrc} alt={titulo} loading="lazy" decoding="async"
+        <img src={imgSrc} alt={titulo} loading="lazy" decoding="async" onError={event => handleNewsImageError(event, slug)}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
       </div>

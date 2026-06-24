@@ -2,15 +2,16 @@ import { useState, useEffect } from 'react'
 import { getNoticias } from '../services/api'
 import BlogCard from '../components/ui/BlogCard'
 import SectionLabel from '../components/ui/SectionLabel'
+import { FALLBACK_NEWS } from '../data/fallbackNews'
 
 export default function Noticias() {
-  const [noticias, setNoticias] = useState([])
+  const [noticias, setNoticias] = useState(FALLBACK_NEWS)
   const [loading, setLoading]   = useState(true)
   const [search, setSearch]     = useState('')
 
   useEffect(() => {
     getNoticias()
-      .then(d => setNoticias(d?.data || []))
+      .then(d => { if (d?.data?.length) setNoticias(d.data) })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
