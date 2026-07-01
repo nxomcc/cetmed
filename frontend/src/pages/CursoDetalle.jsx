@@ -151,6 +151,7 @@ export default function CursoDetalle() {
                 slug={slug}
                 title={a.titulo}
                 loading="eager"
+                fit="contain"
                 className="w-full rounded-2xl shadow-lift aspect-video"
               >
                 {a.franquicia_sence && (

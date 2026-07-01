@@ -6,6 +6,7 @@ export default function CourseImage({
   slug,
   title = 'CETMED',
   loading = 'lazy',
+  fit = 'cover',
   className = '',
   imageClassName = '',
   children,
@@ -27,6 +28,8 @@ export default function CourseImage({
     if (currentSrc !== placeholder) setCurrentSrc(placeholder)
   }
 
+  const fitClass = fit === 'contain' ? 'object-contain' : 'object-cover'
+
   return (
     <div className={`course-image-frame relative overflow-hidden bg-[var(--primary)] ${className}`}>
       <img
@@ -35,7 +38,7 @@ export default function CourseImage({
         loading={loading}
         decoding="async"
         onError={handleError}
-        className={`course-image-img relative z-10 h-full w-full object-cover object-center ${imageClassName}`}
+        className={`course-image-img relative z-10 h-full w-full ${fitClass} object-center ${imageClassName}`}
       />
       {children && (
         <div className="pointer-events-none absolute inset-0 z-20">
