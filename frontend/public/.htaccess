@@ -1,14 +1,14 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  RewriteRule ^(assets|docs|images|mail)/ - [L]
-  RewriteRule ^(favicon\.png|robots\.txt|config\.js|config\.example\.js|cetmed-deploy\.txt)$ - [L]
+  RewriteRule ^(assets|docs|images|mail)(/|$) - [END]
+  RewriteRule ^(favicon\.png|robots\.txt|config\.js|config\.example\.js|cetmed-deploy\.txt)$ - [END]
   RewriteCond %{REQUEST_URI} \.(js|mjs|css|png|jpe?g|gif|webp|avif|svg|ico|pdf|txt|json|xml|map|woff2?|ttf|otf)$ [NC]
-  RewriteRule ^ - [L]
+  RewriteRule ^ - [END]
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  RewriteRule . /index.html [END]
 </IfModule>
 
 <IfModule mod_mime.c>
