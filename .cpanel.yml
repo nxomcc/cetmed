@@ -12,8 +12,19 @@ deployment:
     - /bin/cp -f "$FRONTEND_PUBLIC_PATH/config.js" /home/cetmedcl/.cetmed-deploy-backup/config.js 2>/dev/null || true
     - /bin/test -f /home/cetmedcl/.cetmed-deploy-backup/config.js || /bin/cp -f /home/cetmedcl/new.cetmed.cl/config.js /home/cetmedcl/.cetmed-deploy-backup/config.js 2>/dev/null || true
     - /bin/find "$FRONTEND_PUBLIC_PATH" -mindepth 1 ! -name config.js -exec /bin/rm -rf {} +
-    - /bin/cp -a "$FRONTEND_DIST/." "$FRONTEND_PUBLIC_PATH/"
+    - /bin/cp -f "$FRONTEND_DIST/index.html" "$FRONTEND_PUBLIC_PATH/index.html"
+    - /bin/cp -f "$FRONTEND_DIST/.htaccess" "$FRONTEND_PUBLIC_PATH/.htaccess"
+    - /bin/cp -f "$FRONTEND_DIST/favicon.png" "$FRONTEND_PUBLIC_PATH/favicon.png"
+    - /bin/cp -f "$FRONTEND_DIST/robots.txt" "$FRONTEND_PUBLIC_PATH/robots.txt"
+    - /bin/cp -f "$FRONTEND_DIST/config.example.js" "$FRONTEND_PUBLIC_PATH/config.example.js"
+    - /bin/mkdir -p "$FRONTEND_PUBLIC_PATH/assets" "$FRONTEND_PUBLIC_PATH/docs" "$FRONTEND_PUBLIC_PATH/images" "$FRONTEND_PUBLIC_PATH/mail"
+    - /bin/cp -a "$FRONTEND_DIST/assets/." "$FRONTEND_PUBLIC_PATH/assets/"
+    - /bin/cp -a "$FRONTEND_DIST/docs/." "$FRONTEND_PUBLIC_PATH/docs/"
+    - /bin/cp -a "$FRONTEND_DIST/images/." "$FRONTEND_PUBLIC_PATH/images/"
+    - /bin/cp -a "$FRONTEND_DIST/mail/." "$FRONTEND_PUBLIC_PATH/mail/"
     - /bin/cp -f /home/cetmedcl/.cetmed-deploy-backup/config.js "$FRONTEND_PUBLIC_PATH/config.js" 2>/dev/null || true
     - /bin/test -f "$FRONTEND_PUBLIC_PATH/index.html"
     - /bin/test -d "$FRONTEND_PUBLIC_PATH/assets"
+    - /bin/find "$FRONTEND_PUBLIC_PATH/assets" -type f -name "index-*.js" -print -quit | /bin/grep -q .
+    - /bin/find "$FRONTEND_PUBLIC_PATH/assets" -type f -name "index-*.css" -print -quit | /bin/grep -q .
     - /bin/test -f "$FRONTEND_PUBLIC_PATH/docs/brochure-cetmed.pdf"
