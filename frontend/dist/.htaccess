@@ -2,12 +2,7 @@
   RewriteEngine On
   RewriteBase /
   RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_URI} !^/(assets|docs|images|mail)(/|$) [NC]
-  RewriteCond %{REQUEST_URI} !^/(favicon\.png|robots\.txt|config\.js|config\.example\.js|cetmed-deploy\.txt)$ [NC]
-  RewriteCond %{REQUEST_URI} !\.(js|mjs|css|png|jpe?g|gif|webp|avif|svg|ico|pdf|txt|json|xml|map|woff2?|ttf|otf)$ [NC]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  RewriteRule ^(admin|nosotros|cursos|noticias|contacto|carrito|checkout|terminos-y-condiciones|politica-de-privacidad|politicas-de-mantenimiento)(/.*)?$ /index.html [L]
 </IfModule>
 
 <IfModule mod_mime.c>
