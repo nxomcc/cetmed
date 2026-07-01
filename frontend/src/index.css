@@ -274,15 +274,10 @@ main {
   object-position: center center !important;
 }
 
-.course-image-frame > .course-image-img.object-fill {
-  object-fit: fill !important;
-}
-
-.course-image-frame > .course-image-img.object-contain {
+.course-image-frame > .course-image-img {
   object-fit: contain !important;
 }
 
-.course-image-frame > .course-image-img.object-cover,
 .course-card > .relative.overflow-hidden > img {
   object-fit: cover !important;
 }
