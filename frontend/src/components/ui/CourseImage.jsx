@@ -28,7 +28,7 @@ export default function CourseImage({
     if (currentSrc !== placeholder) setCurrentSrc(placeholder)
   }
 
-  const fitClass = fit === 'contain' ? 'object-contain' : 'object-cover'
+  const fitClass = fit === 'fill' ? 'object-fill' : fit === 'contain' ? 'object-contain' : 'object-cover'
 
   return (
     <div className={`course-image-frame relative overflow-hidden bg-[var(--primary)] ${className}`}>
