@@ -274,6 +274,18 @@ main {
   object-position: center center !important;
 }
 
+.object-fill {
+  object-fit: fill !important;
+}
+
+.object-contain {
+  object-fit: contain !important;
+}
+
+.object-cover {
+  object-fit: cover !important;
+}
+
 .course-image-frame > .course-image-img {
   object-fit: contain !important;
 }
