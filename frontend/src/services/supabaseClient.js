@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 
 const runtimeConfig = globalThis.__CETMED_CONFIG__ || {}
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || runtimeConfig.SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || runtimeConfig.SUPABASE_ANON_KEY
+const supabaseUrl = runtimeConfig.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = runtimeConfig.SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY
 const sessionStorageAdapter = {
   getItem: (key) => {
     if (typeof window === 'undefined') return null

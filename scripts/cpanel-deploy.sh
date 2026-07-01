@@ -39,6 +39,16 @@ if [ -f "$BACKUP_PATH/config.js" ]; then
   cp -f "$BACKUP_PATH/config.js" "$FRONTEND_PUBLIC_PATH/config.js"
 fi
 
+if [ ! -f "$FRONTEND_PUBLIC_PATH/config.js" ]; then
+  echo "Missing $FRONTEND_PUBLIC_PATH/config.js with Supabase runtime config" >&2
+  exit 1
+fi
+
+grep -q "__CETMED_CONFIG__" "$FRONTEND_PUBLIC_PATH/config.js" || {
+  echo "$FRONTEND_PUBLIC_PATH/config.js does not define __CETMED_CONFIG__" >&2
+  exit 1
+}
+
 test -f "$FRONTEND_PUBLIC_PATH/index.html"
 test -f "$FRONTEND_PUBLIC_PATH/docs/brochure-cetmed.pdf"
 ls "$FRONTEND_PUBLIC_PATH/assets"/index-*.js >/dev/null
