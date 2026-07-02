@@ -9,6 +9,7 @@ import { FALLBACK_NEWS } from '../data/fallbackNews'
 
 /* ── Mock data fallback (when CMS offline) ────────── */
 const MOCK_CURSOS = [
+  { id:56, attributes:{ titulo:'Mantenimiento Industrial de Plantas de Chancado, Correas y Equipos de Proceso', precio:132000, modalidad:'E-Learning asincrónico', horas:24, slug:'mantenimiento-industrial-plantas-chancado-correas-equipos-proceso', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/mantenimiento-industrial-plantas-chancado-correas-equipos-proceso.png' } } }, categoria:{ data:{ attributes:{ nombre:'Procesos Industriales', slug:'procesos-industriales' } } } } },
   { id:1, attributes:{ titulo:'Técnicas de trabajo seguro en espacios confinados', precio:0, modalidad:'E-Learning asincrónico', horas:16, slug:'tecnicas-de-trabajo-seguro-en-espacios-confinados', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-seguro-espacios-confinados.jpg' } } } } },
   { id:2, attributes:{ titulo:'Técnicas de seguridad en el montaje y desmontaje de andamios', precio:0, modalidad:'E-Learning asincrónico', horas:16, slug:'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-de-andamios', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/seguridad-andamios.jpg' } } } } },
   { id:3, attributes:{ titulo:'Gestor de inclusión laboral', precio:0, modalidad:'E-Learning asincrónico', horas:40, slug:'gestor-de-inclusion-laboral', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/gestor-inclusion-laboral.jpg' } } } } },
@@ -16,10 +17,10 @@ const MOCK_CURSOS = [
   { id:5, attributes:{ titulo:'Manejo de extintores portátiles', precio:0, modalidad:'E-Learning asincrónico', horas:8, slug:'manejo-de-extintores-portatiles', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/manejo-extintores.jpg' } } } } },
   { id:6, attributes:{ titulo:'Manejo de sustancias peligrosas', precio:0, modalidad:'E-Learning asincrónico', horas:16, slug:'manejo-de-sustancias-peligrosas', franquicia_sence:true, imagen:{ data:null } } },
   { id:7, attributes:{ titulo:'Procedimientos para trabajo en altura física', precio:0, modalidad:'E-Learning asincrónico', horas:16, slug:'procedimientos-para-trabajo-en-altura-fisica', franquicia_sence:true, imagen:{ data:{ attributes:{ url:'/images/courses/trabajo-en-altura.jpg' } } } } },
-  { id:8, attributes:{ titulo:'Aislamiento y bloqueo (LOTO)', precio:0, modalidad:'E-Learning asincrónico', horas:16, slug:'aislamiento-y-bloqueo-loto', franquicia_sence:true, imagen:{ data:null } } },
 ]
 
 const HOME_COURSE_SLUGS = [
+  'mantenimiento-industrial-plantas-chancado-correas-equipos-proceso',
   'tecnicas-de-trabajo-seguro-en-espacios-confinados',
   'tecnicas-de-seguridad-en-el-montaje-y-desmontaje-de-andamios',
   'gestor-de-inclusion-laboral',
@@ -27,7 +28,6 @@ const HOME_COURSE_SLUGS = [
   'manejo-de-extintores-portatiles',
   'manejo-de-sustancias-peligrosas',
   'procedimientos-para-trabajo-en-altura-fisica',
-  'aislamiento-y-bloqueo-loto',
 ]
 
 const HOME_SENCE_SLUGS = new Set(HOME_COURSE_SLUGS)
